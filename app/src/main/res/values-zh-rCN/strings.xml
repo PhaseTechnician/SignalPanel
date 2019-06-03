@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">信号面板</string>
+    <string name="nav_header_title">未登录</string>
+    <string name="nav_header_subtitle">未登录</string>
+    <string name="nav_menu_setings">设置</string>
+</resources>
