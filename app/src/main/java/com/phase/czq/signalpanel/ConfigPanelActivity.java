@@ -24,7 +24,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -59,10 +65,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config_panel);
         mainLayout=(ConstraintLayout)findViewById(R.id.config_layout_main);
-        addButtun(getResources().getString(R.string.default_buttun_name)+"1");
-        addSwitch("switchbn");
-        addProgressBar("non");
-        addSeekBar(" ");
+
         //隐藏控制栏
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -71,6 +74,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     private void addButtun(String buttunName){
@@ -119,8 +123,36 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         params.height = 400;
         nsb.setLayoutParams(params);
     }
+
+    private boolean savePanel(){
+
+
+
+
+        return false;
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.nav_buttun:
+                addButtun("undefine");
+                break;
+            case R.id.nav_pbr:
+                addProgressBar("undefien");
+                break;
+            case R.id.nav_switch:
+                addSwitch("undefien");
+                break;
+            case R.id.nav_sbr:
+                addSeekBar("undefien");
+                break;
+            case R.id.nav_save:
+                savePanel();
+                break;
+            case R.id.nav_otg_pipe:
+                break;
+        }
         return false;
     }
 

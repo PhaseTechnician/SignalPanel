@@ -3,45 +3,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_panel"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Panel" />
-        <item
-            android:id="@+id/nav_seting"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/nav_menu_setings" />
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="Add Input Plugs">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_buttun"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Buttun" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_switch"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Switch" />
+            <item
+                android:id="@+id/nav_pbr"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Bar"/>
+            <item
+                android:id="@+id/nav_sbr"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="sbr"/>
         </menu>
     </item>
 
-    <item android:title="Account">
+    <item android:title="Add Output Plugs">
         <menu>
             <item
                 android:id="@+id/nav_login"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Login"/>
+                android:title="ImageView"/>
         </menu>
     </item>
 
+    <item android:title="Pipes">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_bt_pipe"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="BT"/>
+                <item
+                    android:id="@+id/nav_otg_pipe"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="OTG"/>
+            </group>
+        </menu>
+    </item>
+
+
+    <item android:title="Aomp">
+        <menu>
+            <item
+                android:title="Comps"
+                android:id="@+id/COMP"
+                android:icon="@drawable/ic_menu_share"/>
+        </menu>
+    </item>
+
+    <item android:title="File">
+        <menu>
+            <item
+                android:id="@+id/nav_save"
+                android:icon="@drawable/ic_menu_slideshow"
+                android:title="SAVE"/>
+            <item
+                android:id="@+id/nav_upload"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Upload"/>
+        </menu>
+    </item>
 </menu>
