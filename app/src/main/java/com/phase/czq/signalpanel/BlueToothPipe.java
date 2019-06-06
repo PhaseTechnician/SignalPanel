@@ -1,5 +1,7 @@
 package com.phase.czq.signalpanel;
 
+import android.bluetooth.BluetoothManager;
+
 import java.nio.ByteBuffer;
 
 //通过该类进行蓝牙串口通讯

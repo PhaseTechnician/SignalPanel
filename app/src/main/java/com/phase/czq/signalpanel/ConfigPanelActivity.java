@@ -18,6 +18,9 @@ import android.support.v4.app.NavUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +60,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_config_panel);
         mainLayout=(ConstraintLayout)findViewById(R.id.config_layout_main);
         addButtun(getResources().getString(R.string.default_buttun_name)+"1");
-        //addButtun(getResources().getString(R.string.default_buttun_name)+"2");
+        addSwitch("switchbn");
+        addProgressBar("non");
+        addSeekBar(" ");
         //隐藏控制栏
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -74,16 +79,46 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newButtun.setClickable(true);
         //// 获取要改变view的父布局的布局参数
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newButtun.getLayoutParams();
-        //newButtun.setLayoutParams(params);
-        newButtun.setText(buttunName);
-        //// 设置宽为100dp
         params.width = 400;
-        //// 设置高为100dp
         params.height = 200;
         newButtun.setLayoutParams(params);
+        newButtun.setText(buttunName);
         newButtun.setOnTouchListener(dragListener);
     }
 
+    private void addSwitch(String switchName){
+        Switch newSwitch=new Switch(this);
+        mainLayout.addView(newSwitch);
+        newSwitch.setClickable(true);
+        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) newSwitch.getLayoutParams();
+        params.width = 400;
+        params.height = 200;
+        newSwitch.setLayoutParams(params);
+        newSwitch.setText(switchName);
+        newSwitch.setOnTouchListener(dragListener);
+    }
+
+    private void addProgressBar(String barName){
+        ProgressBar npb = new ProgressBar(this);
+        mainLayout.addView(npb);
+        npb.setOnTouchListener(dragListener);
+        npb.setClickable(true);
+        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) npb.getLayoutParams();
+        params.width = 400;
+        params.height = 400;
+        npb.setLayoutParams(params);
+    }
+
+    private void addSeekBar(String barname){
+        SeekBar nsb=new SeekBar(this);
+        mainLayout.addView(nsb);
+        nsb.setOnTouchListener(dragListener);
+        nsb.setClickable(true);
+        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) nsb.getLayoutParams();
+        params.width = 400;
+        params.height = 400;
+        nsb.setLayoutParams(params);
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         return false;
