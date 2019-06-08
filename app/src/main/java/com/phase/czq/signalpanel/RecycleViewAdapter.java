@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.phase.czq.signalpanel.Panel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.panelViewHolder> {
@@ -21,6 +22,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public RecycleViewAdapter(Context context, List<Panel> data){
         this.mcontext=context;
         datas=data;
+    }
+
+    public RecycleViewAdapter(Context context){
+        this.mcontext=context;
+        datas=new ArrayList<>();
     }
 
     @NonNull
@@ -73,4 +79,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     }
 
+    public void addItem(Panel newPanel){
+        datas.add(newPanel);
+    }
 }

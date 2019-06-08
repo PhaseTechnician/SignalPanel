@@ -26,34 +26,30 @@ import javax.xml.parsers.ParserConfigurationException;
 public class Panel {
     private Context context;
     private String XMLpath;
-    private String panelName;
-    private String author;
-    private String desc;
+    private String panelName="undefine";
+    private String author="undefine";
+    private String desc="undefine";
     //对应的图像
     private String IMAGE;
 
-    public Panel(String path,Context context){
-        this.XMLpath=path;
+    public Panel(String panelName,Context context){
+        if(panelName==""){
+            //合适的文件名
+            this.XMLpath = "NULL";
+        }
+        this.XMLpath=context.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs"+File.separator+panelName+".xml";
         this.context=context;
-        decodeXML();
-    }
-
-    public void setXMLpath(String XMLpath) {
-        this.XMLpath = XMLpath;
-        decodeXML();
+        decodeXMLHeader();
     }
 
     //从XML文件获取概述信息
-    private void decodeXML(){
-        //默认值
-        panelName="No name";
-        author="dont know";
-        desc="empty";
+    private void decodeXMLHeader(){
         try{
-            FileInputStream fileInputStream = new FileInputStream(XMLpath);
+            FileInputStream fileInputStream = new FileInputStream(XMLpath.substring(0,XMLpath.length()-4));
             DocumentBuilderFactory documentBuilderFactory=DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder=documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(fileInputStream);
+
             NodeList nl=document.getElementsByTagName("header");
             if(nl.getLength()==0){
                 Toast.makeText(context,"Header0",Toast.LENGTH_SHORT).show();
@@ -87,28 +83,30 @@ public class Panel {
             Node descN = descl.item(0);
             desc = descN.getTextContent();
         }
-        catch (FileNotFoundException ex)
-        {
-            ex.printStackTrace();
-            Toast.makeText(context,ex.getMessage(),Toast.LENGTH_SHORT).show();
+        catch (FileNotFoundException ex) {
+            Log.e("panelDecoder",ex.getMessage());
         }catch (ParserConfigurationException ex){
-            ex.printStackTrace();
-            Toast.makeText(context,ex.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelDecoder",ex.getMessage());
         }catch (SAXException ex){
-            ex.printStackTrace();
-            Toast.makeText(context,ex.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelDecoder",ex.getMessage());
         }catch(IOException ex){
-            ex.printStackTrace();
-            Toast.makeText(context,ex.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelDecoder",ex.getMessage());
         }
     }
     //保存Panel信息到XML
     public void save(){
-        String appFilePath = context.getFilesDir().getAbsolutePath();
-        String filePath = appFilePath+File.separator+"EXAMPLE.xml";
-        XMLpath = filePath;
         try {
-            FileOutputStream fileOutputStream=new FileOutputStream(filePath);
+            File file = new File(XMLpath);
+            if(!file.exists()) {
+                if(file.createNewFile())
+                    Log.e("panelCreat","creat new xml file success");
+                else
+                    Log.e("panelCreat","creat xml file fail");
+            }
+            else{
+                Log.e("panelCreat","file has exist");
+            }
+            FileOutputStream fileOutputStream=new FileOutputStream(file);
             XmlSerializer serializer = Xml.newSerializer();
             serializer.setOutput(fileOutputStream,"utf-8");
             serializer.startDocument("utf-8",true);
@@ -116,15 +114,15 @@ public class Panel {
             serializer.startTag(null,"header");
 
             serializer.startTag(null,"panelName");
-            serializer.text("EXAMPLE");
+            serializer.text(panelName);
             serializer.endTag(null,"panelName");
 
             serializer.startTag(null,"author");
-            serializer.text("czq");
+            serializer.text("unknow author");
             serializer.endTag(null,"author");
 
             serializer.startTag(null,"description");
-            serializer.text("This is an example panel");
+            serializer.text("This is an empty panel");
             serializer.endTag(null,"description");
             serializer.endTag(null,"header");
 
@@ -141,15 +139,13 @@ public class Panel {
             fileOutputStream.close();
 
         }catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelCreat",e.getMessage()+e);
         } catch (IllegalStateException e) {
-            e.printStackTrace();
-            Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelCreat",e.getMessage()+e);
         } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+            Log.e("panelCreat",e.getMessage()+e);
         }
+        Log.e("panelCreat", "save: FINISH");
     }
 
     public String getPanelName() {

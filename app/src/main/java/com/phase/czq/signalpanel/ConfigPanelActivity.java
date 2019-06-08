@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.view.ViewGroup;
+import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -74,7 +75,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     private void addButtun(String buttunName){

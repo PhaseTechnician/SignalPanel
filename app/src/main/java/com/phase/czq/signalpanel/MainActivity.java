@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -32,23 +33,48 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView RV;
+    private RecycleViewAdapter RVA;
+    private PanelsManager panelsManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //尝试创建路径
+        File file = new File(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
+        if(file.exists()){
+            //路径存在
+            Log.e("FilePath","path exist");
+            File[] files = file.listFiles();
+            if(files!=null) {
+                Log.e("FilePath",Integer.toString(files.length)+" files found");
+                for(int i=0;i<files.length;i++){
+                    Log.e("FilePath",files[i].getName().toString());
+                }
+            }
+            else {
+                Log.e("FilePath","0 files found");
+            }
+            file.delete();
+        }
+        else{
+            //路径不存在
+            Log.e("FilePath","path not found");
+            file.mkdirs();
+            Log.e("FilePath","path has creat");
+        }
         //设置RecycleView
-        RV=(RecyclerView)findViewById(R.id.recycleView);
+        RecyclerView RV=(RecyclerView)findViewById(R.id.recycleView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RV.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
-
-        Panel p=new Panel("",this);
-        p.save();
-        final List<Panel> panels = new ArrayList<>();
-        //panels.add(p);
-        panels.add(new Panel(this.getFilesDir().getAbsolutePath()+File.separator+"EXAMPLE.xml",getApplicationContext()));
-        RV.setAdapter(new RecycleViewAdapter(this,panels));
+        RVA = new RecycleViewAdapter(this);
+        RV.setAdapter(RVA);
+        File[] files=file.listFiles();
+        if(files!=null){
+            for(int i=0;i<files.length;i++){
+                RVA.addItem(new Panel(files[i].getName().toString(),getApplicationContext()));
+            }
+        }
         //设置工具栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

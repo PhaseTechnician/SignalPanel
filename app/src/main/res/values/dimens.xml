@@ -9,4 +9,5 @@
     <dimen name="panel_main_height">80dp</dimen>
     <dimen name="panel_main_image_width">64dp</dimen>
     <dimen name="panel_main_image_height">64dp</dimen>
+    <dimen name="nav_config_panel_width">180dp</dimen>
 </resources>
