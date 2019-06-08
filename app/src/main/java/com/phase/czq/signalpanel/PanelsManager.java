@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 /*使用这个类来管理所有的panels资源*/
+@Deprecated
 public class PanelsManager {
 
     public PanelsManager(Context c){
@@ -28,8 +29,7 @@ public class PanelsManager {
         File floder = new File(path);
         File[] files = floder.listFiles();
         if(files!=null){
-            for(int i=0;i<files.length;i++)
-            Log.e("eee","文件名 ： " + files[i].getName());
+            for (File file : files) Log.e("eee", "文件名 ： " + file.getName());
         }
         else {
             Log.e("eee","NON");

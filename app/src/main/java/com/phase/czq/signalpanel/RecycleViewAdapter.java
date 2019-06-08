@@ -55,8 +55,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 switch(event.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
-                        Toast.makeText(mcontext, "TOUCHD", Toast.LENGTH_SHORT).show();
                         break;
+                    case MotionEvent.ACTION_MOVE:
+                        v.scrollTo(-(int)event.getX(),0);
+                        return false;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        v.scrollTo(0,0);
+                        return false;
                 }
                 return false;
             }
@@ -72,9 +78,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public final TextView panel_name,panel_author,panel_descrip;
         public panelViewHolder(View v) {
             super(v);
-            panel_name = (TextView)v.findViewById(R.id.panel_main_name);
-            panel_author = (TextView) v.findViewById(R.id.panel_main_author);
-            panel_descrip = (TextView)v.findViewById(R.id.panel_main_desc);
+            panel_name = v.findViewById(R.id.panel_main_name);
+            panel_author =  v.findViewById(R.id.panel_main_author);
+            panel_descrip = v.findViewById(R.id.panel_main_desc);
         }
 
     }

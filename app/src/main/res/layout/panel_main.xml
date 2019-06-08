@@ -8,9 +8,23 @@
     android:orientation="horizontal"
     android:background="@color/colorPrimaryDark">
 
+    <ImageButton
+        android:id="@+id/panel_main_config"
+        android:layout_width="@dimen/panel_main_image_width"
+        android:layout_height="@dimen/panel_main_image_height"
+        android:layout_marginLeft="-128dp"
+        android:src="@drawable/ic_menu_manage" />
+    <ImageButton
+        android:layout_width="@dimen/panel_main_image_width"
+        android:layout_height="@dimen/panel_main_image_height"
+        android:layout_marginLeft="0dp"
+        android:id="@+id/panel_main_delet"
+        android:src="@drawable/ic_menu_camera"/>
+
     <ImageView
         android:layout_width="@dimen/panel_main_image_width"
         android:layout_height="@dimen/panel_main_image_height"
+        android:layout_marginStart="0dp"
         android:layout_gravity="center_vertical"
         app:srcCompat="@drawable/ic_menu_gallery" />
 
