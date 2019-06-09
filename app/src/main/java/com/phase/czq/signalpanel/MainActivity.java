@@ -1,16 +1,14 @@
 package com.phase.czq.signalpanel;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,16 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.phase.czq.signalpanel.Panel;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,29 +28,13 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //尝试创建路径
+        //尝试创建XML文档路径
         File file = new File(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
-        if(file.exists()){
-            //路径存在
-            Log.e("FilePath","path exist");
-            File[] files = file.listFiles();
-            if(files!=null) {
-                Log.e("FilePath",Integer.toString(files.length)+" files found");
-                for(int i=0;i<files.length;i++){
-                    Log.e("FilePath",files[i].getName().toString());
-                }
-            }
-            else {
-                Log.e("FilePath","0 files found");
-            }
-            file.delete();
-        }
-        else{
-            //路径不存在
-            Log.e("FilePath","path not found");
-            file.mkdirs();
-            Log.e("FilePath","path has creat");
-        }
+
+        tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
+        //尝试创建IMG文档路径
+        tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelImgs");
+
         //设置RecycleView
         RecyclerView RV=(RecyclerView)findViewById(R.id.recycleView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -83,8 +57,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //添加新的Panel 并进入编辑Config
-                Intent intent = new Intent(MainActivity.this,ConfigPanelActivity.class);
-                startActivity(intent);
+                newPanelSetingDialog("czq");
             }
         });
         //
@@ -96,6 +69,64 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    //尝试添加一个路径
+    private void tryMakeDir(String Path){
+        File file = new File(Path);
+        if(file.exists()){
+            //路径存在
+            Log.e("FilePath",Path+" Exist");
+        }
+        else{
+            //路径不存在
+            Log.e("FilePath",Path+" Not found");
+            file.mkdirs();
+            Log.e("FilePath",Path+" Creat");
+        }
+        file.delete();
+    }
+
+    //尝试添加路径并进行列举
+    private void tryMakeDirAndList(String path){
+        File file = new File(path);
+        if(file.exists()){
+            //路径存在
+            Log.e("FilePath","path exist");
+            File[] files = file.listFiles();
+            if(files!=null) {
+                Log.e("FilePath",Integer.toString(files.length)+" files found");
+                for(int i=0;i<files.length;i++){
+                    Log.e("FilePath",files[i].getName().toString());
+                }
+            }
+            else {
+                Log.e("FilePath","0 files found");
+            }
+        }
+        else{
+            //路径不存在
+            Log.e("FilePath","path not found");
+            file.mkdirs();
+            Log.e("FilePath","path has creat");
+        }
+        file.delete();
+    }
+
+    private void newPanelSetingDialog(String defaultAuthor){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("add new plane");
+        builder.setIcon(R.drawable.ic_menu_send);
+        builder.setView(R.layout.new_panel_dialog);
+        builder.setPositiveButton("creat", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(MainActivity.this,ConfigPanelActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("cancel",null);
+        builder.show();
     }
 
     @Override

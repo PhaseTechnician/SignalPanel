@@ -1,7 +1,9 @@
 package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -11,11 +13,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -156,5 +160,30 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         return false;
     }
 
+    private Bitmap savePanelImg(){
+        View mainView = findViewById(R.id.config_layout_main);
+        mainView.setDrawingCacheEnabled(true);
+        mainView.buildDrawingCache();
+        Rect rect = new Rect();
+        mainView.getWindowVisibleDisplayFrame(rect);
+        int stateBarHeight = rect.top;
+
+        WindowManager windowManager = this.getWindowManager();
+
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(outMetrics);
+        int width = outMetrics.widthPixels;
+        int height = outMetrics.heightPixels;
+
+        Bitmap bitmap = Bitmap.createBitmap(mainView.getDrawingCache(), 0, stateBarHeight, width,
+                height - stateBarHeight);
+        //销毁缓存信息
+        mainView.destroyDrawingCache();
+        mainView.setDrawingCacheEnabled(false);
+
+        //图形压缩
+
+        return  bitmap;
+    }
 
 }
