@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,23 +19,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     private RecycleViewAdapter RVA;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //尝试创建XML文档路径
-        File file = new File(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
-
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
         //尝试创建IMG文档路径
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelImgs");
-
         //设置RecycleView
         RecyclerView RV=(RecyclerView)findViewById(R.id.recycleView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         RVA = new RecycleViewAdapter(this);
         RV.setAdapter(RVA);
+
+        File file = new File(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
         File[] files=file.listFiles();
         if(files!=null){
             for(int i=0;i<files.length;i++){
@@ -117,11 +121,19 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("add new plane");
         builder.setIcon(R.drawable.ic_menu_send);
-        builder.setView(R.layout.new_panel_dialog);
+        View view = LayoutInflater.from(this).inflate(R.layout.new_panel_dialog,null);
+        builder.setView(view);
+        final EditText eName = view.findViewById(R.id.input_panel_name);
+        final EditText eAuthor = view.findViewById(R.id.input_panel_author);
+        final EditText eDesc = view.findViewById(R.id.input_panel_desc);
+        eAuthor.setText(defaultAuthor);
         builder.setPositiveButton("creat", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(MainActivity.this,ConfigPanelActivity.class);
+                intent.putExtra("SignalPanel.panelName",eName.getText().toString());
+                intent.putExtra("SignalPanel.author",eAuthor.getText().toString());
+                intent.putExtra("SignalPanel.description",eDesc.getText().toString());
                 startActivity(intent);
             }
         });

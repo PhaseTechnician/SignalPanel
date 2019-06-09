@@ -5,4 +5,12 @@
     <string name="nav_header_subtitle">未登录</string>
     <string name="nav_menu_setings">设置</string>
     <string name="default_buttun_name">按钮</string>
+    <string name="pref_language_set_message">语言设置</string>
+    <string name="title_activity_settings">设置</string>
+    <string name="title_activity_config_panel">面板设置</string>
+    <string name="action_settings">设置</string>
+    <string name="navigation_drawer_close">关闭 抽屉</string>
+    <string name="navigation_drawer_open">打开 抽屉</string>
+    <string name="pref_default_display_name">李明</string>
+    <string name="pref_header_data_sync">数据和同步</string>
 </resources>

@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
@@ -43,15 +44,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 public class ConfigPanelActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    float Lastx,Lasty;
+    //用于确定是否有新的改变，从而判断是否需要保存
+    private boolean newChanges = false;
+    //保留一个Panel的DOM实例，使用它读取和保存XML文档
+    private PanelXmlDom panelXmlDom;
+    //主要布局
     private ConstraintLayout mainLayout;
+
     View.OnTouchListener dragListener=new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Lastx=event.getRawX();
-                    Lasty=event.getRawY();
                     return false;
                 case MotionEvent.ACTION_MOVE:
                     v.setTranslationX(event.getRawX());
@@ -79,6 +83,17 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //从Intent中获取基本信息填充到nav_drawer中
+        if(navigationView.getHeaderCount() > 0) {//From 雪兰灵莹 https://blog.csdn.net/xuelanlingying/article/details/79884592
+            View header = navigationView.getHeaderView(0);
+            TextView panelNameTextView = header.findViewById(R.id.nav_config_panelname);
+            TextView descTextView = header.findViewById(R.id.nav_config_desc);
+            panelNameTextView.setText(getIntent().getStringExtra("SignalPanel.panelName"));
+            descTextView.setText(getIntent().getStringExtra("SignalPanel.description"));
+            Log.e("Intent",getIntent().getStringExtra("SignalPanel.panelName"));
+            Log.e("Intent",getIntent().getStringExtra("SignalPanel.panelName"));
+        }
     }
 
     private void addButtun(String buttunName){
@@ -129,10 +144,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     }
 
     private boolean savePanel(){
-
-
-
-
+        newChanges=false;
+        //需要判断一下是否可以保存
+        panelXmlDom.saveXml();
         return false;
     }
 
@@ -151,10 +165,13 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             case R.id.nav_sbr:
                 addSeekBar("undefien");
                 break;
+            case R.id.nav_otg_pipe:
+                break;
+            //File
             case R.id.nav_save:
                 savePanel();
                 break;
-            case R.id.nav_otg_pipe:
+            case R.id.nav_upload:
                 break;
         }
         return false;

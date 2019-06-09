@@ -21,7 +21,7 @@
     </string>
 
     <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_default_display_name">Li Ming</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
@@ -83,4 +83,15 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string name="title_activity_config_panel">ConfigPanelActivity</string>
+
+    <!-- preferce -->
+    <string name="pref_language_set_message">Language</string>
+    <string-array name="pref_language_set_list_titles">
+        <item>简体中文</item>
+        <item>English</item>
+    </string-array>
+    <string-array name="pref_language_set_list_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 </resources>

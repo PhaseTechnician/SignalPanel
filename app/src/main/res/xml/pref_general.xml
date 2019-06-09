@@ -1,5 +1,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_language_set_list_titles"
+        android:entryValues="@array/pref_language_set_list_values"
+        android:key="language_set_list"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_language_set_message" />
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="example_switch"
