@@ -1,5 +1,6 @@
 package com.phase.czq.signalpanel;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -49,8 +50,9 @@ public class PanelXmlDom {
     private Document document;
     private Element root,header,layout,setings,panelNameE, authorE, descE;
 
-    public PanelXmlDom(DomMode domMode){
+    public PanelXmlDom(DomMode domMode, String xmlFilepath){
         mode=domMode;
+        filePath=xmlFilepath;
         pipeline=Pipeline.Undefine;
         InitDom();
     }
@@ -79,12 +81,12 @@ public class PanelXmlDom {
             document.setXmlStandalone(true);
             document.setXmlVersion("1.0");
             //编写文件头
-            root = document.createElement("panelName");
+            root = document.createElement("panel");
             document.appendChild(root);
             //header 部分
             header = document.createElement("header");
             root.appendChild(header);
-            panelNameE = document.createElement("name");
+            panelNameE = document.createElement("panelName");
             header.appendChild(panelNameE);
             authorE = document.createElement("authorE");
             header.appendChild(authorE);
@@ -111,7 +113,7 @@ public class PanelXmlDom {
         newButtunElement.setAttribute("height",Integer.toString(bt.getHeight()));
         newButtunElement.setAttribute("X",Integer.toString(bt.getTop()));
         newButtunElement.setAttribute("Y",Integer.toString(bt.getLeft()));
-        newButtunElement.setIdAttribute(Integer.toString(bt.getId()),true);
+        newButtunElement.setAttribute("id",Integer.toString(bt.getId()));
         layout.appendChild(newButtunElement);
     }
     public void XmlFlushButtun(Button bt){
@@ -173,20 +175,33 @@ public class PanelXmlDom {
             return "undefine";
     }
     public String getHeaderAuthor(){
-
         return authorE.getTextContent();
     }
     public String getHeaderDescription(){
         return descE.getTextContent();
     }
     /*获取layout 信息*/
-
+    //获取控件中最大的ID
+    public int getMaxID(){
+        NodeList allPlugs = layout.getChildNodes();
+        if(allPlugs!=null){
+            int maxID=0;
+            for(int i=0;i<allPlugs.getLength();i++){
+                int idNum =Integer.getInteger(allPlugs.item(i).getAttributes().getNamedItem("id").getNodeValue());
+                if(idNum>maxID){
+                    maxID=idNum;
+                }
+            }
+            return maxID;
+        }else {
+            return 0;
+        }
+    }
     /*获取seting 信息*/
     @Deprecated
     public Pipeline getSetingPipeLine(){
         return Pipeline.BlueToothSerial;
     }
-
     /*保存XML文档*/
     public boolean saveXml(){
         if(!isLegalPanelXml()){
@@ -201,7 +216,7 @@ public class PanelXmlDom {
             StringWriter stringWriter = new StringWriter();
             transformer.transform(new DOMSource(document),new StreamResult(stringWriter));
             //创建文件流并输出
-            FileOutputStream os = new FileOutputStream(new File(" "));
+            FileOutputStream os = new FileOutputStream(new File(filePath));
             os.write(stringWriter.toString().getBytes());
             os.flush();
             os.close();
@@ -224,13 +239,14 @@ public class PanelXmlDom {
     /* 判断是否是合法的XML文档 */
     @Deprecated
     private boolean isLegalPanelXml(){
-        return false;
+        return true;
     }
 
+    @Deprecated
     public void setMode(DomMode mode) {
         this.mode = mode;
     }
-
+    @Deprecated
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }

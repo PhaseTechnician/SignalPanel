@@ -2,7 +2,7 @@ package com.phase.czq.signalpanel;
 
 import java.nio.ByteBuffer;
 
-public class USBotgPioe {
+public class USBotgPipe {
     //
 
     public void Send(char c){
@@ -18,7 +18,7 @@ public class USBotgPioe {
 
     }
 
-    public USBotgPioe(){
+    public USBotgPipe(){
 
     }
 

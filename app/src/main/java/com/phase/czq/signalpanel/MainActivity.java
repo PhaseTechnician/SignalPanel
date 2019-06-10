@@ -49,14 +49,14 @@ public class MainActivity extends AppCompatActivity
         File[] files=file.listFiles();
         if(files!=null){
             for(int i=0;i<files.length;i++){
-                RVA.addItem(new Panel(files[i].getName().toString(),getApplicationContext()));
+                RVA.addItem(new Panel(files[i].getName(),getApplicationContext()));
             }
         }
         //设置工具栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //浮动按钮
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,13 +65,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
         //
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -88,9 +88,7 @@ public class MainActivity extends AppCompatActivity
             file.mkdirs();
             Log.e("FilePath",Path+" Creat");
         }
-        file.delete();
     }
-
     //尝试添加路径并进行列举
     private void tryMakeDirAndList(String path){
         File file = new File(path);
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity
             Log.e("FilePath","path exist");
             File[] files = file.listFiles();
             if(files!=null) {
-                Log.e("FilePath",Integer.toString(files.length)+" files found");
+                Log.e("FilePath",files.length+" files found");
                 for(int i=0;i<files.length;i++){
                     Log.e("FilePath",files[i].getName().toString());
                 }
@@ -114,7 +112,6 @@ public class MainActivity extends AppCompatActivity
             file.mkdirs();
             Log.e("FilePath","path has creat");
         }
-        file.delete();
     }
 
     private void newPanelSetingDialog(String defaultAuthor){

@@ -33,6 +33,7 @@ import android.widget.Toast;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,10 +61,12 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 case MotionEvent.ACTION_DOWN:
                     return false;
                 case MotionEvent.ACTION_MOVE:
+                    newChanges = true;
                     v.setTranslationX(event.getRawX());
                     v.setTranslationY(event.getRawY());
                     return false;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
 
                     break;
             }
@@ -94,16 +97,22 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             descTextView.setText(getIntent().getStringExtra("SignalPanel.description"));
         }
         //准备对应的XML对象
-        if(getIntent().getStringExtra("SignalPanle.Creat_Change")=="Creat"){
+        if(getIntent().getStringExtra("SignalPanel.Creat_Change").equals("Creat")){
             //新建流程
-            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.WriteToFile);
+            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.WriteToFile,
+                    this.getFilesDir().getAbsolutePath()+ File.separator+"panelXMLs"+File.separator+getIntent().getStringExtra("SignalPanel.panelName"));
             panelXmlDom.setHeaderPanelName(getIntent().getStringExtra("SignalPanel.panelName"));
             panelXmlDom.setHeaderAuthor(getIntent().getStringExtra("SignalPanel.author"));
             panelXmlDom.setHeaderDescription(getIntent().getStringExtra("SignalPanel.description"));
+            IDcount = 0;
         }
         else {
+//ERRORs
             //修改流程
-            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile);
+            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile,
+                    this.getFilesDir().getAbsolutePath()+ File.separator+"panelXMLs"+File.separator+getIntent().getStringExtra("SignalPanel.panelName"));
+            //更新最大ID，避免重复
+            IDcount=panelXmlDom.getMaxID();
             //创建控件
             List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.Buttun);
             if(buttuns!=null){
@@ -111,8 +120,8 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                     addButtun(buttun.mainString,buttun.width,buttun.height,buttun.X,buttun.Y,buttun.ID);
                 }
             }
+            /*当创建完成之后*/
         }
-
     }
 
     //根据现有的参数添加一个按钮，其中ID如果为-1，就自动使用自增ID
@@ -129,13 +138,13 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newButtun.setY(Y);
         newButtun.setText(buttunName);
         newButtun.setOnTouchListener(dragListener);
-        //ID存在问题
         if(ID==-1) {
             newButtun.setId(ID);
         }else {
-            newButtun.setId(IDcount);
             IDcount++;
+            newButtun.setId(IDcount);
         }
+        //同步修改Xml文件
         panelXmlDom.XmlAddButtun(newButtun);
     }
 
@@ -150,7 +159,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newSwitch.setText(switchName);
         newSwitch.setOnTouchListener(dragListener);
     }
-
     private void addProgressBar(String barName){
         ProgressBar npb = new ProgressBar(this);
         mainLayout.addView(npb);
@@ -161,7 +169,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         params.height = 400;
         npb.setLayoutParams(params);
     }
-
     private void addSeekBar(String barname){
         SeekBar nsb=new SeekBar(this);
         mainLayout.addView(nsb);
@@ -175,8 +182,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
     private boolean savePanel(){
         newChanges=false;
-        //需要判断一下是否可以保存
-        panelXmlDom.saveXml();
+        if(panelXmlDom.saveXml()){
+            return true;
+        }
         return false;
     }
 
@@ -187,19 +195,24 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 addButtun("undefine",300,200,0,0,-1);
                 break;
             case R.id.nav_pbr:
-                addProgressBar("undefien");
+                //addProgressBar("undefien");
                 break;
             case R.id.nav_switch:
-                addSwitch("undefien");
+                //addSwitch("undefien");
                 break;
             case R.id.nav_sbr:
-                addSeekBar("undefien");
+                //addSeekBar("undefien");
                 break;
             case R.id.nav_otg_pipe:
                 break;
             //File
             case R.id.nav_save:
-                savePanel();
+                Log.e("XMLSAVE","START SAVE");
+                if(savePanel()){
+                    Toast.makeText(this,"Success save file",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this,"Some errors happened",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.nav_upload:
                 break;
@@ -207,6 +220,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         return false;
     }
 
+    @Deprecated
     private Bitmap savePanelImg(){
         View mainView = findViewById(R.id.config_layout_main);
         mainView.setDrawingCacheEnabled(true);

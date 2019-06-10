@@ -33,9 +33,9 @@ public class Panel {
     private String IMAGE;
 
     public Panel(String panelName,Context context){
-        if(panelName==""){
+        if(panelName.equals("")){
             //合适的文件名
-            this.XMLpath = "NULL";
+            panelName="NULL";
         }
         this.XMLpath=context.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs"+File.separator+panelName+".xml";
         this.context=context;
@@ -95,6 +95,7 @@ public class Panel {
             Log.e("panelDecoder",ex.getMessage());
         }
     }
+    @Deprecated
     //保存Panel信息到XML
     public void save(){
         try {
