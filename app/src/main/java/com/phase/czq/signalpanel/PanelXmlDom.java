@@ -1,17 +1,22 @@
 package com.phase.czq.signalpanel;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +47,7 @@ public class PanelXmlDom {
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
     private Document document;
-    private Element root,header,layout,setings,panelName,author,desc;
+    private Element root,header,layout,setings,panelNameE, authorE, descE;
 
     public PanelXmlDom(DomMode domMode){
         mode=domMode;
@@ -55,15 +60,22 @@ public class PanelXmlDom {
         try{
             documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            document = documentBuilder.newDocument();
         }
         catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
         if(mode==DomMode.ReadFromFile){
-
+            //从文件中初始化XML
+            try{
+                document = documentBuilder.parse(filePath);
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else if(mode==DomMode.WriteToFile){
+            document = documentBuilder.newDocument();
             document.setXmlStandalone(true);
             document.setXmlVersion("1.0");
             //编写文件头
@@ -72,24 +84,26 @@ public class PanelXmlDom {
             //header 部分
             header = document.createElement("header");
             root.appendChild(header);
-            panelName = document.createElement("name");
-            header.appendChild(panelName);
-            author = document.createElement("author");
-            header.appendChild(author);
-            desc = document.createElement("description");
-            header.appendChild(desc);
+            panelNameE = document.createElement("name");
+            header.appendChild(panelNameE);
+            authorE = document.createElement("authorE");
+            header.appendChild(authorE);
+            descE = document.createElement("description");
+            header.appendChild(descE);
             //layout 部分
             layout = document.createElement("layout");
             root.appendChild(layout);
             //seting 部分
             setings = document.createElement("setings");
             root.appendChild(setings);
-        }
-        else{
+        }else{
             //undefine
+            Log.e("SignalPanel","XMLDOM undefine Mode");
         }
     }
+
     /*添加控件信息*/
+    //Buttun
     public void XmlAddButtun(Button bt){
         Element newButtunElement = document.createElement("buttun");
         newButtunElement.setTextContent(bt.getText().toString());
@@ -97,8 +111,38 @@ public class PanelXmlDom {
         newButtunElement.setAttribute("height",Integer.toString(bt.getHeight()));
         newButtunElement.setAttribute("X",Integer.toString(bt.getTop()));
         newButtunElement.setAttribute("Y",Integer.toString(bt.getLeft()));
+        newButtunElement.setIdAttribute(Integer.toString(bt.getId()),true);
         layout.appendChild(newButtunElement);
     }
+    public void XmlFlushButtun(Button bt){
+        //当出现重复ID，可能会出现奇怪的事情
+        Element buttun = document.getElementById(Integer.toString(bt.getId()));
+        if(buttun!=null){
+            buttun.setAttribute("width",Integer.toString(bt.getWidth()));
+            buttun.setAttribute("height",Integer.toString(bt.getHeight()));
+            buttun.setAttribute("X",Integer.toString(bt.getTop()));
+            buttun.setAttribute("Y",Integer.toString(bt.getLeft()));
+        }
+    }
+
+    public List<PlugParams> getPlugsParams(PlugKinds plugkind){
+        NodeList plugs = layout.getElementsByTagName(plugkind.toString());
+        if(plugs==null){
+            return null;
+        }
+        List<PlugParams> plugParams = new ArrayList<>();
+        for (int i = 0; i <plugs.getLength() ; i++) {
+            PlugParams params = new PlugParams();
+            params.width=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
+            params.height=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
+            params.X=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
+            params.Y=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
+            params.ID=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
+            plugParams.add(params);
+        }
+        return plugParams;
+    }
+
     public void XmlAddSwitch(Switch sw){
         Element newSwitchElement = document.createElement("switch");
         newSwitchElement.setAttribute("width",Integer.toString(sw.getWidth()));
@@ -110,23 +154,35 @@ public class PanelXmlDom {
     public void XmlAddProgressBar(ProgressBar progressBar){
 
     }
+    /*设置header信息*/
+    public void setHeaderPanelName(String panelName){
+        panelNameE.setTextContent(panelName);
+    }
+    public void setHeaderAuthor(String author){
+        authorE.setTextContent(author);
+    }
+    public void setHeaderDescription(String description){
+        descE.setTextContent(description);
+    }
+
     /*获取header信息*/
     public String getHeaderPanelName(){
-        if(panelName!=null)
-            return panelName.getTextContent();
+        if(panelNameE!=null)
+            return panelNameE.getTextContent();
         else
             return "undefine";
     }
     public String getHeaderAuthor(){
 
-        return author.getTextContent();
+        return authorE.getTextContent();
     }
     public String getHeaderDescription(){
-        return desc.getTextContent();
+        return descE.getTextContent();
     }
     /*获取layout 信息*/
 
     /*获取seting 信息*/
+    @Deprecated
     public Pipeline getSetingPipeLine(){
         return Pipeline.BlueToothSerial;
     }
@@ -147,6 +203,8 @@ public class PanelXmlDom {
             //创建文件流并输出
             FileOutputStream os = new FileOutputStream(new File(" "));
             os.write(stringWriter.toString().getBytes());
+            os.flush();
+            os.close();
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();
             return false;
@@ -164,16 +222,9 @@ public class PanelXmlDom {
     }
 
     /* 判断是否是合法的XML文档 */
+    @Deprecated
     private boolean isLegalPanelXml(){
         return false;
-    }
-
-    public Pipeline getPipeline() {
-        return pipeline;
-    }
-
-    public void setPipeline(Pipeline pipeline) {
-        this.pipeline = pipeline;
     }
 
     public void setMode(DomMode mode) {

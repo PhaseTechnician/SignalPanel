@@ -50,6 +50,8 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     private PanelXmlDom panelXmlDom;
     //主要布局
     private ConstraintLayout mainLayout;
+    //ID计数 不应该出现重复的ID
+    private int IDcount=0;
 
     View.OnTouchListener dragListener=new View.OnTouchListener() {
         @Override
@@ -80,10 +82,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         if (actionBar != null) {
             actionBar.hide();
         }
-
+        //设置侧边栏
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
-
         //从Intent中获取基本信息填充到nav_drawer中
         if(navigationView.getHeaderCount() > 0) {//From 雪兰灵莹 https://blog.csdn.net/xuelanlingying/article/details/79884592
             View header = navigationView.getHeaderView(0);
@@ -91,22 +92,51 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             TextView descTextView = header.findViewById(R.id.nav_config_desc);
             panelNameTextView.setText(getIntent().getStringExtra("SignalPanel.panelName"));
             descTextView.setText(getIntent().getStringExtra("SignalPanel.description"));
-            Log.e("Intent",getIntent().getStringExtra("SignalPanel.panelName"));
-            Log.e("Intent",getIntent().getStringExtra("SignalPanel.panelName"));
         }
+        //准备对应的XML对象
+        if(getIntent().getStringExtra("SignalPanle.Creat_Change")=="Creat"){
+            //新建流程
+            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.WriteToFile);
+            panelXmlDom.setHeaderPanelName(getIntent().getStringExtra("SignalPanel.panelName"));
+            panelXmlDom.setHeaderAuthor(getIntent().getStringExtra("SignalPanel.author"));
+            panelXmlDom.setHeaderDescription(getIntent().getStringExtra("SignalPanel.description"));
+        }
+        else {
+            //修改流程
+            panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile);
+            //创建控件
+            List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.Buttun);
+            if(buttuns!=null){
+                for (PlugParams buttun:buttuns) {
+                    addButtun(buttun.mainString,buttun.width,buttun.height,buttun.X,buttun.Y,buttun.ID);
+                }
+            }
+        }
+
     }
 
-    private void addButtun(String buttunName){
+    //根据现有的参数添加一个按钮，其中ID如果为-1，就自动使用自增ID
+    private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
         Button newButtun=new Button(this);
         mainLayout.addView(newButtun);
         newButtun.setClickable(true);
         //// 获取要改变view的父布局的布局参数
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newButtun.getLayoutParams();
-        params.width = 400;
-        params.height = 200;
+        params.width = width;
+        params.height = height;
         newButtun.setLayoutParams(params);
+        newButtun.setX(X);
+        newButtun.setY(Y);
         newButtun.setText(buttunName);
         newButtun.setOnTouchListener(dragListener);
+        //ID存在问题
+        if(ID==-1) {
+            newButtun.setId(ID);
+        }else {
+            newButtun.setId(IDcount);
+            IDcount++;
+        }
+        panelXmlDom.XmlAddButtun(newButtun);
     }
 
     private void addSwitch(String switchName){
@@ -154,7 +184,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_buttun:
-                addButtun("undefine");
+                addButtun("undefine",300,200,0,0,-1);
                 break;
             case R.id.nav_pbr:
                 addProgressBar("undefien");

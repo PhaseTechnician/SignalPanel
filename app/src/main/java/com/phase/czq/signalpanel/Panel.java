@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+//仅仅解析文件的header
 public class Panel {
     private Context context;
     private String XMLpath;
@@ -82,6 +82,8 @@ public class Panel {
             }
             Node descN = descl.item(0);
             desc = descN.getTextContent();
+            //释放资源
+            fileInputStream.close();
         }
         catch (FileNotFoundException ex) {
             Log.e("panelDecoder",ex.getMessage());

@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("SignalPanel.panelName",eName.getText().toString());
                 intent.putExtra("SignalPanel.author",eAuthor.getText().toString());
                 intent.putExtra("SignalPanel.description",eDesc.getText().toString());
+                intent.putExtra("SignalPanel.Creat_Change","Creat");
                 startActivity(intent);
             }
         });
