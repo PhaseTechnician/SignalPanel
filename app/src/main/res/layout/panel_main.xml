@@ -13,20 +13,20 @@
         android:layout_width="@dimen/panel_main_image_width"
         android:layout_height="@dimen/panel_main_image_height"
         android:layout_marginLeft="-128dp"
-        android:src="@drawable/ic_menu_manage" />
+        android:src="@drawable/ic_config" />
     <ImageButton
         android:layout_width="@dimen/panel_main_image_width"
         android:layout_height="@dimen/panel_main_image_height"
         android:layout_marginLeft="0dp"
         android:id="@+id/panel_main_delet"
-        android:src="@drawable/ic_menu_camera"/>
+        android:src="@drawable/ic_delete"/>
 
     <ImageView
         android:layout_width="@dimen/panel_main_image_width"
         android:layout_height="@dimen/panel_main_image_height"
         android:layout_marginStart="0dp"
         android:layout_gravity="center_vertical"
-        app:srcCompat="@drawable/ic_menu_gallery" />
+        app:srcCompat="@drawable/ic_panel" />
 
     <LinearLayout
         android:layout_width="match_parent"

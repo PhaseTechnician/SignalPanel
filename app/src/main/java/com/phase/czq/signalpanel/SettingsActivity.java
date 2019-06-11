@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -41,11 +42,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener =
+            new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
@@ -80,7 +81,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
 
-            } else {
+            } /*else if(preference instanceof SwitchPreference){
+                SwitchPreference switchPreference = (SwitchPreference)preference;
+                String answer = Boolean.toString(switchPreference.isChecked());
+                preference.setSummary(answer);
+            }*/
+            else{
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -174,7 +180,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || NotificationPreferenceFragment.class.getName().equals(fragmentName)
-                || voids.class.getName().equals(fragmentName);
+                || voids.class.getName().equals(fragmentName)
+                || pipePreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -275,10 +282,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
         }
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class pipePreferenceFragment extends PreferenceFragment{
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_pipe);
+            setHasOptionsMenu(true);
+
+
+            //bindPreferenceSummaryToValue(findPreference("pipe_bluetooth"));
+            //bindPreferenceSummaryToValue(findPreference("pipe_otg"));
+            //bindPreferenceSummaryToValue(findPreference("pipe_wifi"));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
             return super.onOptionsItemSelected(item);
         }
     }

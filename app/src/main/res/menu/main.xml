@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+    <group>
+        <item
+            android:id="@+id/pipe_BT"
+            android:icon="@drawable/ic_bluetooth_normal"
+            android:orderInCategory="1"
+            android:title="BT"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/pipe_OTG"
+            android:icon="@drawable/ic_usb_normal"
+            android:orderInCategory="2"
+            android:title="OTG"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/pipe_WIFI"
+            android:icon="@drawable/ic_wifi_normal"
+            android:orderInCategory="3"
+            android:title="WIFI"
+            app:showAsAction="always"/>
+    </group>
+
 </menu>

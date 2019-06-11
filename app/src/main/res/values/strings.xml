@@ -2,18 +2,47 @@
     <string name="app_name">SignalPanel</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Main Activity Drawer Titles -->
     <string name="nav_header_title">Un Login</string>
     <string name="nav_header_subtitle">Un Login</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-    <string name="nav_menu_setings">Seting</string>
+
+    <string name="nav_menu_import">Import</string>
+    <string name="nav_menu_gallery">Gallery</string>
+    <string name="nav_menu_panel">Panel</string>
+    <string name="nav_menu_setings">Settings</string>
+    <string name="nav_menu_share">Share</string>
+    <string name="nav_menu_send">Send</string>
+    <string name="nav_menu_login">Login</string>
+    <string name="nav_menu_feedback">FeedBack</string>
+
+    <!-- Preferce -->
+    <!-- General Preferce -->
+    <string name="pre_general_title">General</string>
+    <!-- Notification Preferce -->
+    <string name="pre_notification_title">Notification</string>
+    <!-- Data_Sync Preferce -->
+    <string name="pre_data_sync_title">Data&amp;Sync</string>
+    <!-- Path Preferce -->
+    <string name="pre_path_title">Path</string>
+    <!-- Pipe preferce -->
+    <string name="pre_pipe_title">Pipe</string>
+    <string name="pre_pipe_bluetooth_title">Enable BlueTooth COM</string>
+    <string name="pre_pipe_bluetooth_summary">Use BlueTooth to connect your lot device\'s BlueTooth modle</string>
+    <string name="pre_pipe_otg_title">Enable USB-OTG COM</string>
+    <string name="pre_pipe_otg_summary">Use USB-OTG to directly connect your device\'s Serial COM [USART]</string>
+    <string name="pre_pipe_wifi_title">Enable WIFI TCP/IP</string>
+    <string name="pre_pipe_wifi_summary">Use WIFI model to connect your device by TCP/UDP </string>
+    <!-- Feature Preferce -->
+    <string name="pre_feature_title">Feature</string>
+
+
     <string name="title_activity_settings">Settings</string>
     <string name="default_buttun_name">Buttun</string>
 
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -73,7 +102,6 @@
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
 

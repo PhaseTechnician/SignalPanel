@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
     private void newPanelSetingDialog(String defaultAuthor){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("add new plane");
-        builder.setIcon(R.drawable.ic_menu_send);
+        builder.setIcon(R.drawable.ic_add);
         View view = LayoutInflater.from(this).inflate(R.layout.new_panel_dialog,null);
         builder.setView(view);
         final EditText eName = view.findViewById(R.id.input_panel_name);
@@ -161,14 +161,20 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.pipe_BT) {
+
+            return true;
+        }else if(id==R.id.pipe_OTG){
+
+            return true;
+        }else if(id==R.id.pipe_WIFI){
+
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

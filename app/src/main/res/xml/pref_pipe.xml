@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="pipe_bluetooth"
+        android:title="@string/pre_pipe_bluetooth_title"
+        android:summary="@string/pre_pipe_bluetooth_summary"/>
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="pipe_otg"
+        android:title="@string/pre_pipe_otg_title"
+        android:summary="@string/pre_pipe_otg_summary"/>
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="pipe_wifi"
+        android:title="@string/pre_pipe_wifi_title"
+        android:summary="@string/pre_pipe_wifi_summary"/>
+
+</PreferenceScreen>

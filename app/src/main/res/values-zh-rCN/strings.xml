@@ -8,9 +8,26 @@
     <string name="pref_language_set_message">语言设置</string>
     <string name="title_activity_settings">设置</string>
     <string name="title_activity_config_panel">面板设置</string>
-    <string name="action_settings">设置</string>
     <string name="navigation_drawer_close">关闭 抽屉</string>
     <string name="navigation_drawer_open">打开 抽屉</string>
     <string name="pref_default_display_name">李明</string>
     <string name="pref_header_data_sync">数据和同步</string>
+    <string name="nav_menu_feedback">反馈</string>
+    <string name="nav_menu_gallery">仓库</string>
+    <string name="nav_menu_import">导入</string>
+    <string name="nav_menu_login">登录</string>
+    <string name="nav_menu_panel">面板</string>
+    <string name="nav_menu_send">发送</string>
+    <string name="nav_menu_share">分享</string>
+    <string name="pre_pipe_bluetooth_summary">使用蓝牙功能连接你的物联网设备的蓝牙模块</string>
+    <string name="pre_pipe_bluetooth_title">容许使用蓝牙串口</string>
+    <string name="pre_pipe_otg_summary">使用USB的OTG功能来直接连接你设备的串口</string>
+    <string name="pre_pipe_wifi_summary">使用WIFI模块经由TCP或UDP协议来连接你的设备</string>
+    <string name="pre_pipe_otg_title">容许使用USB的OTG串口通讯</string>
+    <string name="pre_pipe_wifi_title">容许使用WIFI通讯</string>
+    <string name="pre_path_title">路径</string>
+    <string name="pre_notification_title">提醒</string>
+    <string name="pre_general_title">通用</string>
+    <string name="pre_feature_title">特性</string>
+    <string name="pre_data_sync_title">数据&amp;同步</string>
 </resources>

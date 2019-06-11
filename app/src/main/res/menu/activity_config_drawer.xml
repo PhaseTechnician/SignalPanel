@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -7,19 +8,19 @@
         <menu>
             <item
                 android:id="@+id/nav_buttun"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_plug_button"
                 android:title="Buttun" />
             <item
                 android:id="@+id/nav_switch"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_plug_switch"
                 android:title="Switch" />
             <item
                 android:id="@+id/nav_pbr"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/ic_plug_progressbar"
                 android:title="Bar"/>
             <item
                 android:id="@+id/nav_sbr"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/ic_plug_seekbar"
                 android:title="sbr"/>
         </menu>
     </item>
@@ -28,7 +29,7 @@
         <menu>
             <item
                 android:id="@+id/nav_login"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_plug_image"
                 android:title="ImageView"/>
         </menu>
     </item>
@@ -38,23 +39,23 @@
             <group>
                 <item
                     android:id="@+id/nav_bt_pipe"
-                    android:icon="@drawable/ic_menu_share"
+                    android:icon="@drawable/ic_bluetooth_normal"
                     android:title="BT"/>
                 <item
                     android:id="@+id/nav_otg_pipe"
-                    android:icon="@drawable/ic_menu_share"
+                    android:icon="@drawable/ic_usb_normal"
                     android:title="OTG"/>
             </group>
         </menu>
     </item>
 
 
-    <item android:title="Aomp">
+    <item android:title="Security">
         <menu>
             <item
                 android:title="Comps"
                 android:id="@+id/COMP"
-                android:icon="@drawable/ic_menu_share"/>
+                android:icon="@drawable/ic_security"/>
         </menu>
     </item>
 
@@ -62,11 +63,11 @@
         <menu>
             <item
                 android:id="@+id/nav_save"
-                android:icon="@drawable/ic_menu_slideshow"
+                android:icon="@drawable/ic_savefile"
                 android:title="SAVE"/>
             <item
                 android:id="@+id/nav_upload"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_upload"
                 android:title="Upload"/>
         </menu>
     </item>
