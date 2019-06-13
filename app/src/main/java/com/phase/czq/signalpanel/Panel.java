@@ -24,7 +24,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 //仅仅解析文件的header
 public class Panel {
-    private Context context;
     private String XMLpath;
     private String panelName="undefine";
     private String author="undefine";
@@ -38,7 +37,6 @@ public class Panel {
             panelName="NULL";
         }
         this.XMLpath=context.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs"+File.separator+panelName+".xml";
-        this.context=context;
         decodeXMLHeader();
     }
 
@@ -52,15 +50,15 @@ public class Panel {
 
             NodeList nl=document.getElementsByTagName("header");
             if(nl.getLength()==0){
-                Toast.makeText(context,"Header0",Toast.LENGTH_SHORT).show();
+                Log.i("panelDecoder","Header0");
                 return;
             }
 
             NodeList namel=document.getElementsByTagName("panelName");
             if(namel.getLength()==0)
             {
-                Toast.makeText(context,"name0",Toast.LENGTH_SHORT).show();
-               return;
+                Log.i("panelDecoder","Name 0");
+                return;
             }
             Node nameN = namel.item(0);
             panelName = nameN.getTextContent();
@@ -68,7 +66,7 @@ public class Panel {
             NodeList authorl=document.getElementsByTagName("author");
             if(authorl.getLength()==0)
             {
-                Toast.makeText(context,"author0",Toast.LENGTH_SHORT).show();
+                Log.i("panelDecoder","Author 0");
                 return;
             }
             Node authorN = authorl.item(0);
@@ -77,7 +75,7 @@ public class Panel {
             NodeList descl=document.getElementsByTagName("description");
             if(descl.getLength()==0)
             {
-                Toast.makeText(context,"desc0",Toast.LENGTH_SHORT).show();
+                Log.i("panelDecoder","Description 0");
                 return;
             }
             Node descN = descl.item(0);
@@ -86,17 +84,18 @@ public class Panel {
             fileInputStream.close();
         }
         catch (FileNotFoundException ex) {
-            Log.e("panelDecoder",ex.getMessage());
+            Log.i("panelDecoder",ex.getMessage());
         }catch (ParserConfigurationException ex){
-            Log.e("panelDecoder",ex.getMessage());
+            Log.i("panelDecoder",ex.getMessage());
         }catch (SAXException ex){
-            Log.e("panelDecoder",ex.getMessage());
+            Log.i("panelDecoder",ex.getMessage());
         }catch(IOException ex){
-            Log.e("panelDecoder",ex.getMessage());
+            Log.i("panelDecoder",ex.getMessage());
         }
     }
-    @Deprecated
+
     //保存Panel信息到XML
+    @Deprecated
     public void save(){
         try {
             File file = new File(XMLpath);

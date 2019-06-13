@@ -21,13 +21,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.phase.czq.signalpanel.ui.login.LoginActivity;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecycleViewAdapter RVA;
-
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +44,11 @@ public class MainActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RV.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
+
         RVA = new RecycleViewAdapter(this);
         RV.setAdapter(RVA);
+        RVA.reloadItems();
 
-        File file = new File(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
-        File[] files=file.listFiles();
-        if(files!=null){
-            for(int i=0;i<files.length;i++){
-                RVA.addItem(new Panel(files[i].getName(),getApplicationContext()));
-            }
-        }
         //设置工具栏
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,6 +70,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ValuePool.init(this);
+    }
+//213
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //更新菜单
+        upLoadOptionsMenu();
+        //更新items
+        RVA.reloadItems();
     }
 
     //尝试添加一个路径
@@ -152,7 +159,31 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        mMenu = menu;
+        upLoadOptionsMenu();
         return true;
+    }
+
+    //更新菜单上的pipe按钮
+    private void upLoadOptionsMenu(){
+        MenuItem menuItemBT = mMenu.findItem(R.id.pipe_BT);
+        if(ValuePool.getBoolean("pipe_bluetooth")){
+            menuItemBT.setVisible(true);
+        }else{
+            menuItemBT.setVisible(false);
+        }
+        MenuItem menuItemOTG = mMenu.findItem(R.id.pipe_OTG);
+        if(ValuePool.getBoolean("pipe_otg")){
+            menuItemOTG.setVisible(true);
+        }else{
+            menuItemOTG.setVisible(false);
+        }
+        MenuItem menuItemWIFI = mMenu.findItem(R.id.pipe_WIFI);
+        if(ValuePool.getBoolean("pipe_wifi")){
+            menuItemWIFI.setVisible(true);
+        }else{
+            menuItemWIFI.setVisible(false);
+        }
     }
 
     @Override
@@ -181,7 +212,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_import) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -194,6 +225,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+        } else if(id==R.id.nav_login){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

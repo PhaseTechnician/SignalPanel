@@ -18,7 +18,7 @@
         android:title="@string/pre_data_sync_title" />
 
     <header
-        android:fragment="com.phase.czq.signalpanel.SettingsActivity$voids"
+        android:fragment="com.phase.czq.signalpanel.SettingsActivity$pathPreferceFragment"
         android:icon="@drawable/ic_folder"
         android:title="@string/pre_path_title"/>
 
@@ -28,7 +28,7 @@
         android:title="@string/pre_pipe_title"/>
 
     <header
-        android:fragment="com.phase.czq.signalpanel.SettingsActivity$voids"
+        android:fragment="com.phase.czq.signalpanel.SettingsActivity$featurePreferceFragment"
         android:icon="@drawable/ic_info"
         android:title="@string/pre_feature_title"/>
 

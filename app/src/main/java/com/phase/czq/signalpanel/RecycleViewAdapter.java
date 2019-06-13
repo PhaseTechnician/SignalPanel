@@ -2,6 +2,7 @@ package com.phase.czq.signalpanel;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +42,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter.panelViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecycleViewAdapter.panelViewHolder viewHolder, int i) {
         viewHolder.panel_name.setText(datas.get(i).getPanelName());
         viewHolder.panel_author.setText(datas.get(i).getAuthor());
         viewHolder.panel_descrip.setText(datas.get(i).getDesc());
@@ -49,7 +50,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mcontext,"open",Toast.LENGTH_SHORT).show();
+                openPanel(viewHolder.XmlFilePath);
             }
         });
         viewHolder.itemView.setOnTouchListener(new View.OnTouchListener(){
@@ -110,16 +111,53 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     }
 
-    public void addItem(Panel newPanel){
+    private void addItem(Panel newPanel){
         datas.add(newPanel);
     }
-
-    public void deleteItem(String panelName){
+    private void deleteItem(String panelName){
         for (Panel panel:datas) {
             if(panel.getPanelName().equals(panelName)){
                 datas.remove(panel);
                 return;
             }
+        }
+    }
+    private void clearAllItem(){
+        datas.clear();
+    }
+    public void reloadItems(){
+        clearAllItem();
+        File file = new File(mcontext.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
+        File[] files=file.listFiles();
+        if(files!=null){
+            for(int i=0;i<files.length;i++){
+                addItem(new Panel(files[i].getName(),mcontext));
+            }
+        }
+    }
+
+    //管线状态判断
+    private boolean criticalPipe(){
+        if(ValuePool.blueToothPipeConnect||ValuePool.usbOTGPipeConnect||ValuePool.wifiPipeConnect){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    //打开一个Panel
+    private void openPanel(String path){
+        if(!criticalPipe()){
+            Toast.makeText(mcontext,"No Pipe Contect",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            //Toast.makeText(mcontext,"open",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mcontext,PanelActivity.class);
+            intent.putExtra("SignalPanel.XMLPath",path);
+            mcontext.startActivity(intent);
+            return;
         }
     }
 }

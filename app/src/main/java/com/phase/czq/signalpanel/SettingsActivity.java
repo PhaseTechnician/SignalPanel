@@ -180,8 +180,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || NotificationPreferenceFragment.class.getName().equals(fragmentName)
-                || voids.class.getName().equals(fragmentName)
-                || pipePreferenceFragment.class.getName().equals(fragmentName);
+                || pathPreferceFragment.class.getName().equals(fragmentName)
+                || pipePreferenceFragment.class.getName().equals(fragmentName)
+                || featurePreferceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -196,13 +197,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
-            bindPreferenceSummaryToValue(findPreference("language_set_list"));
+            bindPreferenceSummaryToValue(findPreference("language_set"));
         }
 
         @Override
@@ -277,7 +272,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class voids extends PreferenceFragment{
+    public static class pathPreferceFragment extends PreferenceFragment{
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -300,10 +295,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_pipe);
             setHasOptionsMenu(true);
 
-
-            //bindPreferenceSummaryToValue(findPreference("pipe_bluetooth"));
-            //bindPreferenceSummaryToValue(findPreference("pipe_otg"));
-            //bindPreferenceSummaryToValue(findPreference("pipe_wifi"));
+            bindPreferenceSummaryToValue(findPreference("pipe_bluetooth_baudrate"));
         }
 
         @Override
@@ -313,6 +305,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class featurePreferceFragment extends PreferenceFragment{
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
             return super.onOptionsItemSelected(item);
         }
     }

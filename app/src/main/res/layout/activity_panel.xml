@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/panel_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context=".ConfigPanelActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/panel_layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_config"
+        android:layout_width="@dimen/nav_config_panel_width"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header_config"
+        app:menu="@menu/activity_panel_drawer">
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
+

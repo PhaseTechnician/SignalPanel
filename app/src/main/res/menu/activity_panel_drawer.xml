@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Pipes">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_bt_pipe"
+                    android:icon="@drawable/ic_bluetooth_normal"
+                    android:title="BT"/>
+                <item
+                    android:id="@+id/nav_otg_pipe"
+                    android:icon="@drawable/ic_usb_normal"
+                    android:title="OTG"/>
+            </group>
+        </menu>
+    </item>
+
+
+    <item android:title="Security">
+        <menu>
+            <item
+                android:title="Comps"
+                android:id="@+id/COMP"
+                android:icon="@drawable/ic_security"/>
+        </menu>
+    </item>
+
+    <item android:title="Config">
+        <menu>
+            <item
+                android:id="@+id/nav_save"
+                android:icon="@drawable/ic_config"
+                android:title="SAVE"/>
+        </menu>
+    </item>
+</menu>

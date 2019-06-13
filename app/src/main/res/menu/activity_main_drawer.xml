@@ -5,15 +5,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_import"
+            android:enabled="false"
             android:icon="@drawable/ic_import"
             android:title="@string/nav_menu_import" />
         <item
             android:id="@+id/nav_gallery"
+            android:enabled="false"
             android:icon="@drawable/ic_gallery"
             android:title="@string/nav_menu_gallery" />
         <item
             android:id="@+id/nav_panel"
+            android:checked="true"
             android:icon="@drawable/ic_panel"
             android:title="@string/nav_menu_panel" />
         <item
@@ -22,20 +25,22 @@
             android:title="@string/nav_menu_setings" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/nav_menu_communicate_title">
         <menu>
             <item
                 android:id="@+id/nav_share"
+                android:enabled="false"
                 android:icon="@drawable/ic_share"
                 android:title="@string/nav_menu_share" />
             <item
                 android:id="@+id/nav_send"
+                android:enabled="false"
                 android:icon="@drawable/ic_send"
                 android:title="@string/nav_menu_send" />
         </menu>
     </item>
 
-    <item android:title="Account">
+    <item android:title="@string/nav_menu_Account_title">
         <menu>
             <item
                 android:id="@+id/nav_login"
@@ -45,10 +50,11 @@
     </item>
 
 
-    <item android:title="FeedBack">
+    <item android:title="@string/nav_menu_feedback_title">
         <menu>
             <item
                 android:id="@+id/nav_feed"
+                android:enabled="false"
                 android:icon="@drawable/ic_star"
                 android:title="@string/nav_menu_feedback" />
         </menu>

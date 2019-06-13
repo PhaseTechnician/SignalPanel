@@ -64,6 +64,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                     newChanges = true;
                     v.setTranslationX(event.getRawX());
                     v.setTranslationY(event.getRawY());
+                    flushPlug(v);
                     return false;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
@@ -114,7 +115,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             //更新最大ID，避免重复
             IDcount=panelXmlDom.getMaxID();
             //创建控件
-            List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.Buttun);
+            List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.buttun);
             if(buttuns!=null){
                 for (PlugParams buttun:buttuns) {
                     addButtun(buttun.mainString,buttun.width,buttun.height,buttun.X,buttun.Y,buttun.ID);
@@ -138,14 +139,16 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newButtun.setY(Y);
         newButtun.setText(buttunName);
         newButtun.setOnTouchListener(dragListener);
-        if(ID==-1) {
+        if(ID!=-1) {
             newButtun.setId(ID);
         }else {
             IDcount++;
             newButtun.setId(IDcount);
         }
         //同步修改Xml文件
-        panelXmlDom.XmlAddButtun(newButtun);
+        panelXmlDom.XmlAddButtun(new PlugParams(buttunName,width,height,X,Y,newButtun.getId()));
+        //作出提示
+        Toast.makeText(this,"NEW buttun add",Toast.LENGTH_SHORT);
     }
 
     private void addSwitch(String switchName){
@@ -178,6 +181,16 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         params.width = 400;
         params.height = 400;
         nsb.setLayoutParams(params);
+    }
+
+    //当控件被拖动时或修改大小时，更新控件信息
+    private void flushPlug(View view){
+        if(view instanceof Button){
+            panelXmlDom.XmlFlushButtun(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
+        }
+        else {
+
+        }
     }
 
     private boolean savePanel(){

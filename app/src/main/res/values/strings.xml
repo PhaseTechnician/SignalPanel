@@ -11,24 +11,61 @@
     <string name="nav_menu_gallery">Gallery</string>
     <string name="nav_menu_panel">Panel</string>
     <string name="nav_menu_setings">Settings</string>
+    <string name="nav_menu_communicate_title">Communicate</string>
     <string name="nav_menu_share">Share</string>
     <string name="nav_menu_send">Send</string>
+    <string name="nav_menu_Account_title">Account</string>
     <string name="nav_menu_login">Login</string>
+    <string name="nav_menu_feedback_title">FeedBack</string>
     <string name="nav_menu_feedback">FeedBack</string>
 
     <!-- Preferce -->
     <!-- General Preferce -->
     <string name="pre_general_title">General</string>
+    <string name="pref_language_set_message">Language</string>
+    <string-array name="pref_language_set_list_titles">
+        <item>简体中文</item>
+        <item>English</item>
+    </string-array>
+    <string-array name="pref_language_set_list_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
     <!-- Notification Preferce -->
     <string name="pre_notification_title">Notification</string>
     <!-- Data_Sync Preferce -->
     <string name="pre_data_sync_title">Data&amp;Sync</string>
+    <string name="pre_data_sync_enable_title">Enable upload your panels auto</string>
+    <string name="pre_data_sync_enable_summary">Your panels will automaticallly upload to github, so you can use them on other device</string>
+    <string name="pre_data_sync_frequency_list_title">Sync frequency</string>
+    <string-array name="pre_data_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+    <string name="pre_data_sync_systermsetings_title">System sync settings</string>
     <!-- Path Preferce -->
     <string name="pre_path_title">Path</string>
     <!-- Pipe preferce -->
     <string name="pre_pipe_title">Pipe</string>
     <string name="pre_pipe_bluetooth_title">Enable BlueTooth COM</string>
-    <string name="pre_pipe_bluetooth_summary">Use BlueTooth to connect your lot device\'s BlueTooth modle</string>
+    <string name="pre_pipe_bluetooth_summary">Use BlueTooth to connect your lot device\'s BlueTooth model</string>
+    <string name="pre_pipe_bluetooth_baudrate_title">Baud Rate</string>
+    <string-array name="pre_pipe_bluetooth_baudrate_values_titles">
+        <item>9600</item>
+        <item>115200</item>
+    </string-array>
     <string name="pre_pipe_otg_title">Enable USB-OTG COM</string>
     <string name="pre_pipe_otg_summary">Use USB-OTG to directly connect your device\'s Serial COM [USART]</string>
     <string name="pre_pipe_wifi_title">Enable WIFI TCP/IP</string>
@@ -67,23 +104,7 @@
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
+
 
     <string-array name="list_preference_entries">
         <item>Entry 1</item>
@@ -99,7 +120,7 @@
 
     <string-array name="multi_select_list_preference_default_value" />
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
+
 
     <!-- Example settings for Notifications -->
 
@@ -111,15 +132,18 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string name="title_activity_config_panel">ConfigPanelActivity</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="title_activity_panel">panel</string>
 
     <!-- preferce -->
-    <string name="pref_language_set_message">Language</string>
-    <string-array name="pref_language_set_list_titles">
-        <item>简体中文</item>
-        <item>English</item>
-    </string-array>
-    <string-array name="pref_language_set_list_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
+
 </resources>

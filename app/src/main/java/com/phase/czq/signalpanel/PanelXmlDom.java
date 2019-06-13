@@ -8,10 +8,14 @@ import android.widget.Switch;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,7 +73,15 @@ public class PanelXmlDom {
         if(mode==DomMode.ReadFromFile){
             //从文件中初始化XML
             try{
-                document = documentBuilder.parse(filePath);
+                FileInputStream fileInputStream = new FileInputStream(filePath.substring(0,filePath.length()-4));
+                document = documentBuilder.parse(fileInputStream);
+                root = getElement("panel");
+                header = getElement("header");
+                panelNameE = getElement("panelName");
+                authorE = getElement("author");
+                descE = getElement("description");
+                layout = getElement("layout");
+                setings = getElement("setings");
             } catch (SAXException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -104,26 +116,36 @@ public class PanelXmlDom {
         }
     }
 
+    //只能查找到第一个Element,所以用来查找单例元素
+    private Element getElement(String tagName){
+        NodeList nodeList = document.getElementsByTagName(tagName);
+        if(nodeList==null||nodeList.getLength()==0){
+            return null;
+        }
+        Node node = nodeList.item(0);
+        return (Element) node;
+    }
+
     /*添加控件信息*/
     //Buttun
-    public void XmlAddButtun(Button bt){
+    public void XmlAddButtun(PlugParams params){
         Element newButtunElement = document.createElement("buttun");
-        newButtunElement.setTextContent(bt.getText().toString());
-        newButtunElement.setAttribute("width",Integer.toString(bt.getWidth()));
-        newButtunElement.setAttribute("height",Integer.toString(bt.getHeight()));
-        newButtunElement.setAttribute("X",Integer.toString(bt.getTop()));
-        newButtunElement.setAttribute("Y",Integer.toString(bt.getLeft()));
-        newButtunElement.setAttribute("id",Integer.toString(bt.getId()));
+        newButtunElement.setTextContent(params.mainString);
+        newButtunElement.setAttribute("width",Integer.toString(params.width));
+        newButtunElement.setAttribute("height",Integer.toString(params.height));
+        newButtunElement.setAttribute("X",Integer.toString(params.X));
+        newButtunElement.setAttribute("Y",Integer.toString(params.Y));
+        newButtunElement.setAttribute("id",Integer.toString(params.ID));
         layout.appendChild(newButtunElement);
     }
-    public void XmlFlushButtun(Button bt){
+    public void XmlFlushButtun(PlugParams params){
         //当出现重复ID，可能会出现奇怪的事情
-        Element buttun = document.getElementById(Integer.toString(bt.getId()));
+        Element buttun = document.getElementById(Integer.toString(params.ID));
         if(buttun!=null){
-            buttun.setAttribute("width",Integer.toString(bt.getWidth()));
-            buttun.setAttribute("height",Integer.toString(bt.getHeight()));
-            buttun.setAttribute("X",Integer.toString(bt.getTop()));
-            buttun.setAttribute("Y",Integer.toString(bt.getLeft()));
+            buttun.setAttribute("width",Integer.toString(params.width));
+            buttun.setAttribute("height",Integer.toString(params.height));
+            buttun.setAttribute("X",Integer.toString(params.X));
+            buttun.setAttribute("Y",Integer.toString(params.Y));
         }
     }
 
@@ -135,11 +157,12 @@ public class PanelXmlDom {
         List<PlugParams> plugParams = new ArrayList<>();
         for (int i = 0; i <plugs.getLength() ; i++) {
             PlugParams params = new PlugParams();
-            params.width=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
-            params.height=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
-            params.X=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
-            params.Y=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
-            params.ID=Integer.getInteger(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
+            params.mainString = plugs.item(i).getTextContent();
+            params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
+            params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
+            params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
+            params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
+            params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
             plugParams.add(params);
         }
         return plugParams;

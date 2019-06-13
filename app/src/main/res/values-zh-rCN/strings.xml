@@ -30,4 +30,13 @@
     <string name="pre_general_title">通用</string>
     <string name="pre_feature_title">特性</string>
     <string name="pre_data_sync_title">数据&amp;同步</string>
+    <string name="pre_pipe_title">管道</string>
+    <string name="pre_pipe_bluetooth_baudrate_title">波特率</string>
+    <string name="nav_menu_Account_title">账户</string>
+    <string name="nav_menu_communicate_title">交流</string>
+    <string name="nav_menu_feedback_title">反馈</string>
+    <string name="pre_data_sync_enable_summary">你的面板会自动上传到github，这样你就可以从其他手机上使用它了</string>
+    <string name="pre_data_sync_enable_title">容许自动上传面板</string>
+    <string name="pre_data_sync_systermsetings_title">系统同步设置</string>
+    <string name="pre_data_sync_frequency_list_title">同步频率</string>
 </resources>
