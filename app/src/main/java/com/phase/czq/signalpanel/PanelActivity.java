@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.Button;
+import android.widget.Switch;
 
 import java.util.List;
 
@@ -67,8 +68,16 @@ public class PanelActivity extends AppCompatActivity {
         for(int i=0;i<buttunParams.size();i++){
             addButtun(buttunParams.get(i).mainString,buttunParams.get(i).width,buttunParams.get(i).height,buttunParams.get(i).X,buttunParams.get(i).Y,buttunParams.get(i).ID);
         }
-
+        //addswitch
+        List<PlugParams> switchParams = panelXmlDom.getPlugsParams(PlugKinds.switche);
+        if(switchParams==null){
+            return;
+        }
+        for(int i=0;i<switchParams.size();i++){
+            addSwitch(switchParams.get(i).mainString,switchParams.get(i).width,switchParams.get(i).height,switchParams.get(i).X,switchParams.get(i).Y,switchParams.get(i).ID);
+        }
     }
+
 
     //ERROR
     private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
@@ -85,6 +94,24 @@ public class PanelActivity extends AppCompatActivity {
         newButtun.setText(buttunName);
         if(ID!=-1) {
             newButtun.setId(ID);
+        }else {
+            Log.e("ID","ERROR ID");
+        }
+    }
+    private void addSwitch(String switchName,int width,int height, int X,int Y,int ID){
+        Switch newSwitch=new Switch(this);
+        mainLayout.addView(newSwitch);
+        newSwitch.setClickable(true);
+        //// 获取要改变view的父布局的布局参数
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newSwitch.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        newSwitch.setLayoutParams(params);
+        newSwitch.setX(X);
+        newSwitch.setY(Y);
+        newSwitch.setText(switchName);
+        if(ID!=-1) {
+            newSwitch.setId(ID);
         }else {
             Log.e("ID","ERROR ID");
         }

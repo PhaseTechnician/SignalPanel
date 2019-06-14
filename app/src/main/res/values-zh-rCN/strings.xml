@@ -5,13 +5,11 @@
     <string name="nav_header_subtitle">未登录</string>
     <string name="nav_menu_setings">设置</string>
     <string name="default_buttun_name">按钮</string>
-    <string name="pref_language_set_message">语言设置</string>
+    <string name="pre_language_set_message">语言设置</string>
     <string name="title_activity_settings">设置</string>
-    <string name="title_activity_config_panel">面板设置</string>
+    <string name="title_activity_config_panel">设置面板</string>
     <string name="navigation_drawer_close">关闭 抽屉</string>
     <string name="navigation_drawer_open">打开 抽屉</string>
-    <string name="pref_default_display_name">李明</string>
-    <string name="pref_header_data_sync">数据和同步</string>
     <string name="nav_menu_feedback">反馈</string>
     <string name="nav_menu_gallery">仓库</string>
     <string name="nav_menu_import">导入</string>
@@ -39,4 +37,21 @@
     <string name="pre_data_sync_enable_title">容许自动上传面板</string>
     <string name="pre_data_sync_systermsetings_title">系统同步设置</string>
     <string name="pre_data_sync_frequency_list_title">同步频率</string>
+    <string name="pre_notification_enable_title">容许提醒</string>
+    <string name="pre_notification_ring_choose_title">选择提示音</string>
+    <string name="pre_notification_ring_enable_summary">当重要的事情发生时，你会收到铃声来提醒你</string>
+    <string name="pre_notification_ring_enable_title">容许通过铃声来提醒</string>
+    <string name="pre_notification_vibrate_enable_summary">当重要的事情发生时，你的手机会震动</string>
+    <string name="pre_notification_vibrate_enable_title">容许通过震动来提醒</string>
+    <string name="title_activity_panel">面板</string>
+    <string name="title_activity_login">登录</string>
+    <string name="log_password_kit">输入你的密码</string>
+    <string name="log_login_buttun_title">登录</string>
+    <string name="log_invalid_username">不合规则的用户名</string>
+    <string name="log_invalid_password">不合规则的密码</string>
+    <string name="log_account_kit">输入你的账户</string>
+    <string name="pre_notification_ring_null_summary">保持静默</string>
+    <string name="log_un">未知字符</string>
+    <string name="log_welcome">未知字符</string>
+    <string name="log_fail">未知字符</string>
 </resources>

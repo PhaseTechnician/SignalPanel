@@ -126,6 +126,25 @@ public class PanelXmlDom {
         return (Element) node;
     }
 
+    //获取控件参数
+    public List<PlugParams> getPlugsParams(PlugKinds plugkind){
+        NodeList plugs = layout.getElementsByTagName(plugkind.toString());
+        if(plugs==null){
+            return null;
+        }
+        List<PlugParams> plugParams = new ArrayList<>();
+        for (int i = 0; i <plugs.getLength() ; i++) {
+            PlugParams params = new PlugParams();
+            params.mainString = plugs.item(i).getTextContent();
+            params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
+            params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
+            params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
+            params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
+            params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
+            plugParams.add(params);
+        }
+        return plugParams;
+    }
     /*添加控件信息*/
     //Buttun
     public void XmlAddButtun(PlugParams params){
@@ -148,34 +167,29 @@ public class PanelXmlDom {
             buttun.setAttribute("Y",Integer.toString(params.Y));
         }
     }
-
-    public List<PlugParams> getPlugsParams(PlugKinds plugkind){
-        NodeList plugs = layout.getElementsByTagName(plugkind.toString());
-        if(plugs==null){
-            return null;
-        }
-        List<PlugParams> plugParams = new ArrayList<>();
-        for (int i = 0; i <plugs.getLength() ; i++) {
-            PlugParams params = new PlugParams();
-            params.mainString = plugs.item(i).getTextContent();
-            params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
-            params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
-            params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
-            params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
-            params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
-            plugParams.add(params);
-        }
-        return plugParams;
-    }
-
-    public void XmlAddSwitch(Switch sw){
-        Element newSwitchElement = document.createElement("switch");
-        newSwitchElement.setAttribute("width",Integer.toString(sw.getWidth()));
-        newSwitchElement.setAttribute("height",Integer.toString(sw.getHeight()));
-        newSwitchElement.setAttribute("X",Integer.toString(sw.getTop()));
-        newSwitchElement.setAttribute("Y",Integer.toString(sw.getLeft()));
+    //Switch
+    public void XmlAddSwitch(PlugParams params){
+        Element newSwitchElement = document.createElement("switche");
+        newSwitchElement.setTextContent(params.mainString);
+        newSwitchElement.setAttribute("width",Integer.toString(params.width));
+        newSwitchElement.setAttribute("height",Integer.toString(params.height));
+        newSwitchElement.setAttribute("X",Integer.toString(params.X));
+        newSwitchElement.setAttribute("Y",Integer.toString(params.Y));
+        newSwitchElement.setAttribute("id",Integer.toString(params.ID));
         layout.appendChild(newSwitchElement);
     }
+    public void XmlFlushSwitch(PlugParams params){
+        //当出现重复ID，可能会出现奇怪的事情
+        Element newSwitchElement = document.getElementById(Integer.toString(params.ID));
+        if(newSwitchElement!=null){
+            newSwitchElement.setAttribute("width",Integer.toString(params.width));
+            newSwitchElement.setAttribute("height",Integer.toString(params.height));
+            newSwitchElement.setAttribute("X",Integer.toString(params.X));
+            newSwitchElement.setAttribute("Y",Integer.toString(params.Y));
+        }
+    }
+
+    @Deprecated
     public void XmlAddProgressBar(ProgressBar progressBar){
 
     }

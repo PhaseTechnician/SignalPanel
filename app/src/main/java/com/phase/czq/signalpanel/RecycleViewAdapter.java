@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,17 +63,26 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         break;
                     case MotionEvent.ACTION_MOVE:
                         v.scrollTo(-(int)event.getX(),0);
-                        return false;
+                        break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
-                        v.scrollTo(0,0);
-                        return false;
+                       //Log.i("Xpos",Integer.toString((int)v.getScrollX()));
+                       // if(-1*v.getScrollX()>400){
+                       //     v.scrollTo(-500,0);
+                       // }else{
+                            v.scrollTo(0,0);
+                       // }
+                       // if(-1*v.getScrollX()<10){
+                       //     return  true;
+                       // }
+                        break;
                 }
                 return false;
             }
         });
 
     }
+
     @Override
     public int getItemCount() {
         return datas.size();

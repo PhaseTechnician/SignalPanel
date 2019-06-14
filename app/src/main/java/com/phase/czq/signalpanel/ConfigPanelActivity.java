@@ -1,6 +1,9 @@
 package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
@@ -23,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -68,7 +73,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                     return false;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-
                     break;
             }
             return false;
@@ -139,6 +143,12 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newButtun.setY(Y);
         newButtun.setText(buttunName);
         newButtun.setOnTouchListener(dragListener);
+        newButtun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newButtunSetingDialog();
+            }
+        });
         if(ID!=-1) {
             newButtun.setId(ID);
         }else {
@@ -148,20 +158,32 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         //同步修改Xml文件
         panelXmlDom.XmlAddButtun(new PlugParams(buttunName,width,height,X,Y,newButtun.getId()));
         //作出提示
-        Toast.makeText(this,"NEW buttun add",Toast.LENGTH_SHORT);
+        Toast.makeText(this,"NEW buttun add",Toast.LENGTH_SHORT).show();
     }
-
-    private void addSwitch(String switchName){
+    private void addSwitch(String switchName,int width,int height, int X,int Y,int ID){
         Switch newSwitch=new Switch(this);
         mainLayout.addView(newSwitch);
         newSwitch.setClickable(true);
         ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) newSwitch.getLayoutParams();
-        params.width = 400;
-        params.height = 200;
+        params.width = width;
+        params.height = height;
         newSwitch.setLayoutParams(params);
+        newSwitch.setX(X);
+        newSwitch.setY(Y);
         newSwitch.setText(switchName);
         newSwitch.setOnTouchListener(dragListener);
+        if(ID!=-1) {
+            newSwitch.setId(ID);
+        }else {
+            IDcount++;
+            newSwitch.setId(IDcount);
+        }
+        //同步修改Xml文件
+        panelXmlDom.XmlAddSwitch(new PlugParams(switchName,width,height,X,Y,newSwitch.getId()));
+        //作出提示
+        Toast.makeText(this,"NEW switch add",Toast.LENGTH_SHORT).show();
     }
+
     private void addProgressBar(String barName){
         ProgressBar npb = new ProgressBar(this);
         mainLayout.addView(npb);
@@ -188,8 +210,8 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         if(view instanceof Button){
             panelXmlDom.XmlFlushButtun(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
         }
-        else {
-
+        else if(view instanceof Switch) {
+            panelXmlDom.XmlFlushSwitch(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
         }
     }
 
@@ -207,11 +229,11 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             case R.id.nav_buttun:
                 addButtun("undefine",300,200,0,0,-1);
                 break;
+            case R.id.nav_switch:
+                addSwitch("undefine",300,200,0,0,-1);
+                break;
             case R.id.nav_pbr:
                 //addProgressBar("undefien");
-                break;
-            case R.id.nav_switch:
-                //addSwitch("undefien");
                 break;
             case R.id.nav_sbr:
                 //addSeekBar("undefien");
@@ -258,6 +280,17 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         //图形压缩
 
         return  bitmap;
+    }
+
+    private void newButtunSetingDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("config buttun");
+        builder.setIcon(R.drawable.ic_config);
+        View view = LayoutInflater.from(this).inflate(R.layout.buttun_set_dialog,null);
+        builder.setView(view);
+        builder.setPositiveButton("save", null);
+        builder.setNegativeButton("cancel",null);
+        builder.show();
     }
 
 }

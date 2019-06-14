@@ -2,11 +2,11 @@
 
     <ListPreference
         android:defaultValue="0"
-        android:entries="@array/pref_language_set_list_titles"
-        android:entryValues="@array/pref_language_set_list_values"
+        android:entries="@array/pre_language_set_list_titles"
+        android:entryValues="@array/pre_language_set_list_values"
         android:key="language_set"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/pref_language_set_message" />
+        android:title="@string/pre_language_set_message" />
 
 </PreferenceScreen>

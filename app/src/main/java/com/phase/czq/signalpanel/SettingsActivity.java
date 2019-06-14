@@ -64,7 +64,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // using RingtoneManager.
                 if (TextUtils.isEmpty(stringValue)) {
                     // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
+                    preference.setSummary(R.string.pre_notification_ring_null_summary);
 
                 } else {
                     Ringtone ringtone = RingtoneManager.getRingtone(
@@ -81,12 +81,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
 
-            } /*else if(preference instanceof SwitchPreference){
-                SwitchPreference switchPreference = (SwitchPreference)preference;
-                String answer = Boolean.toString(switchPreference.isChecked());
-                preference.setSummary(answer);
-            }*/
-            else{
+            } else{
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -184,11 +179,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || pipePreferenceFragment.class.getName().equals(fragmentName)
                 || featurePreferceFragment.class.getName().equals(fragmentName);
     }
-
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+    //通用
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
@@ -210,11 +201,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-    /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+    //提醒
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
         @Override
@@ -227,7 +214,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+            bindPreferenceSummaryToValue(findPreference("notifications_ring"));
         }
 
         @Override
@@ -240,11 +227,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-    /**
-     * This fragment shows data and sync preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+    //数据同步
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DataSyncPreferenceFragment extends PreferenceFragment {
         @Override
@@ -270,7 +253,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    //路径
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class pathPreferceFragment extends PreferenceFragment{
 
@@ -285,7 +268,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    //管线
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class pipePreferenceFragment extends PreferenceFragment{
 
@@ -308,7 +291,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    //特性
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class featurePreferceFragment extends PreferenceFragment{
         @Override
