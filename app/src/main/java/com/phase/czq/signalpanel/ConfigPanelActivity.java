@@ -133,7 +133,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     //根据现有的参数添加一个按钮，其中ID如果为-1，就自动使用自增ID
     @Deprecated
     private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
-        Button newButtun=new Button(this);
+        final Button newButtun=new Button(this);
         mainLayout.addView(newButtun);
         newButtun.setClickable(true);
         //// 获取要改变view的父布局的布局参数
@@ -148,7 +148,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         newButtun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newButtunSetingDialog();
+                newButtunSetingDialog(newButtun);
             }
         });
         if(ID!=-1) {
@@ -228,13 +228,13 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         switch(plugKinds.toString())
         {
             case "buttun":
-                Button newButtun = new Button(this);
+                final Button newButtun = new Button(this);
                 newButtun.setClickable(true);
                 newButtun.setText(plugParams.mainString);
                 newButtun.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        newButtunSetingDialog();
+                        newButtunSetingDialog(newButtun);
                     }
                 });
                 view = newButtun;
@@ -246,7 +246,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 newSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        newSwitchSetingDialog();
+                        plugSetingDialog();
                     }
                 });
                 view = newSwitch;
@@ -349,7 +349,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         return  bitmap;
     }
 
-    private void newButtunSetingDialog(){
+    private void newButtunSetingDialog(Button buttun){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("config buttun");
         builder.setIcon(R.drawable.ic_config);
@@ -361,6 +361,11 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     }
     private void newSwitchSetingDialog(){
 
+    }
+
+    private void plugSetingDialog(){
+        Intent intent = new Intent(this,ParamsSetingActivity.class);
+        startActivity(intent);
     }
 
     void applyBasicPlugParam(View view,PlugParams plugParams){
