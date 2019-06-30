@@ -12,9 +12,14 @@ import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
+import java.lang.reflect.Type;
 import java.util.List;
+
+import javax.xml.transform.Templates;
 
 public class PanelActivity extends AppCompatActivity {
 
@@ -29,7 +34,7 @@ public class PanelActivity extends AppCompatActivity {
         String path = getIntent().getExtras().getString("SignalPanel.XMLPath");
 
         //读取XML文档
-        panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile,path);
+        panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile, path);
         //主布局
         mainLayout = findViewById(R.id.panel_layout_main);
         //隐藏标题栏
@@ -59,29 +64,46 @@ public class PanelActivity extends AppCompatActivity {
     }
 
     //从XML中获取信息添加控件
-    private void addPlugsFromXml(){
+    private void addPlugsFromXml() {
         //addbuttuns
         List<PlugParams> buttunParams = panelXmlDom.getPlugsParams(PlugKinds.buttun);
-        if(buttunParams==null){
+        if (buttunParams == null) {
             return;
         }
-        for(int i=0;i<buttunParams.size();i++){
-            addButtun(buttunParams.get(i).mainString,buttunParams.get(i).width,buttunParams.get(i).height,buttunParams.get(i).X,buttunParams.get(i).Y,buttunParams.get(i).ID);
+        for (int i = 0; i < buttunParams.size(); i++) {
+            addButtun(buttunParams.get(i));
         }
         //addswitch
         List<PlugParams> switchParams = panelXmlDom.getPlugsParams(PlugKinds.switche);
-        if(switchParams==null){
+        if (switchParams == null) {
             return;
         }
-        for(int i=0;i<switchParams.size();i++){
-            addSwitch(switchParams.get(i).mainString,switchParams.get(i).width,switchParams.get(i).height,switchParams.get(i).X,switchParams.get(i).Y,switchParams.get(i).ID);
+        for (int i = 0; i < switchParams.size(); i++) {
+            addSwitch(switchParams.get(i));
+        }
+        //addprogressbar
+        List<PlugParams> progressbarParams = panelXmlDom.getPlugsParams(PlugKinds.progressbar);
+        if (progressbarParams == null) {
+            return;
+        }
+        for (int i = 0; i < progressbarParams.size(); i++) {
+            addProgressBar(progressbarParams.get(i));
+        }
+        //addseeksbar
+        List<PlugParams> seekbarParams = panelXmlDom.getPlugsParams(PlugKinds.seekbar);
+        if (seekbarParams == null) {
+            return;
+        }
+        for (int i = 0; i < seekbarParams.size(); i++) {
+            addSeekBar(seekbarParams.get(i));
         }
     }
 
 
     //ERROR
-    private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
-        Button newButtun=new Button(this);
+    @Deprecated
+    private void addButtun(String buttunName, int width, int height, int X, int Y, int ID) {
+        Button newButtun = new Button(this);
         mainLayout.addView(newButtun);
         newButtun.setClickable(true);
         //// 获取要改变view的父布局的布局参数
@@ -92,14 +114,15 @@ public class PanelActivity extends AppCompatActivity {
         newButtun.setX(X);
         newButtun.setY(Y);
         newButtun.setText(buttunName);
-        if(ID!=-1) {
+        if (ID != -1) {
             newButtun.setId(ID);
-        }else {
-            Log.e("ID","ERROR ID");
+        } else {
+            Log.e("ID", "ERROR ID");
         }
     }
-    private void addSwitch(String switchName,int width,int height, int X,int Y,int ID){
-        Switch newSwitch=new Switch(this);
+    @Deprecated
+    private void addSwitch(String switchName, int width, int height, int X, int Y, int ID) {
+        Switch newSwitch = new Switch(this);
         mainLayout.addView(newSwitch);
         newSwitch.setClickable(true);
         //// 获取要改变view的父布局的布局参数
@@ -110,10 +133,61 @@ public class PanelActivity extends AppCompatActivity {
         newSwitch.setX(X);
         newSwitch.setY(Y);
         newSwitch.setText(switchName);
-        if(ID!=-1) {
+        if (ID != -1) {
             newSwitch.setId(ID);
-        }else {
-            Log.e("ID","ERROR ID");
+        } else {
+            Log.e("ID", "ERROR ID");
         }
     }
+
+    private void addButtun(PlugParams plugParams) {
+        Button newButtun = new Button(this);
+        mainLayout.addView(newButtun);
+        newButtun.setClickable(true);
+        //// 获取要改变view的父布局的布局参数
+        applyBasicParam(newButtun,plugParams);
+        newButtun.setText(plugParams.mainString);
+    }
+    private void addSwitch(PlugParams plugParams) {
+        Switch newSwitch = new Switch(this);
+        mainLayout.addView(newSwitch);
+        newSwitch.setClickable(true);
+        //// 获取要改变view的父布局的布局参数
+        applyBasicParam(newSwitch,plugParams);
+        newSwitch.setText(plugParams.mainString);
+    }
+    private void addProgressBar(PlugParams plugParams) {
+        ProgressBar npb = new ProgressBar(this);
+        mainLayout.addView(npb);
+        npb.setClickable(true);
+        applyBasicParam(npb,plugParams);
+        //npb.setTooltipText(plugParams.mainString);
+    }
+    private void addSeekBar(PlugParams plugParams){
+        SeekBar sb = new SeekBar(this);
+        mainLayout.addView(sb);
+        sb.setClickable(true);
+        applyBasicParam(sb,plugParams);
+        //sb.setTooltipText(plugParams.mainString);
+    }
+
+
+
+
+
+    //XYWHI
+    static void applyBasicParam(View view, PlugParams plugParams) {
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        params.width = plugParams.width;
+        params.height = plugParams.height;
+        view.setLayoutParams(params);
+        view.setX(plugParams.X);
+        view.setY(plugParams.Y);
+        if (plugParams.ID != -1) {
+            view.setId(plugParams.ID);
+        } else {
+            Log.e("ID", "ERROR ID");
+        }
+    }
+
 }

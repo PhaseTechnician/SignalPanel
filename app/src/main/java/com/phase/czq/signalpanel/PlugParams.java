@@ -3,7 +3,7 @@ package com.phase.czq.signalpanel;
 import android.support.annotation.Nullable;
 
 //用于传输控件的布局信息
-public class PlugParams {
+public class PlugParams{
     public String mainString;
     public int width,height;
     public int X,Y;
@@ -18,7 +18,12 @@ public class PlugParams {
         this.ID=ID;
     }
 
+    public PlugParams changeID(int newID){
+        return  new PlugParams(mainString,width,height,X,Y,newID);
+    }
     //NULL
     public PlugParams(){
     }
+
+
 }

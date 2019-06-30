@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -122,7 +123,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.buttun);
             if(buttuns!=null){
                 for (PlugParams buttun:buttuns) {
-                    addButtun(buttun.mainString,buttun.width,buttun.height,buttun.X,buttun.Y,buttun.ID);
+
                 }
             }
             /*当创建完成之后*/
@@ -130,6 +131,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     }
 
     //根据现有的参数添加一个按钮，其中ID如果为-1，就自动使用自增ID
+    @Deprecated
     private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
         Button newButtun=new Button(this);
         mainLayout.addView(newButtun);
@@ -160,6 +162,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         //作出提示
         Toast.makeText(this,"NEW buttun add",Toast.LENGTH_SHORT).show();
     }
+    @Deprecated
     private void addSwitch(String switchName,int width,int height, int X,int Y,int ID){
         Switch newSwitch=new Switch(this);
         mainLayout.addView(newSwitch);
@@ -183,17 +186,29 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         //作出提示
         Toast.makeText(this,"NEW switch add",Toast.LENGTH_SHORT).show();
     }
-
-    private void addProgressBar(String barName){
+    @Deprecated
+    private void addProgressBar(String buttunName,int width,int height, int X,int Y,int ID){
         ProgressBar npb = new ProgressBar(this);
         mainLayout.addView(npb);
         npb.setOnTouchListener(dragListener);
         npb.setClickable(true);
         ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) npb.getLayoutParams();
-        params.width = 400;
-        params.height = 400;
+        params.width = width;
+        params.height = height;
         npb.setLayoutParams(params);
+        npb.setX(X);
+        npb.setY(Y);
+        //npb.setText(switchName);
+        npb.setOnTouchListener(dragListener);
+        if(ID!=-1) {
+            npb.setId(ID);
+        }else {
+            IDcount++;
+            npb.setId(IDcount);
+        }
+
     }
+    @Deprecated
     private void addSeekBar(String barname){
         SeekBar nsb=new SeekBar(this);
         mainLayout.addView(nsb);
@@ -205,15 +220,67 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         nsb.setLayoutParams(params);
     }
 
+    //EXTRACT
+    @NewPlugAttation
+    private void addPlug(PlugKinds plugKinds, PlugParams plugParams)
+    {
+        View view = null;
+        switch(plugKinds.toString())
+        {
+            case "buttun":
+                Button newButtun = new Button(this);
+                newButtun.setClickable(true);
+                newButtun.setText(plugParams.mainString);
+                newButtun.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        newButtunSetingDialog();
+                    }
+                });
+                view = newButtun;
+                break;
+            case "switche":
+                Switch newSwitch=new Switch(this);
+                newSwitch.setClickable(true);
+                newSwitch.setText(plugParams.mainString);
+                newSwitch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        newSwitchSetingDialog();
+                    }
+                });
+                view = newSwitch;
+                break;
+            case "progressbar":
+                ProgressBar newPB = new ProgressBar(this);
+                newPB.setClickable(true);
+                //newPB.setTooltipText(plugParams.mainString);
+                //newPB.setOnClickListener();
+                view = newPB;
+                break;
+            case "seekbar":
+                SeekBar newSB = new SeekBar(this);
+                newSB.setClickable(true);
+                //newSB.setTooltipText(plugParams.mainString);
+                view = newSB;
+                break;
+        }
+        if(view==null)
+        {
+            return;
+        }
+        mainLayout.addView(view);
+        applyBasicPlugParam(view,plugParams);
+        view.setOnTouchListener(dragListener);
+        panelXmlDom.XmlAddPlug(plugKinds,plugParams.changeID(view.getId()));
+        Toast.makeText(this,"NEW "+plugKinds.toString()+" Add",Toast.LENGTH_SHORT).show();
+    }
+    //EXTRACT
     //当控件被拖动时或修改大小时，更新控件信息
     private void flushPlug(View view){
-        if(view instanceof Button){
-            panelXmlDom.XmlFlushButtun(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
-        }
-        else if(view instanceof Switch) {
-            panelXmlDom.XmlFlushSwitch(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
-        }
+        panelXmlDom.XmlFlushPlug(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
     }
+
 
     private boolean savePanel(){
         newChanges=false;
@@ -223,20 +290,20 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         return false;
     }
 
-    @Override
+    @Override@NewPlugAttation
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_buttun:
-                addButtun("undefine",300,200,0,0,-1);
+                addPlug(PlugKinds.buttun,ValuePool.defaultParam);
                 break;
             case R.id.nav_switch:
-                addSwitch("undefine",300,200,0,0,-1);
+                addPlug(PlugKinds.switche,ValuePool.defaultParam);
                 break;
             case R.id.nav_pbr:
-                //addProgressBar("undefien");
+                addPlug(PlugKinds.progressbar,ValuePool.defaultParam);
                 break;
             case R.id.nav_sbr:
-                //addSeekBar("undefien");
+                addPlug(PlugKinds.seekbar,ValuePool.defaultParam);
                 break;
             case R.id.nav_otg_pipe:
                 break;
@@ -292,5 +359,22 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         builder.setNegativeButton("cancel",null);
         builder.show();
     }
+    private void newSwitchSetingDialog(){
 
+    }
+
+    void applyBasicPlugParam(View view,PlugParams plugParams){
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        params.width = plugParams.width;
+        params.height = plugParams.height;
+        view.setLayoutParams(params);
+        view.setX(plugParams.X);
+        view.setY(plugParams.Y);
+        if(plugParams.ID!=-1) {
+            view.setId(plugParams.ID);
+        }else {
+            IDcount++;
+            view.setId(IDcount);
+        }
+    }
 }

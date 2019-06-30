@@ -1,6 +1,9 @@
 package com.phase.czq.signalpanel;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,10 +23,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.phase.czq.signalpanel.ui.login.LoginActivity;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,6 +92,12 @@ public class MainActivity extends AppCompatActivity
         RVA.reloadItems();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ValuePool.spp.stopService();
+    }
+
     //尝试添加一个路径
     private void tryMakeDir(String Path){
         File file = new File(Path);
@@ -121,6 +137,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //创建一个新面板打开一个对话框
     private void newPanelSetingDialog(String defaultAuthor){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("add new plane");
@@ -144,6 +161,96 @@ public class MainActivity extends AppCompatActivity
         });
         builder.setNegativeButton("cancel",null);
         builder.show();
+    }
+    @Deprecated
+    //创建一个新的蓝牙连接设置对话框
+    private void newBlueToothConnectDialogs(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(!BlueToothPipe.enableBluetooth(this)){
+            builder.setTitle("disable BT");
+        }
+        builder.setTitle("ConnectBT");
+        builder.setIcon(R.drawable.ic_bluetooth_normal);
+        ValuePool.blueToothPipe.setUiInterface(new BlueToothPipe.BlueToothUIInterface() {
+            @Override
+            public void choseDevice(final BluetoothDevice[] bluetoothDevices) {
+                final String[] devices = new String[bluetoothDevices.length];
+                for(int i=0;i<bluetoothDevices.length;i++){
+                    devices[i] = bluetoothDevices[i].getName();
+                }
+                builder.setSingleChoiceItems(devices, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //
+                        ValuePool.blueToothPipe.bluetoothDevice = bluetoothDevices[which];
+                        ValuePool.blueToothPipe.connect(bluetoothDevices[which]);
+                    }
+                });
+            }
+
+            @Override
+            public void timeOut() {
+
+            }
+        });
+        ValuePool.blueToothPipe.scan();
+
+        //builder.setPositiveButton("creat", null);
+        builder.setNegativeButton("cancel",null);
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    //创建一个新的蓝牙连接设置对话框
+    private void newBlueToothConnectDialog() {
+        //
+        ValuePool.spp = new BluetoothSPP(this);
+        if(!ValuePool.spp.isBluetoothAvailable()) {
+            Toast.makeText(getApplicationContext(),"Bluetooth is not available",Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        ValuePool.spp.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            public void onDeviceConnected(String name, String address) {
+                Toast.makeText(getApplicationContext()
+                        , "Connected to " + name + "\n" + address
+                        , Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceDisconnected() {
+                Toast.makeText(getApplicationContext()
+                        , "Connection lost", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceConnectionFailed() {
+                Toast.makeText(getApplicationContext()
+                        , "Unable to connect", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Intent intent = new Intent(this, DeviceList.class);
+        intent.putExtra("bluetooth_devices", "Bluetooth devices");
+        intent.putExtra("no_devices_found", "No device");
+        intent.putExtra("scanning", "Scanning");
+        intent.putExtra("scan_for_devices", "Search");
+        intent.putExtra("select_device", "Select");
+        intent.putExtra("layout_list", R.layout.device_layout_list);
+        intent.putExtra("layout_text", R.layout.device_layout_text);
+        startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+            if(resultCode == Activity.RESULT_OK)
+                ValuePool.spp.connect(data);
+        } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if(resultCode == Activity.RESULT_OK) {
+                ValuePool.spp.setupService();
+            } else {
+                Toast.makeText(getApplicationContext()
+                        , "Bluetooth was not enabled."
+                        , Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
     @Override
@@ -194,7 +301,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.pipe_BT) {
-
+            ValuePool.blueToothPipe = new BlueToothPipe(this);
+            newBlueToothConnectDialog();
             return true;
         }else if(id==R.id.pipe_OTG){
 

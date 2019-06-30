@@ -125,7 +125,6 @@ public class PanelXmlDom {
         Node node = nodeList.item(0);
         return (Element) node;
     }
-
     //获取控件参数
     public List<PlugParams> getPlugsParams(PlugKinds plugkind){
         NodeList plugs = layout.getElementsByTagName(plugkind.toString());
@@ -147,6 +146,7 @@ public class PanelXmlDom {
     }
     /*添加控件信息*/
     //Buttun
+    @Deprecated
     public void XmlAddButtun(PlugParams params){
         Element newButtunElement = document.createElement("buttun");
         newButtunElement.setTextContent(params.mainString);
@@ -157,6 +157,7 @@ public class PanelXmlDom {
         newButtunElement.setAttribute("id",Integer.toString(params.ID));
         layout.appendChild(newButtunElement);
     }
+    @Deprecated
     public void XmlFlushButtun(PlugParams params){
         //当出现重复ID，可能会出现奇怪的事情
         Element buttun = document.getElementById(Integer.toString(params.ID));
@@ -168,6 +169,7 @@ public class PanelXmlDom {
         }
     }
     //Switch
+    @Deprecated
     public void XmlAddSwitch(PlugParams params){
         Element newSwitchElement = document.createElement("switche");
         newSwitchElement.setTextContent(params.mainString);
@@ -178,6 +180,7 @@ public class PanelXmlDom {
         newSwitchElement.setAttribute("id",Integer.toString(params.ID));
         layout.appendChild(newSwitchElement);
     }
+    @Deprecated
     public void XmlFlushSwitch(PlugParams params){
         //当出现重复ID，可能会出现奇怪的事情
         Element newSwitchElement = document.getElementById(Integer.toString(params.ID));
@@ -188,11 +191,33 @@ public class PanelXmlDom {
             newSwitchElement.setAttribute("Y",Integer.toString(params.Y));
         }
     }
-
     @Deprecated
     public void XmlAddProgressBar(ProgressBar progressBar){
 
     }
+
+    //Extract
+    public void XmlFlushPlug(PlugParams params){
+        Element plugElement = document.getElementById(Integer.toString(params.ID));
+        if(plugElement!=null){
+            plugElement.setAttribute("width",Integer.toString(params.width));
+            plugElement.setAttribute("height",Integer.toString(params.height));
+            plugElement.setAttribute("X",Integer.toString(params.X));
+            plugElement.setAttribute("Y",Integer.toString(params.Y));
+        }
+    }
+    //EXTRACT
+    public void XmlAddPlug(PlugKinds kinds,PlugParams params){
+        Element pluElement =  document.createElement(kinds.toString());
+        pluElement.setTextContent(params.mainString);
+        pluElement.setAttribute("width",Integer.toString(params.width));
+        pluElement.setAttribute("height",Integer.toString(params.height));
+        pluElement.setAttribute("X",Integer.toString(params.X));
+        pluElement.setAttribute("Y",Integer.toString(params.Y));
+        pluElement.setAttribute("id",Integer.toString(params.ID));
+        layout.appendChild(pluElement);
+    }
+
     /*设置header信息*/
     public void setHeaderPanelName(String panelName){
         panelNameE.setTextContent(panelName);
