@@ -97,7 +97,19 @@
     <string name="log_invalid_password">invalid password</string>
     <string name="log_un">unn</string>
 
+    <!-- ParamSeting Activity -->
+    <string name="paramset_mainstring_kit">Main String</string>
+    <string name="paramset_sparestring_kit">Spare String</string>
+    <string name="paramset_negative_enable">Negative Enable</string>
+    <string name="paramset_positive_enable">Positive Enable</string>
+    <string name="paramset_negative_key_kit">Negative Key</string>
+    <string name="paramset_positive_key_kit">Positive Key</string>
+    <string name="paramset_mode_buttunname">Mode</string>
+    <string name="paramset_src_buttunname">Resources</string>
+    <string name="paramset_descriptions">Params Descriptions</string>
+    <string name="paramset_title_string">Set params for this plug</string>
 
     <string name="default_buttun_name">Buttun</string>
+
 
 </resources>

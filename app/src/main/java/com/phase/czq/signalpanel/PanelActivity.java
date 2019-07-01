@@ -1,6 +1,7 @@
 package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -140,13 +142,35 @@ public class PanelActivity extends AppCompatActivity {
         }
     }
 
-    private void addButtun(PlugParams plugParams) {
+    @SuppressLint("ClickableViewAccessibility")
+    private void addButtun(final PlugParams plugParams) {
         Button newButtun = new Button(this);
         mainLayout.addView(newButtun);
         newButtun.setClickable(true);
         //// 获取要改变view的父布局的布局参数
         applyBasicParam(newButtun,plugParams);
         newButtun.setText(plugParams.mainString);
+        newButtun.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+                    //未添加mode解释和spareString
+                    case MotionEvent.ACTION_DOWN:
+                        if(plugParams.positiveEnable) {
+                            ValuePool.serial.send(plugParams.positiveKey);
+                        }
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        if(plugParams.negativeEnable){
+                            ValuePool.serial.send(plugParams.negativeKey);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
     }
     private void addSwitch(PlugParams plugParams) {
         Switch newSwitch = new Switch(this);
@@ -188,6 +212,16 @@ public class PanelActivity extends AppCompatActivity {
         } else {
             Log.e("ID", "ERROR ID");
         }
+    }
+
+    @Deprecated
+    static void applyReactor(View view,PlugParams plugParams){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 }

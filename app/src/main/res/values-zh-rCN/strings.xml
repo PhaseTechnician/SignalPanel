@@ -54,4 +54,14 @@
     <string name="log_un">未知字符</string>
     <string name="log_welcome">未知字符</string>
     <string name="log_fail">未知字符</string>
+    <string name="paramset_descriptions">参数解释</string>
+    <string name="paramset_mainstring_kit">主字符串</string>
+    <string name="paramset_mode_buttunname">模式</string>
+    <string name="paramset_negative_enable">负使能</string>
+    <string name="paramset_negative_key_kit">负键值</string>
+    <string name="paramset_positive_enable">正使能</string>
+    <string name="paramset_positive_key_kit">正键值</string>
+    <string name="paramset_sparestring_kit">副字符串</string>
+    <string name="paramset_src_buttunname">资源</string>
+    <string name="paramset_title_string">为这个控件设置参数</string>
 </resources>

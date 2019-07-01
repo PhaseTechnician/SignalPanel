@@ -16,6 +16,8 @@ public class ValuePool {
 
     static BluetoothSPP spp = null;
 
+    static Serial serial;
+
     static PlugParams defaultParam = new PlugParams("undefine",300,200,0,0,-1);
     //初始化PV
     static void init(Context mContext){
