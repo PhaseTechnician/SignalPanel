@@ -64,4 +64,12 @@
     <string name="paramset_sparestring_kit">副字符串</string>
     <string name="paramset_src_buttunname">资源</string>
     <string name="paramset_title_string">为这个控件设置参数</string>
+    <string name="paramset_act_des_buttun">一个按钮的解释是\\r\\n我不重大</string>
+    <string name="paramset_act_des_dialog_title">参数解释</string>
+    <string name="paramset_act_mode_dialog_title">选择模式</string>
+    <string name="paramset_act_src_dialog_title">编辑资源</string>
+    <string name="accept_buttun">接受</string>
+    <string name="canel_buttun">取消</string>
+    <string name="creat_buttun">创建</string>
+    <string name="paramset_save">保存</string>
 </resources>

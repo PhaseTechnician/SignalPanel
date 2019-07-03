@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 public class PlugParams{
     public String mainString,spareString;
     public String positiveKey,negativeKey;
-    public boolean positiveEnable,negativeEnable;
+    public boolean positiveEnable,negativeEnable = true;
     public String modes;
     public String srcs;
     public int width,height;
@@ -27,6 +27,7 @@ public class PlugParams{
     }
     //NULL
     public PlugParams(){
+
     }
 
 

@@ -108,8 +108,17 @@
     <string name="paramset_src_buttunname">Resources</string>
     <string name="paramset_descriptions">Params Descriptions</string>
     <string name="paramset_title_string">Set params for this plug</string>
+    <string name="paramset_act_mode_dialog_title">Chose mode</string>
+    <string name="paramset_act_src_dialog_title">Edit Resources</string>
+    <string name="paramset_act_des_dialog_title">Description of params</string>
+    <string name="paramset_act_des_buttun"> buttun description s are \r\n notods</string>
 
     <string name="default_buttun_name">Buttun</string>
+
+    <string name="accept_buttun">Accept</string>
+    <string name="canel_buttun">Cancel</string>
+    <string name="creat_buttun">Creat</string>
+    <string name="paramset_save">Save</string>
 
 
 </resources>

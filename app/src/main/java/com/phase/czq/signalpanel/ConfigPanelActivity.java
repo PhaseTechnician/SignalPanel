@@ -1,49 +1,34 @@
 package com.phase.czq.signalpanel;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import java.io.File;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -231,31 +216,18 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 final Button newButtun = new Button(this);
                 newButtun.setClickable(true);
                 newButtun.setText(plugParams.mainString);
-                newButtun.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        newButtunSetingDialog(newButtun);
-                    }
-                });
                 view = newButtun;
                 break;
             case "switche":
                 Switch newSwitch=new Switch(this);
                 newSwitch.setClickable(true);
                 newSwitch.setText(plugParams.mainString);
-                newSwitch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        plugSetingDialog();
-                    }
-                });
                 view = newSwitch;
                 break;
             case "progressbar":
                 ProgressBar newPB = new ProgressBar(this);
                 newPB.setClickable(true);
                 //newPB.setTooltipText(plugParams.mainString);
-                //newPB.setOnClickListener();
                 view = newPB;
                 break;
             case "seekbar":
@@ -264,21 +236,35 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 //newSB.setTooltipText(plugParams.mainString);
                 view = newSB;
                 break;
+            case "imageview":
+                ImageView newImgView = new ImageView(this);
+                newImgView.setClickable(true);
+                newImgView.setBackgroundColor(getResources().getColor(R.color.design_default_color_primary));
+                view = newImgView;
+                break;
+
         }
         if(view==null)
         {
             return;
         }
         mainLayout.addView(view);
+        view.setTag(plugKinds);
         applyBasicPlugParam(view,plugParams);
         view.setOnTouchListener(dragListener);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plugSetingDialog(view.getId());
+            }
+        });
         panelXmlDom.XmlAddPlug(plugKinds,plugParams.changeID(view.getId()));
         Toast.makeText(this,"NEW "+plugKinds.toString()+" Add",Toast.LENGTH_SHORT).show();
     }
     //EXTRACT
     //当控件被拖动时或修改大小时，更新控件信息
     private void flushPlug(View view){
-        panelXmlDom.XmlFlushPlug(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
+        panelXmlDom.XmlFlushPlugBasic(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
     }
 
 
@@ -293,18 +279,24 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     @Override@NewPlugAttation
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
+            //input
             case R.id.nav_buttun:
                 addPlug(PlugKinds.buttun,ValuePool.defaultParam);
                 break;
             case R.id.nav_switch:
                 addPlug(PlugKinds.switche,ValuePool.defaultParam);
                 break;
-            case R.id.nav_pbr:
-                addPlug(PlugKinds.progressbar,ValuePool.defaultParam);
-                break;
             case R.id.nav_sbr:
                 addPlug(PlugKinds.seekbar,ValuePool.defaultParam);
                 break;
+            //display
+            case R.id.nav_imageview:
+                addPlug(PlugKinds.imageview,ValuePool.defaultParam);
+                break;
+            case R.id.nav_pbr:
+                addPlug(PlugKinds.progressbar,ValuePool.defaultParam);
+                break;
+            //pipe
             case R.id.nav_otg_pipe:
                 break;
             //File
@@ -363,12 +355,34 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
     }
 
-    private void plugSetingDialog(){
+    private void plugSetingDialog(int ID){
         Intent intent = new Intent(this,ParamsSetingActivity.class);
-        startActivity(intent);
+        //startActivity(intent);
+        intent.putExtra("plugID",ID);
+        startActivityForResult(intent,1);
     }
 
-    void applyBasicPlugParam(View view,PlugParams plugParams){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        if(requestCode==1){
+            if(resultCode == Activity.RESULT_OK){ //
+                PlugParams params = new PlugParams();
+                params.mainString = intent.getStringExtra("mainstring");
+                params.spareString = intent.getStringExtra("sparestring");
+                params.modes = intent.getStringExtra("mode");
+                params.srcs = intent.getStringExtra("src");
+                params.positiveKey = intent.getStringExtra("positivekey");
+                params.negativeKey = intent.getStringExtra("negativekey");
+                params.positiveEnable = intent.getBooleanExtra("positiveenable",true);
+                params.negativeEnable = intent.getBooleanExtra("negativeenable",true);
+                params.ID = intent.getIntExtra("id",-1);
+                panelXmlDom.XmlFlushPlugReact(params);
+                flushPlug(params);
+            }
+        }
+    }
+
+    private void applyBasicPlugParam(View view, PlugParams plugParams){
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
         params.width = plugParams.width;
         params.height = plugParams.height;
@@ -382,4 +396,29 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             view.setId(IDcount);
         }
     }
+
+    @Deprecated
+    private void adaptID(View view,int ID){
+        if(ID!=-1) {
+            view.setId(ID);
+        }else {
+            IDcount++;
+            view.setId(IDcount);
+        }
+    }
+
+    private void flushPlug(PlugParams params){
+        View v = findViewById(params.ID);
+        if(v==null){
+            return;
+        }
+        if(v.getTag()==PlugKinds.buttun) {
+            Button buttun = (Button)v;
+            buttun.setText(params.mainString);
+        }
+        else{
+
+        }
+    }
+
 }

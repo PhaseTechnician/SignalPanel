@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -83,14 +84,6 @@ public class PanelActivity extends AppCompatActivity {
         for (int i = 0; i < switchParams.size(); i++) {
             addSwitch(switchParams.get(i));
         }
-        //addprogressbar
-        List<PlugParams> progressbarParams = panelXmlDom.getPlugsParams(PlugKinds.progressbar);
-        if (progressbarParams == null) {
-            return;
-        }
-        for (int i = 0; i < progressbarParams.size(); i++) {
-            addProgressBar(progressbarParams.get(i));
-        }
         //addseeksbar
         List<PlugParams> seekbarParams = panelXmlDom.getPlugsParams(PlugKinds.seekbar);
         if (seekbarParams == null) {
@@ -99,6 +92,23 @@ public class PanelActivity extends AppCompatActivity {
         for (int i = 0; i < seekbarParams.size(); i++) {
             addSeekBar(seekbarParams.get(i));
         }
+        //addimageview
+        List<PlugParams> imageviewParams = panelXmlDom.getPlugsParams(PlugKinds.imageview);
+        if(imageviewParams==null){
+            return;
+        }
+        for (int i = 0; i < imageviewParams.size(); i++) {
+            addImageView(imageviewParams.get(i));
+        }
+        //addprogressbar
+        List<PlugParams> progressbarParams = panelXmlDom.getPlugsParams(PlugKinds.progressbar);
+        if (progressbarParams == null) {
+            return;
+        }
+        for (int i = 0; i < progressbarParams.size(); i++) {
+            addProgressBar(progressbarParams.get(i));
+        }
+
     }
 
 
@@ -180,13 +190,6 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(newSwitch,plugParams);
         newSwitch.setText(plugParams.mainString);
     }
-    private void addProgressBar(PlugParams plugParams) {
-        ProgressBar npb = new ProgressBar(this);
-        mainLayout.addView(npb);
-        npb.setClickable(true);
-        applyBasicParam(npb,plugParams);
-        //npb.setTooltipText(plugParams.mainString);
-    }
     private void addSeekBar(PlugParams plugParams){
         SeekBar sb = new SeekBar(this);
         mainLayout.addView(sb);
@@ -194,9 +197,24 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(sb,plugParams);
         //sb.setTooltipText(plugParams.mainString);
     }
-
-
-
+    private void addImageView(PlugParams plugParams){
+        ImageView niv = new ImageView(this);
+        mainLayout.addView(niv);
+        if(plugParams.srcs==null) {
+            niv.setBackgroundColor(getResources().getColor(R.color.design_default_color_primary));
+        }
+        else{
+            //niv.setImageBitmap();
+        }
+        applyBasicParam(niv,plugParams);
+    }
+    private void addProgressBar(PlugParams plugParams) {
+        ProgressBar npb = new ProgressBar(this);
+        mainLayout.addView(npb);
+        npb.setClickable(true);
+        applyBasicParam(npb,plugParams);
+        //npb.setTooltipText(plugParams.mainString);
+    }
 
 
     //XYWHI

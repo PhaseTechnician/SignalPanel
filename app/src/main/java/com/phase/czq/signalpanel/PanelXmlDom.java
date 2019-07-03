@@ -135,11 +135,18 @@ public class PanelXmlDom {
         for (int i = 0; i <plugs.getLength() ; i++) {
             PlugParams params = new PlugParams();
             params.mainString = plugs.item(i).getTextContent();
+            params.spareString = plugs.item(i).getAttributes().getNamedItem("sparestring").getNodeValue();
             params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
             params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
             params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
             params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
             params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
+            params.srcs = plugs.item(i).getAttributes().getNamedItem("src").getNodeValue();
+            params.modes = plugs.item(i).getAttributes().getNamedItem("mode").getNodeValue();
+            params.positiveKey = plugs.item(i).getAttributes().getNamedItem("positivekey").getNodeValue();
+            params.positiveEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("positiveenable").getNodeValue());
+            params.negativeKey = plugs.item(i).getAttributes().getNamedItem("negativekey").getNodeValue();
+            params.negativeEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("negativeenable").getNodeValue());
             plugParams.add(params);
         }
         return plugParams;
@@ -197,13 +204,26 @@ public class PanelXmlDom {
     }
 
     //Extract
-    public void XmlFlushPlug(PlugParams params){
+    public void XmlFlushPlugBasic(PlugParams params){
         Element plugElement = document.getElementById(Integer.toString(params.ID));
         if(plugElement!=null){
             plugElement.setAttribute("width",Integer.toString(params.width));
             plugElement.setAttribute("height",Integer.toString(params.height));
             plugElement.setAttribute("X",Integer.toString(params.X));
             plugElement.setAttribute("Y",Integer.toString(params.Y));
+        }
+    }
+    public void XmlFlushPlugReact(PlugParams params){
+        Element plugElement = document.getElementById(Integer.toString(params.ID));
+        if(plugElement!=null){
+            plugElement.setTextContent(params.mainString);
+            plugElement.setAttribute("sparestring",params.spareString);
+            plugElement.setAttribute("positivekey",params.positiveKey);
+            plugElement.setAttribute("positiveenable",Boolean.toString(params.positiveEnable));
+            plugElement.setAttribute("negativekey",params.negativeKey);
+            plugElement.setAttribute("negativeenable",Boolean.toString(params.negativeEnable));
+            plugElement.setAttribute("src",params.srcs);
+            plugElement.setAttribute("mode",params.modes);
         }
     }
     //EXTRACT
@@ -215,6 +235,13 @@ public class PanelXmlDom {
         pluElement.setAttribute("X",Integer.toString(params.X));
         pluElement.setAttribute("Y",Integer.toString(params.Y));
         pluElement.setAttribute("id",Integer.toString(params.ID));
+        pluElement.setAttribute("sparestring",params.spareString);
+        pluElement.setAttribute("positivekey",params.positiveKey);
+        pluElement.setAttribute("positiveenable",Boolean.toString(params.positiveEnable));
+        pluElement.setAttribute("negativekey",params.negativeKey);
+        pluElement.setAttribute("negativeenable",Boolean.toString(params.negativeEnable));
+        pluElement.setAttribute("src",params.srcs);
+        pluElement.setAttribute("mode",params.modes);
         layout.appendChild(pluElement);
     }
 

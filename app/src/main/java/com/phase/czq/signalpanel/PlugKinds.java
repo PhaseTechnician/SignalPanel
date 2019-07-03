@@ -7,5 +7,6 @@ public enum PlugKinds {
     textView,
     progressbar,
     seekbar,
+    imageview,
 }
 
