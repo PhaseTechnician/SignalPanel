@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class Serial {
 
-    static void send(String message){
+    void send(String message){
         Log.i("SerialMessage",message);
     }
 

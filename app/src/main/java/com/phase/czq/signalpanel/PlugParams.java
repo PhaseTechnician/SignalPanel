@@ -4,11 +4,11 @@ import android.support.annotation.Nullable;
 
 //用于传输控件的布局信息
 public class PlugParams{
-    public String mainString,spareString;
-    public String positiveKey,negativeKey;
+    public String mainString,spareString = "null";
+    public String positiveKey,negativeKey = "null";
     public boolean positiveEnable,negativeEnable = true;
-    public String modes;
-    public String srcs;
+    public String modes = "null";
+    public String srcs = "null";
     public int width,height;
     public int X,Y;
     public int ID=-1;

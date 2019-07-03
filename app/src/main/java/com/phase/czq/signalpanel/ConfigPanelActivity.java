@@ -68,6 +68,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
         setContentView(R.layout.activity_config_panel);
         mainLayout=(ConstraintLayout)findViewById(R.id.config_layout_main);
 
@@ -214,31 +215,42 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         {
             case "buttun":
                 final Button newButtun = new Button(this);
-                newButtun.setClickable(true);
                 newButtun.setText(plugParams.mainString);
                 view = newButtun;
                 break;
             case "switche":
                 Switch newSwitch=new Switch(this);
-                newSwitch.setClickable(true);
                 newSwitch.setText(plugParams.mainString);
                 view = newSwitch;
                 break;
             case "progressbar":
                 ProgressBar newPB = new ProgressBar(this);
-                newPB.setClickable(true);
                 //newPB.setTooltipText(plugParams.mainString);
                 view = newPB;
                 break;
             case "seekbar":
                 SeekBar newSB = new SeekBar(this);
-                newSB.setClickable(true);
                 //newSB.setTooltipText(plugParams.mainString);
+                newSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        plugSetingDialog(seekBar.getId());
+                    }
+                });
                 view = newSB;
                 break;
             case "imageview":
                 ImageView newImgView = new ImageView(this);
-                newImgView.setClickable(true);
                 newImgView.setBackgroundColor(getResources().getColor(R.color.design_default_color_primary));
                 view = newImgView;
                 break;
@@ -249,6 +261,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             return;
         }
         mainLayout.addView(view);
+        view.setClickable(true);
         view.setTag(plugKinds);
         applyBasicPlugParam(view,plugParams);
         view.setOnTouchListener(dragListener);
@@ -416,8 +429,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             Button buttun = (Button)v;
             buttun.setText(params.mainString);
         }
-        else{
-
+        else if(v.getTag()==PlugKinds.switche){
+            Switch sw = (Switch)v;
+            sw.setText(params.mainString);
         }
     }
 

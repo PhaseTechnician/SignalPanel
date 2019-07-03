@@ -6,9 +6,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_import"
-            android:enabled="false"
+            android:enabled="true"
             android:icon="@drawable/ic_import"
             android:title="@string/nav_menu_import" />
+        <item
+            android:id="@+id/nav_export"
+            android:enabled="false"
+            android:icon="@drawable/ic_export"
+            android:title="@string/nav_menu_export" />
         <item
             android:id="@+id/nav_gallery"
             android:enabled="false"

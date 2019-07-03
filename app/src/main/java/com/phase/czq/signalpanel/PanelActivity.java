@@ -1,7 +1,10 @@
 package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -33,6 +37,7 @@ public class PanelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
         setContentView(R.layout.activity_panel);
         String path = getIntent().getExtras().getString("SignalPanel.XMLPath");
 
@@ -182,25 +187,81 @@ public class PanelActivity extends AppCompatActivity {
             }
         });
     }
-    private void addSwitch(PlugParams plugParams) {
+    private void addSwitch(final PlugParams plugParams) {
         Switch newSwitch = new Switch(this);
         mainLayout.addView(newSwitch);
         newSwitch.setClickable(true);
-        //// 获取要改变view的父布局的布局参数
         applyBasicParam(newSwitch,plugParams);
         newSwitch.setText(plugParams.mainString);
+        newSwitch.setChecked(plugParams.positiveEnable);
+        newSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sw = (Switch) v;
+                if(sw.isChecked()){
+                    ValuePool.serial.send(plugParams.positiveKey);
+                    if(plugParams.positiveEnable){
+                        sw.setText(plugParams.mainString);
+                    }
+                }
+                else if(!sw.isChecked()){
+                    ValuePool.serial.send(plugParams.negativeKey);
+                    if(plugParams.positiveEnable){
+                        sw.setText(plugParams.spareString);
+                    }
+                }
+            }
+        });
     }
-    private void addSeekBar(PlugParams plugParams){
+
+
+    @SuppressLint("NewApi")
+    private void addSeekBar(final PlugParams plugParams){
         SeekBar sb = new SeekBar(this);
         mainLayout.addView(sb);
         sb.setClickable(true);
         applyBasicParam(sb,plugParams);
-        //sb.setTooltipText(plugParams.mainString);
+        sb.setMax(Integer.valueOf(plugParams.negativeKey));
+        sb.setMin(Integer.valueOf(plugParams.positiveKey));
+        final String head,foot;
+        int numIndex = plugParams.spareString.indexOf('%');
+        if(numIndex!=-1){
+            head = plugParams.spareString.substring(0,numIndex);
+            foot = plugParams.spareString.substring(numIndex+1);
+        }
+        else {
+            head = "";
+            foot = "";
+        }
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int lastProgress=Integer.valueOf(plugParams.positiveKey);
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress-lastProgress>0&&plugParams.positiveEnable){
+                    ValuePool.serial.send(head + Integer.toString(progress)+ foot);
+                }
+                else if(progress-lastProgress<0&&plugParams.negativeEnable){
+                    ValuePool.serial.send(head + Integer.toString(progress)+ foot);
+                }
+                lastProgress = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
     private void addImageView(PlugParams plugParams){
         ImageView niv = new ImageView(this);
         mainLayout.addView(niv);
-        if(plugParams.srcs==null) {
+        if(plugParams.srcs=="null") {
             niv.setBackgroundColor(getResources().getColor(R.color.design_default_color_primary));
         }
         else{

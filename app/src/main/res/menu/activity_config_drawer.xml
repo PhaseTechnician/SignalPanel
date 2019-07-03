@@ -50,15 +50,6 @@
     </item>
 
 
-    <item android:title="Security">
-        <menu>
-            <item
-                android:title="Comps"
-                android:id="@+id/COMP"
-                android:icon="@drawable/ic_security"/>
-        </menu>
-    </item>
-
     <item android:title="File">
         <menu>
             <item

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -238,18 +239,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if(resultCode == Activity.RESULT_OK)
-                ValuePool.spp.connect(data);
-        } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if(resultCode == Activity.RESULT_OK) {
-                ValuePool.spp.setupService();
-            } else {
-                Toast.makeText(getApplicationContext()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-                finish();
-            }
+        switch (requestCode){
+            case BluetoothState.REQUEST_CONNECT_DEVICE:
+                if(resultCode == Activity.RESULT_OK)
+                    ValuePool.spp.connect(data);
+                break;
+            case BluetoothState.REQUEST_ENABLE_BT:
+                if(resultCode == Activity.RESULT_OK) {
+                    ValuePool.spp.setupService();
+                } else {
+                    Toast.makeText(getApplicationContext()
+                            , "Bluetooth was not enabled."
+                            , Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            case RequestCodes.ImportFile:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri=data.getData();
+                    Toast.makeText(this,uri.getPath(),Toast.LENGTH_LONG);
+                    break;
+                }
+                else {
+                    Toast.makeText(this,"error",Toast.LENGTH_SHORT);
+                }
+                break;
         }
     }
 
@@ -314,14 +328,22 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    private void chosefile(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*.txt");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent,1);
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_import) {
-            // Handle the camera action
+            chosefile();
+        } else if (id == R.id.nav_export) {
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_panel) {
