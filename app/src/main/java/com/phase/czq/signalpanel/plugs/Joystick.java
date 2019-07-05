@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.MonthDisplayHelper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ public class Joystick extends View {
     private int backImg,forImg;
     private int axeX,axeY;
     private boolean autoCentral;
+    private boolean locked;
     private Paint paint,fillpaint;
 
     public Joystick(Context context) {
@@ -51,16 +54,27 @@ public class Joystick extends View {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        return false;
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        axeX = (int)event.getX();
-        axeY = (int)event.getY();
-        Toast.makeText(getContext(),"tc",Toast.LENGTH_SHORT).show();
-        return super.onTouchEvent(event);
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                axeX = (int)event.getX();
+                axeY = (int)event.getY();
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                if(locked){
+                    performClick();
+                }
+            case MotionEvent.ACTION_CANCEL:
+                if(autoCentral){
+                    axeX=getWidth()/2;
+                    axeY=getHeight()/2;
+                }
+                break;
+        }
+        return true;
     }
 
 
@@ -69,7 +83,7 @@ public class Joystick extends View {
         super.onDraw(canvas);
         Rect rect = new Rect(0,0,getWidth(),getHeight());
         canvas.drawRect(rect, paint);
-        canvas.drawCircle(canvas.getWidth()/2,canvas.getHeight()/2,canvas.getWidth()/2,fillpaint);
+        canvas.drawCircle(canvas.getWidth()/2,canvas.getHeight()/2,canvas.getWidth()/2,paint);
 
         canvas.drawCircle(axeX,axeY,20,fillpaint);
     }
@@ -81,5 +95,14 @@ public class Joystick extends View {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
         setMeasuredDimension(width > height ? height : width, width > height ? height : width);
+    }
+
+    public void setAutoCentral(boolean enable){
+        autoCentral = enable;
+    }
+
+    //锁定时，不会响应触摸移动滑块，而是启动onclick。
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

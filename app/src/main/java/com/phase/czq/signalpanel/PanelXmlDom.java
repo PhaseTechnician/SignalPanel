@@ -133,23 +133,37 @@ public class PanelXmlDom {
         }
         List<PlugParams> plugParams = new ArrayList<>();
         for (int i = 0; i <plugs.getLength() ; i++) {
-            PlugParams params = new PlugParams();
-            params.mainString = plugs.item(i).getTextContent();
-            params.spareString = plugs.item(i).getAttributes().getNamedItem("sparestring").getNodeValue();
-            params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
-            params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
-            params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
-            params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
-            params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
-            params.srcs = plugs.item(i).getAttributes().getNamedItem("src").getNodeValue();
-            params.modes = plugs.item(i).getAttributes().getNamedItem("mode").getNodeValue();
-            params.positiveKey = plugs.item(i).getAttributes().getNamedItem("positivekey").getNodeValue();
-            params.positiveEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("positiveenable").getNodeValue());
-            params.negativeKey = plugs.item(i).getAttributes().getNamedItem("negativekey").getNodeValue();
-            params.negativeEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("negativeenable").getNodeValue());
-            plugParams.add(params);
+            plugParams.add(getPluParamsFromNodeList(i,plugs));
         }
         return plugParams;
+    }
+
+    public PlugParams getPlugParamsByID(int ID){
+        NodeList nodeList = layout.getChildNodes();
+        for (int i=0;i<nodeList.getLength();i++) {
+            if(nodeList.item(i).getAttributes().getNamedItem("id").getNodeValue()==Integer.toString(ID)){
+                return getPluParamsFromNodeList(i,nodeList);
+            }
+        }
+        return null;
+    }
+
+    private PlugParams getPluParamsFromNodeList(int i,NodeList plugs){
+        PlugParams params = new PlugParams();
+        params.mainString = plugs.item(i).getTextContent();
+        params.spareString = plugs.item(i).getAttributes().getNamedItem("sparestring").getNodeValue();
+        params.width=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("width").getNodeValue()) ;
+        params.height=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("height").getNodeValue()) ;
+        params.X=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("X").getNodeValue()) ;
+        params.Y=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("Y").getNodeValue()) ;
+        params.ID=Integer.valueOf(plugs.item(i).getAttributes().getNamedItem("id").getNodeValue()) ;
+        params.srcs = plugs.item(i).getAttributes().getNamedItem("src").getNodeValue();
+        params.modes = plugs.item(i).getAttributes().getNamedItem("mode").getNodeValue();
+        params.positiveKey = plugs.item(i).getAttributes().getNamedItem("positivekey").getNodeValue();
+        params.positiveEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("positiveenable").getNodeValue());
+        params.negativeKey = plugs.item(i).getAttributes().getNamedItem("negativekey").getNodeValue();
+        params.negativeEnable = Boolean.valueOf(plugs.item(i).getAttributes().getNamedItem("negativeenable").getNodeValue());
+        return  params;
     }
     /*添加控件信息*/
 

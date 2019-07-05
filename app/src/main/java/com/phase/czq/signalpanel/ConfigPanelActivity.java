@@ -27,6 +27,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.plugs.Joystick;
+
 import java.io.File;
 import java.util.List;
 
@@ -165,6 +167,11 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 newImgView.setBackgroundColor(getResources().getColor(R.color.design_default_color_primary));
                 view = newImgView;
                 break;
+            case "joystick":
+                Joystick newJoystick = new Joystick(this);
+                newJoystick.setLocked(true);
+                view = newJoystick;
+                break;
 
         }
         if(view==null)
@@ -212,6 +219,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_sbr:
                 addPlug(PlugKinds.seekbar,ValuePool.defaultParam);
+                break;
+            case R.id.nav_joystick:
+                addPlug(PlugKinds.joystick,ValuePool.defaultParam);
                 break;
             //display
             case R.id.nav_imageview:
@@ -265,24 +275,10 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         return  bitmap;
     }
 
-    private void newButtunSetingDialog(Button buttun){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("config buttun");
-        builder.setIcon(R.drawable.ic_config);
-        View view = LayoutInflater.from(this).inflate(R.layout.buttun_set_dialog,null);
-        builder.setView(view);
-        builder.setPositiveButton("save", null);
-        builder.setNegativeButton("cancel",null);
-        builder.show();
-    }
-    private void newSwitchSetingDialog(){
-
-    }
-
     private void plugSetingDialog(int ID){
         Intent intent = new Intent(this,ParamsSetingActivity.class);
-        //startActivity(intent);
-        intent.putExtra("plugID",ID);
+        //intent.putExtra("plugID",ID);
+        intent.putExtra("params",panelXmlDom.getPlugParamsByID(ID));
         startActivityForResult(intent,1);
     }
 

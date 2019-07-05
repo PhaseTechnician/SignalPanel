@@ -5,6 +5,7 @@ public enum PlugKinds {
     buttun,
     switche,
     textView,
+    joystick,
     progressbar,
     seekbar,
     imageview,

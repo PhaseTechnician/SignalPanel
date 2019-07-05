@@ -25,7 +25,8 @@ public class ParamsSetingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_params_seting);
 
-        params.ID = getIntent().getIntExtra("plugID",-1);
+        //params.ID = getIntent().getIntExtra("plugID",-1);
+        params=(PlugParams)getIntent().getSerializableExtra("params");
 
         modeButtun = findViewById(R.id.paramset_mode);
         srcButtun = findViewById(R.id.paramset_src);
@@ -37,6 +38,13 @@ public class ParamsSetingActivity extends AppCompatActivity {
         spareText = findViewById(R.id.paramset_spareString);
         posText = findViewById(R.id.paramset_positiveKey);
         negText = findViewById(R.id.paramset_negativeKey);
+
+        mainText.setText(params.mainString);
+        spareText.setText(params.spareString);
+        posText.setText(params.positiveKey);
+        negText.setText(params.negativeKey);
+        posSwitch.setChecked(params.positiveEnable);
+        negSwitch.setChecked(params.negativeEnable);
 
         modeButtun.setOnClickListener(new View.OnClickListener() {
             @Override

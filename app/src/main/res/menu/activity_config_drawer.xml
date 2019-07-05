@@ -18,6 +18,10 @@
                 android:id="@+id/nav_sbr"
                 android:icon="@drawable/ic_plug_seekbar"
                 android:title="sbr"/>
+            <item
+                android:id="@+id/nav_joystick"
+                android:icon="@drawable/ic_joystick"
+                android:title="Joystick"/>
         </menu>
     </item>
 

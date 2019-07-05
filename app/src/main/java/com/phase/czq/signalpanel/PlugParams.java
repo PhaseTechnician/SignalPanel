@@ -2,8 +2,10 @@ package com.phase.czq.signalpanel;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
+
 //用于传输控件的布局信息
-public class PlugParams{
+public class PlugParams implements Serializable {
     public String mainString,spareString = "null";
     public String positiveKey,negativeKey = "null";
     public boolean positiveEnable,negativeEnable = true;
