@@ -58,6 +58,23 @@ public class TCPClient {
         return sb.toString();
     }
 
+    public boolean isReceived(){
+        if(inputStream==null){
+            return false;
+        }
+        try {
+            if(inputStream.available()!=0){
+                return true;
+            }
+            else {
+                return  false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void close(){
         if (socket!=null){
             try {

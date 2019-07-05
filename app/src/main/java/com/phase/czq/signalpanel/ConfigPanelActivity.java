@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -121,8 +123,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
     //EXTRACT
     @NewPlugAttation
-    private void addPlug(PlugKinds plugKinds, PlugParams plugParams)
-    {
+    private void addPlug(PlugKinds plugKinds, PlugParams plugParams) {
         View view = null;
         switch(plugKinds.toString())
         {
@@ -198,7 +199,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     }
     //EXTRACT
     //当控件被拖动时或修改大小时，更新控件信息
-    private void flushPlug(View view){
+    private void flushPlug(@NonNull View view){
         panelXmlDom.XmlFlushPlugBasic(new PlugParams("unuse",view.getWidth(),view.getHeight(),(int)view.getTranslationX(),(int)view.getTranslationY(),view.getId()));
     }
 
@@ -237,9 +238,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             case R.id.nav_pbr:
                 addPlug(PlugKinds.progressbar,ValuePool.defaultParam);
                 break;
-            //pipe
-            case R.id.nav_otg_pipe:
-                break;
             //File
             case R.id.nav_save:
                 Log.e("XMLSAVE","START SAVE");
@@ -251,8 +249,28 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_upload:
                 break;
+            //Feature
+            case R.id.nav_notification:
+                break;
+            case R.id.nav_frequency:
+                break;
+            case R.id.nav_Adapter:
+                adapterEditDialog();
+                break;
         }
         return false;
+    }
+
+    private void adapterEditDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MultiAutoCompleteTextView textInputEditText = new MultiAutoCompleteTextView(this);
+        textInputEditText.setText("adapt");
+        builder.setIcon(R.drawable.ic_receive);
+        builder.setTitle("Packet Adapter");
+        builder.setView(textInputEditText);
+        builder.setPositiveButton(R.string.accept_buttun,null);
+        builder.setNegativeButton(R.string.canel_buttun,null);
+        builder.show();
     }
 
     @Deprecated

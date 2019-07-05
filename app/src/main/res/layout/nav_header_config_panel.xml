@@ -5,42 +5,83 @@
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="@dimen/panel_main_image_width"
-        android:layout_height="@dimen/panel_main_image_height"
-        android:contentDescription="contextDescription"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/ic_panel" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/panel_main_image_width"
+            android:layout_height="@dimen/panel_main_image_height"
+            android:contentDescription="contextDescription"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            app:srcCompat="@drawable/ic_panel" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nav_config_panelname"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:text="Unname"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/nav_config_desc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/nav_header_subtitle" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="vertical"
-        android:layout_marginLeft="10dp">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/nav_config_panelname"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Unname"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <ImageView
+            android:id="@+id/nav_header_bluetooth_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_bluetooth_normal" />
 
-        <TextView
-            android:id="@+id/nav_config_desc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/nav_header_subtitle" />
+        <ImageView
+            android:id="@+id/nav_header_wifi_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_wifi_normal" />
+
+        <ImageView
+            android:id="@+id/nav_header_USB_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_usb_normal" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/nav_header_message"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="1920*460 fre100ms " />
 
 </LinearLayout>

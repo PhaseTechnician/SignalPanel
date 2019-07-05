@@ -28,33 +28,50 @@ import com.phase.czq.signalpanel.plugs.Joystick;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.transform.Templates;
+
+//考虑何时停止TIMER
 
 public class PanelActivity extends AppCompatActivity {
 
     PanelXmlDom panelXmlDom;
     //主要布局
     private ConstraintLayout mainLayout;
+    private Timer timer;
+    class checkReceiveTask extends TimerTask {
+        public void run() {
+            if(ValuePool.serial.isReceive())
+            {
+                //处理更新
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
-        setContentView(R.layout.activity_panel);
-        String path = getIntent().getExtras().getString("SignalPanel.XMLPath");
-
-        //读取XML文档
-        panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile, path);
-        //主布局
-        mainLayout = findViewById(R.id.panel_layout_main);
+        //隐藏状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //隐藏标题栏
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
+        //设置UI
+        setContentView(R.layout.activity_panel);
+        //读取XML文档
+        String path = getIntent().getExtras().getString("SignalPanel.XMLPath");
+        panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile, path);
+        mainLayout = findViewById(R.id.panel_layout_main);
         //添加控件
         addPlugsFromXml();
+        //设置定时器
+        timer = new Timer();
+        //频率设置
+        timer.schedule(new checkReceiveTask(),0,100);
     }
 
     @Override

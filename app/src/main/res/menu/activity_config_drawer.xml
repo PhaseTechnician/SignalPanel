@@ -29,7 +29,7 @@
         <menu>
             <item
                 android:id="@+id/nav_textview"
-                android:icon="@drawable/ic_text"
+                android:icon="@drawable/ic_plug_text"
                 android:title="TEXT"/>
             <item
                 android:id="@+id/nav_imageview"
@@ -39,21 +39,6 @@
                 android:id="@+id/nav_pbr"
                 android:icon="@drawable/ic_plug_progressbar"
                 android:title="Bar"/>
-        </menu>
-    </item>
-
-    <item android:title="Pipes">
-        <menu>
-            <group>
-                <item
-                    android:id="@+id/nav_bt_pipe"
-                    android:icon="@drawable/ic_bluetooth_normal"
-                    android:title="BT"/>
-                <item
-                    android:id="@+id/nav_otg_pipe"
-                    android:icon="@drawable/ic_usb_normal"
-                    android:title="OTG"/>
-            </group>
         </menu>
     </item>
 
@@ -68,6 +53,23 @@
                 android:id="@+id/nav_upload"
                 android:icon="@drawable/ic_upload"
                 android:title="Upload"/>
+        </menu>
+    </item>
+    <item android:title="Feature">
+        <menu>
+            <item
+                android:id="@+id/nav_notification"
+                android:icon="@drawable/ic_notifications"
+                android:title="Notification"/>
+            <item
+                android:id="@+id/nav_frequency"
+                android:icon="@drawable/ic_frequency"
+                android:title="Frequence">
+            </item>
+            <item
+                android:id="@+id/nav_Adapter"
+                android:icon="@drawable/ic_receive"
+                android:title="Adapter"/>
         </menu>
     </item>
 </menu>
