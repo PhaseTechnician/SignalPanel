@@ -23,6 +23,8 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.plugs.Joystick;
+
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -97,6 +99,14 @@ public class PanelActivity extends AppCompatActivity {
         for (int i = 0; i < seekbarParams.size(); i++) {
             addSeekBar(seekbarParams.get(i));
         }
+        //addJoystick
+        List<PlugParams> joystickParams = panelXmlDom.getPlugsParams(PlugKinds.joystick);
+        if (joystickParams == null) {
+            return;
+        }
+        for (int i = 0; i < joystickParams.size(); i++) {
+            addJoystick(joystickParams.get(i));
+        }
         //addimageview
         List<PlugParams> imageviewParams = panelXmlDom.getPlugsParams(PlugKinds.imageview);
         if(imageviewParams==null){
@@ -114,47 +124,6 @@ public class PanelActivity extends AppCompatActivity {
             addProgressBar(progressbarParams.get(i));
         }
 
-    }
-
-
-    //ERROR
-    @Deprecated
-    private void addButtun(String buttunName, int width, int height, int X, int Y, int ID) {
-        Button newButtun = new Button(this);
-        mainLayout.addView(newButtun);
-        newButtun.setClickable(true);
-        //// 获取要改变view的父布局的布局参数
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newButtun.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        newButtun.setLayoutParams(params);
-        newButtun.setX(X);
-        newButtun.setY(Y);
-        newButtun.setText(buttunName);
-        if (ID != -1) {
-            newButtun.setId(ID);
-        } else {
-            Log.e("ID", "ERROR ID");
-        }
-    }
-    @Deprecated
-    private void addSwitch(String switchName, int width, int height, int X, int Y, int ID) {
-        Switch newSwitch = new Switch(this);
-        mainLayout.addView(newSwitch);
-        newSwitch.setClickable(true);
-        //// 获取要改变view的父布局的布局参数
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newSwitch.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        newSwitch.setLayoutParams(params);
-        newSwitch.setX(X);
-        newSwitch.setY(Y);
-        newSwitch.setText(switchName);
-        if (ID != -1) {
-            newSwitch.setId(ID);
-        } else {
-            Log.e("ID", "ERROR ID");
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -213,8 +182,6 @@ public class PanelActivity extends AppCompatActivity {
             }
         });
     }
-
-
     @SuppressLint("NewApi")
     private void addSeekBar(final PlugParams plugParams){
         SeekBar sb = new SeekBar(this);
@@ -223,26 +190,17 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(sb,plugParams);
         sb.setMax(Integer.valueOf(plugParams.negativeKey));
         sb.setMin(Integer.valueOf(plugParams.positiveKey));
-        final String head,foot;
-        int numIndex = plugParams.spareString.indexOf('%');
-        if(numIndex!=-1){
-            head = plugParams.spareString.substring(0,numIndex);
-            foot = plugParams.spareString.substring(numIndex+1);
-        }
-        else {
-            head = "";
-            foot = "";
-        }
+        final ValueExpression expression = ValueExpression.analzeSignalString(plugParams.spareString,"%");
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int lastProgress=Integer.valueOf(plugParams.positiveKey);
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress-lastProgress>0&&plugParams.positiveEnable){
-                    ValuePool.serial.send(head + Integer.toString(progress)+ foot);
+                    ValuePool.serial.send(expression.head + Integer.toString(progress)+ expression.foot);
                 }
                 else if(progress-lastProgress<0&&plugParams.negativeEnable){
-                    ValuePool.serial.send(head + Integer.toString(progress)+ foot);
+                    ValuePool.serial.send(expression.head + Integer.toString(progress)+ expression.foot);
                 }
                 lastProgress = progress;
             }
@@ -255,6 +213,48 @@ public class PanelActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+    }
+    private void addJoystick(final PlugParams plugParams){
+        Joystick joystick = new Joystick(this);
+        mainLayout.addView(joystick);
+        joystick.setClickable(true);
+        applyBasicParam(joystick,plugParams);
+        joystick.setAutoCentral(true);
+        joystick.setStickName(plugParams.mainString);
+        joystick.setRange(Integer.valueOf(plugParams.positiveKey),Integer.valueOf(plugParams.negativeKey));
+        ValueExpression expression = ValueExpression.analzeSignalString(plugParams.spareString,",");
+        final ValueExpression Xexpression,Yexpression;
+        if(expression.head.indexOf("%X")!=-1){
+            Xexpression = ValueExpression.analzeSignalString(expression.head,"%X");
+            Yexpression = ValueExpression.analzeSignalString(expression.foot,"%Y");
+        }else{
+            Xexpression = ValueExpression.analzeSignalString(expression.foot,"%X");
+            Yexpression = ValueExpression.analzeSignalString(expression.head,"%Y");
+        }
+
+        joystick.setOnValueChange(new Joystick.OnValueChange() {
+            @Override
+            public void onAxeXValueChange(int X) {
+                if(plugParams.positiveEnable){
+                    ValuePool.serial.send(Xexpression.head+X+Xexpression.foot);
+                    //Log.i("Joystick","X: "+Integer.toString(X));
+                }
+            }
+
+            @Override
+            public void onAxeYValueChange(int Y) {
+                if(plugParams.negativeEnable){
+                    ValuePool.serial.send(Yexpression.head+Y+Yexpression.foot);
+                    //Log.i("Joystick","Y: "+Integer.toString(Y));
+                }
+            }
+
+            @Override
+            public void onAutoCentral() {
+                ValuePool.serial.send(Xexpression.head+0+Xexpression.foot);
+                ValuePool.serial.send(Yexpression.head+0+Yexpression.foot);
             }
         });
     }
@@ -276,7 +276,6 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(npb,plugParams);
         //npb.setTooltipText(plugParams.mainString);
     }
-
 
     //XYWHI
     static void applyBasicParam(View view, PlugParams plugParams) {

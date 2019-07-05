@@ -6,9 +6,12 @@ import java.io.Serializable;
 
 //用于传输控件的布局信息
 public class PlugParams implements Serializable {
-    public String mainString,spareString = "null";
-    public String positiveKey,negativeKey = "null";
-    public boolean positiveEnable,negativeEnable = true;
+    public String mainString = "null";
+    public String spareString = "null";
+    public String positiveKey = "null";
+    public String negativeKey = "null";
+    public boolean positiveEnable = true;
+    public boolean negativeEnable = true;
     public String modes = "null";
     public String srcs = "null";
     public int width,height;

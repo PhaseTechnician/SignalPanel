@@ -23,11 +23,22 @@ import com.phase.czq.signalpanel.R;
 
 public class Joystick extends View {
 
+    private int maxRangeX = 100;
+    private int maxRangeY = 100;
     private int backImg,forImg;
     private int axeX,axeY;
+    private int lastAxeX,lastAxeY;
     private boolean autoCentral;
-    private boolean locked;
+    private boolean locked = false;
     private Paint paint,fillpaint;
+    private OnValueChange onValueChange = null;
+    private String stickName = "";
+
+    public interface OnValueChange{
+        void onAxeXValueChange(int X);
+        void onAxeYValueChange(int Y);
+        void onAutoCentral();
+    }
 
     public Joystick(Context context) {
         super(context);
@@ -55,12 +66,27 @@ public class Joystick extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.i("Joystick",  Integer.toString((int) event.getY()));
+        if(!locked){
+            if(axeX!=lastAxeX){
+                onValueChange.onAxeXValueChange((axeX-getWidth()/2)*2*maxRangeX/getWidth());
+            }
+            if(axeY!=lastAxeY){
+                onValueChange.onAxeYValueChange((axeY-getHeight()/2)*2*maxRangeY/getHeight());
+            }
+        }
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
-                axeX = (int)event.getX();
-                axeY = (int)event.getY();
+                lastAxeX = axeX;
+                lastAxeY = axeY;
+                if(event.getX()>0&&event.getX()<getWidth()){
+                    axeX = (int)event.getX();
+                }
+                if(event.getY()>0&&event.getY()<getHeight()){
+                    axeY = (int)event.getY();
+                }
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
@@ -69,6 +95,11 @@ public class Joystick extends View {
                 }
             case MotionEvent.ACTION_CANCEL:
                 if(autoCentral){
+                    if(!locked){
+                        onValueChange.onAutoCentral();
+                    }
+                    lastAxeX = axeX;
+                    lastAxeY = axeY;
                     axeX=getWidth()/2;
                     axeY=getHeight()/2;
                 }
@@ -82,6 +113,7 @@ public class Joystick extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Rect rect = new Rect(0,0,getWidth(),getHeight());
+        canvas.drawText(stickName,0,0,paint);
         canvas.drawRect(rect, paint);
         canvas.drawCircle(canvas.getWidth()/2,canvas.getHeight()/2,canvas.getWidth()/2,paint);
 
@@ -105,4 +137,15 @@ public class Joystick extends View {
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
+    public void setOnValueChange(OnValueChange onValueChange) {
+        this.onValueChange = onValueChange;
+    }
+    public void setRange(int XRange,int YRange){
+        maxRangeX = XRange;
+        maxRangeY = YRange;
+    }
+    public void setStickName(String stickName) {
+        this.stickName = stickName;
+    }
+
 }
