@@ -57,6 +57,9 @@ public class Joystick extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        axeX = (int)event.getX();
+        axeY = (int)event.getY();
+        Toast.makeText(getContext(),"tc",Toast.LENGTH_SHORT).show();
         return super.onTouchEvent(event);
     }
 

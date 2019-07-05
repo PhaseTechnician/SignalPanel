@@ -27,6 +27,22 @@
         android:key="pipe_wifi"
         android:title="@string/pre_pipe_wifi_title"
         android:summary="@string/pre_pipe_wifi_summary"/>
-
-
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/pre_pipe_wifi_select_values_titles"
+        android:entryValues="@array/pre_pipe_wifi_select_values"
+        android:key="pipe_wifi_protocol"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pre_pipe_wifi_select_title" />>
+    <EditTextPreference
+        android:title="@string/pre_pipe_wifi_address_title"
+        android:key="pipe_wifi_address"
+        android:summary="@string/pre_pipe_wifi_address_summary"
+        android:dependency="pipe_wifi"/>
+    <EditTextPreference
+        android:title="@string/pre_pipe_wifi_port_title"
+        android:key="pipe_wifi_port"
+        android:summary="@string/pre_pipe_wifi_port_summary"
+        android:dependency="pipe_wifi"/>
 </PreferenceScreen>

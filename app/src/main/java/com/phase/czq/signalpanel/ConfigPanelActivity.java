@@ -116,95 +116,6 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    //根据现有的参数添加一个按钮，其中ID如果为-1，就自动使用自增ID
-    @Deprecated
-    private void addButtun(String buttunName,int width,int height, int X,int Y,int ID){
-        final Button newButtun=new Button(this);
-        mainLayout.addView(newButtun);
-        newButtun.setClickable(true);
-        //// 获取要改变view的父布局的布局参数
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newButtun.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        newButtun.setLayoutParams(params);
-        newButtun.setX(X);
-        newButtun.setY(Y);
-        newButtun.setText(buttunName);
-        newButtun.setOnTouchListener(dragListener);
-        newButtun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newButtunSetingDialog(newButtun);
-            }
-        });
-        if(ID!=-1) {
-            newButtun.setId(ID);
-        }else {
-            IDcount++;
-            newButtun.setId(IDcount);
-        }
-        //同步修改Xml文件
-        panelXmlDom.XmlAddButtun(new PlugParams(buttunName,width,height,X,Y,newButtun.getId()));
-        //作出提示
-        Toast.makeText(this,"NEW buttun add",Toast.LENGTH_SHORT).show();
-    }
-    @Deprecated
-    private void addSwitch(String switchName,int width,int height, int X,int Y,int ID){
-        Switch newSwitch=new Switch(this);
-        mainLayout.addView(newSwitch);
-        newSwitch.setClickable(true);
-        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) newSwitch.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        newSwitch.setLayoutParams(params);
-        newSwitch.setX(X);
-        newSwitch.setY(Y);
-        newSwitch.setText(switchName);
-        newSwitch.setOnTouchListener(dragListener);
-        if(ID!=-1) {
-            newSwitch.setId(ID);
-        }else {
-            IDcount++;
-            newSwitch.setId(IDcount);
-        }
-        //同步修改Xml文件
-        panelXmlDom.XmlAddSwitch(new PlugParams(switchName,width,height,X,Y,newSwitch.getId()));
-        //作出提示
-        Toast.makeText(this,"NEW switch add",Toast.LENGTH_SHORT).show();
-    }
-    @Deprecated
-    private void addProgressBar(String buttunName,int width,int height, int X,int Y,int ID){
-        ProgressBar npb = new ProgressBar(this);
-        mainLayout.addView(npb);
-        npb.setOnTouchListener(dragListener);
-        npb.setClickable(true);
-        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) npb.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        npb.setLayoutParams(params);
-        npb.setX(X);
-        npb.setY(Y);
-        //npb.setText(switchName);
-        npb.setOnTouchListener(dragListener);
-        if(ID!=-1) {
-            npb.setId(ID);
-        }else {
-            IDcount++;
-            npb.setId(IDcount);
-        }
-
-    }
-    @Deprecated
-    private void addSeekBar(String barname){
-        SeekBar nsb=new SeekBar(this);
-        mainLayout.addView(nsb);
-        nsb.setOnTouchListener(dragListener);
-        nsb.setClickable(true);
-        ConstraintLayout.LayoutParams params =(ConstraintLayout.LayoutParams) nsb.getLayoutParams();
-        params.width = 400;
-        params.height = 400;
-        nsb.setLayoutParams(params);
-    }
 
     //EXTRACT
     @NewPlugAttation
@@ -395,7 +306,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    private void applyBasicPlugParam(View view, PlugParams plugParams){
+    private void applyBasicPlugParam(@NonNull View view, @NonNull PlugParams plugParams){
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
         params.width = plugParams.width;
         params.height = plugParams.height;
@@ -410,17 +321,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    @Deprecated
-    private void adaptID(View view,int ID){
-        if(ID!=-1) {
-            view.setId(ID);
-        }else {
-            IDcount++;
-            view.setId(IDcount);
-        }
-    }
-
-    private void flushPlug(PlugParams params){
+    private void flushPlug(@NonNull PlugParams params){
         View v = findViewById(params.ID);
         if(v==null){
             return;

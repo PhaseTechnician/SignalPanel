@@ -9,6 +9,7 @@ public class Serial {
 
     void send(String message){
         Log.i("SerialMessage",message);
+        ValuePool.tcpClient.sendMessage(message);
     }
 
 }

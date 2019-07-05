@@ -1,6 +1,7 @@
 package com.phase.czq.signalpanel;
 
 import android.content.Context;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
@@ -8,12 +9,12 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 public class ValuePool {
     static Context context;
 
-    static Boolean blueToothPipeConnect = true;
+    static Boolean blueToothPipeConnect = false;
     static Boolean usbOTGPipeConnect = false;
     static Boolean wifiPipeConnect = false;
 
-    static BlueToothPipe blueToothPipe;
-
+    static TCPClient tcpClient = null;
+    //static BlueToothPipe blueToothPipe;
     static BluetoothSPP spp = null;
 
     static Serial serial = new Serial();
@@ -26,8 +27,10 @@ public class ValuePool {
     static boolean getBoolean(String key){
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key,false);
     }
-
-    static boolean getString(String key){
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key,false);
+    static String getString(String key){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(key,"default");
+    }
+    static int getInt(String key){
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString(key,"0")) ;
     }
 }

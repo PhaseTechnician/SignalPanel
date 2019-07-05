@@ -73,4 +73,9 @@
     <string name="creat_buttun">创建</string>
     <string name="paramset_save">保存</string>
     <string name="nav_menu_export">导出</string>
+    <string name="pre_pipe_wifi_address_summary">输入你的IP地址。如果你选择服务器模式，该项将被忽略</string>
+    <string name="pre_pipe_wifi_address_title">地址</string>
+    <string name="pre_pipe_wifi_port_summary">输入你想要的连接的端口</string>
+    <string name="pre_pipe_wifi_port_title">端口</string>
+    <string name="pre_pipe_wifi_select_title">选择协议</string>
 </resources>

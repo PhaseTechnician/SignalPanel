@@ -152,56 +152,6 @@ public class PanelXmlDom {
         return plugParams;
     }
     /*添加控件信息*/
-    //Buttun
-    @Deprecated
-    public void XmlAddButtun(PlugParams params){
-        Element newButtunElement = document.createElement("buttun");
-        newButtunElement.setTextContent(params.mainString);
-        newButtunElement.setAttribute("width",Integer.toString(params.width));
-        newButtunElement.setAttribute("height",Integer.toString(params.height));
-        newButtunElement.setAttribute("X",Integer.toString(params.X));
-        newButtunElement.setAttribute("Y",Integer.toString(params.Y));
-        newButtunElement.setAttribute("id",Integer.toString(params.ID));
-        layout.appendChild(newButtunElement);
-    }
-    @Deprecated
-    public void XmlFlushButtun(PlugParams params){
-        //当出现重复ID，可能会出现奇怪的事情
-        Element buttun = document.getElementById(Integer.toString(params.ID));
-        if(buttun!=null){
-            buttun.setAttribute("width",Integer.toString(params.width));
-            buttun.setAttribute("height",Integer.toString(params.height));
-            buttun.setAttribute("X",Integer.toString(params.X));
-            buttun.setAttribute("Y",Integer.toString(params.Y));
-        }
-    }
-    //Switch
-    @Deprecated
-    public void XmlAddSwitch(PlugParams params){
-        Element newSwitchElement = document.createElement("switche");
-        newSwitchElement.setTextContent(params.mainString);
-        newSwitchElement.setAttribute("width",Integer.toString(params.width));
-        newSwitchElement.setAttribute("height",Integer.toString(params.height));
-        newSwitchElement.setAttribute("X",Integer.toString(params.X));
-        newSwitchElement.setAttribute("Y",Integer.toString(params.Y));
-        newSwitchElement.setAttribute("id",Integer.toString(params.ID));
-        layout.appendChild(newSwitchElement);
-    }
-    @Deprecated
-    public void XmlFlushSwitch(PlugParams params){
-        //当出现重复ID，可能会出现奇怪的事情
-        Element newSwitchElement = document.getElementById(Integer.toString(params.ID));
-        if(newSwitchElement!=null){
-            newSwitchElement.setAttribute("width",Integer.toString(params.width));
-            newSwitchElement.setAttribute("height",Integer.toString(params.height));
-            newSwitchElement.setAttribute("X",Integer.toString(params.X));
-            newSwitchElement.setAttribute("Y",Integer.toString(params.Y));
-        }
-    }
-    @Deprecated
-    public void XmlAddProgressBar(ProgressBar progressBar){
-
-    }
 
     //Extract
     public void XmlFlushPlugBasic(PlugParams params){

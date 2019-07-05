@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         setContentView(R.layout.activity_main);
         //尝试创建XML文档路径
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
@@ -96,7 +103,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(ValuePool.spp!=null)
         ValuePool.spp.stopService();
+        if(ValuePool.tcpClient!=null){
+            ValuePool.tcpClient.close();
+        }
     }
 
     //尝试添加一个路径
@@ -163,48 +174,30 @@ public class MainActivity extends AppCompatActivity
         builder.setNegativeButton("cancel",null);
         builder.show();
     }
-    @Deprecated
-    //创建一个新的蓝牙连接设置对话框
-    private void newBlueToothConnectDialogs(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if(!BlueToothPipe.enableBluetooth(this)){
-            builder.setTitle("disable BT");
-        }
-        builder.setTitle("ConnectBT");
-        builder.setIcon(R.drawable.ic_bluetooth_normal);
-        ValuePool.blueToothPipe.setUiInterface(new BlueToothPipe.BlueToothUIInterface() {
-            @Override
-            public void choseDevice(final BluetoothDevice[] bluetoothDevices) {
-                final String[] devices = new String[bluetoothDevices.length];
-                for(int i=0;i<bluetoothDevices.length;i++){
-                    devices[i] = bluetoothDevices[i].getName();
-                }
-                builder.setSingleChoiceItems(devices, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //
-                        ValuePool.blueToothPipe.bluetoothDevice = bluetoothDevices[which];
-                        ValuePool.blueToothPipe.connect(bluetoothDevices[which]);
-                    }
-                });
-            }
 
-            @Override
-            public void timeOut() {
-
-            }
-        });
-        ValuePool.blueToothPipe.scan();
-
-        //builder.setPositiveButton("creat", null);
-        builder.setNegativeButton("cancel",null);
-        builder.setCancelable(false);
+    //创建一个临时的WIFI连接窗口
+    private void newWifiConnectDialog(){
+        ValuePool.tcpClient = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_wifi_normal);
+        builder.setTitle("connecting...");
+        builder.setMessage("IP:"+ValuePool.getString("pipe_wifi_address")+"Port:"+ValuePool.getInt("pipe_wifi_port"));
+        builder.setNegativeButton("canel",null);
         builder.show();
+        if(ValuePool.tcpClient == null){
+            builder.setMessage("unable00");
+            builder.show();
+            return;
+        }
+        if(ValuePool.tcpClient.initStream()){
+            builder.setMessage("success");
+            builder.show();
+            ValuePool.wifiPipeConnect = true;
+        }
     }
 
     //创建一个新的蓝牙连接设置对话框
     private void newBlueToothConnectDialog() {
-        //
         ValuePool.spp = new BluetoothSPP(this);
         if(!ValuePool.spp.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext(),"Bluetooth is not available",Toast.LENGTH_SHORT).show();
@@ -215,6 +208,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext()
                         , "Connected to " + name + "\n" + address
                         , Toast.LENGTH_SHORT).show();
+
             }
 
             public void onDeviceDisconnected() {
@@ -315,19 +309,20 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.pipe_BT) {
-            ValuePool.blueToothPipe = new BlueToothPipe(this);
+            //ValuePool.blueToothPipe = new BlueToothPipe(this);
             newBlueToothConnectDialog();
             return true;
         }else if(id==R.id.pipe_OTG){
 
             return true;
         }else if(id==R.id.pipe_WIFI){
-
+            newWifiConnectDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Deprecated
     private void chosefile(){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("file/*.txt");

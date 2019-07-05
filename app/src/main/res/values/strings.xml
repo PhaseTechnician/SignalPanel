@@ -84,6 +84,23 @@
     <string name="pre_pipe_otg_summary">Use USB-OTG to directly connect your device\'s Serial COM [USART]</string>
     <string name="pre_pipe_wifi_title">Enable WIFI TCP/IP</string>
     <string name="pre_pipe_wifi_summary">Use WIFI model to connect your device by TCP/UDP </string>
+    <string name="pre_pipe_wifi_select_title">Chose your procotol</string>
+    <string-array name="pre_pipe_wifi_select_values_titles">
+        <item>TCP_SERVER</item>
+        <item>TCP_CLIENT</item>
+        <item>UDP_SERVER</item>
+        <item>UDP_Client</item>
+    </string-array>
+    <string-array name="pre_pipe_wifi_select_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string name="pre_pipe_wifi_address_title">Address</string>
+    <string name="pre_pipe_wifi_address_summary">Input the IP address of client. If you chose server mode, this will be ignored</string>
+    <string name="pre_pipe_wifi_port_title">Port</string>
+    <string name="pre_pipe_wifi_port_summary">Input the port you willing to connect</string>
     <!-- Feature Preferce -->
     <string name="pre_feature_title">Feature</string>
 
