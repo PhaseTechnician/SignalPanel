@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.phase.czq.signalpanel.plugs.Joystick;
@@ -122,6 +123,14 @@ public class PanelActivity extends AppCompatActivity {
         }
         for (int i = 0; i < progressbarParams.size(); i++) {
             addProgressBar(progressbarParams.get(i));
+        }
+        //addtextview
+        List<PlugParams> textviewParams = panelXmlDom.getPlugsParams(PlugKinds.textview);
+        if (textviewParams == null) {
+            return;
+        }
+        for (int i = 0; i < textviewParams.size(); i++) {
+            addTextView(textviewParams.get(i));
         }
 
     }
@@ -276,7 +285,12 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(npb,plugParams);
         //npb.setTooltipText(plugParams.mainString);
     }
-
+    private void addTextView(PlugParams plugParams){
+        TextView TV= new TextView(this);
+        mainLayout.addView(TV);
+        TV.setText(plugParams.mainString);
+        applyBasicParam(TV,plugParams);
+    }
     //XYWHI
     static void applyBasicParam(View view, PlugParams plugParams) {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();

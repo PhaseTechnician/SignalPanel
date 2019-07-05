@@ -172,7 +172,11 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 newJoystick.setLocked(true);
                 view = newJoystick;
                 break;
-
+            case "textview":
+                TextView newTV = new TextView(this);
+                newTV.setText(plugParams.mainString);
+                view = newTV;
+                break;
         }
         if(view==null)
         {
@@ -224,6 +228,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 addPlug(PlugKinds.joystick,ValuePool.defaultParam);
                 break;
             //display
+            case R.id.nav_textview:
+                addPlug(PlugKinds.textview,ValuePool.defaultParam);
+                break;
             case R.id.nav_imageview:
                 addPlug(PlugKinds.imageview,ValuePool.defaultParam);
                 break;
@@ -317,6 +324,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         }
     }
 
+    @NewPlugAttation
     private void flushPlug(@NonNull PlugParams params){
         View v = findViewById(params.ID);
         if(v==null){
@@ -329,6 +337,10 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         else if(v.getTag()==PlugKinds.switche){
             Switch sw = (Switch)v;
             sw.setText(params.mainString);
+        }
+        else if(v.getTag()==PlugKinds.textview){
+            TextView tv = (TextView) v;
+            tv.setText(params.mainString);
         }
     }
 

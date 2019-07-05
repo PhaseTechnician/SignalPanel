@@ -28,6 +28,10 @@
     <item android:title="Add Display Plugs">
         <menu>
             <item
+                android:id="@+id/nav_textview"
+                android:icon="@drawable/ic_text"
+                android:title="TEXT"/>
+            <item
                 android:id="@+id/nav_imageview"
                 android:icon="@drawable/ic_plug_image"
                 android:title="ImageView"/>

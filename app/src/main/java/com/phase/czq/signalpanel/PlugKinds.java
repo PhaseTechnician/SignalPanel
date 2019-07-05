@@ -4,7 +4,7 @@ package com.phase.czq.signalpanel;
 public enum PlugKinds {
     buttun,
     switche,
-    textView,
+    textview,
     joystick,
     progressbar,
     seekbar,
