@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel>
+    <header>
+        <panelName>EXP</panelName>
+        <author>czq</author>
+        <description>This is an example panel</description>
+    </header>
+    <layout>
+        <buttun></buttun>
+        <lable></lable>
+        <image></image>
+        <Bar></Bar>
+    </layout>
+    <setings>
+    </setings>
+</panel>

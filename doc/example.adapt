@@ -1,0 +1,25 @@
+version 1.0
+adapter Packet
+adapt //[key,type]
+[1,string,2] // 一个字符串 2Byte
+[desition,int] // 一个整形 4Byte
+[locked,bool]  //一个布尔 1Byte
+[temp,float]  //一个浮点 4Byte
+[,empty,6]  //跳过
+
+ [ , , ]
+01 2 3 0
+ [ , ]
+01 2 0
+
+//将本文件写入Panel的Xml中
+
+一般情况下：
+32位编译器：
+char      short      int      long      float      double      指针
+1           2        4         4         4          8           4
+
+
+64位编译器：
+char      short      int      long      float      double      指针
+1           2        4         8         4           8          8
