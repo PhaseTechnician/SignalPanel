@@ -8,7 +8,6 @@ import java.util.List;
 public class Apapt {
     static List<ValueChangMessage> adaptPacket(String message){
         List<ValueChangMessage> messages = new ArrayList<>();
-
         return  messages;
     }
     static List<ValueChangMessage> adaptRegex(String message){

@@ -255,6 +255,42 @@ public class PanelXmlDom {
     public Pipeline getSetingPipeLine(){
         return Pipeline.BlueToothSerial;
     }
+    /*管理Adapt*/
+    public boolean hasAdapt(){
+        NodeList setingEs = setings.getElementsByTagName("adapt");
+        if(setingEs.getLength()!=0){
+            return true;
+        }
+        return false;
+    }
+    public void setAdapt(String adapt,AdapterKinds kinds){
+        Element adaptE = document.createElement("adapt");
+        adaptE.setTextContent(adapt);
+        adaptE.setAttribute("adapter",kinds.toString());
+        setings.appendChild(adaptE);
+    }
+    public String getApapt(){
+        NodeList setingEs = setings.getElementsByTagName("adapt");
+        if(setingEs.getLength()!=0){
+            return setingEs.item(0).getTextContent();
+        }
+        return null;
+    }
+    public AdapterKinds getAdapter(){
+        NodeList setingEs = setings.getElementsByTagName("adapt");
+        if(setingEs.getLength()!=0){
+            switch (setingEs.item(0).getAttributes().getNamedItem("adapter").getNodeValue())
+            {
+                case "packet":
+                    return AdapterKinds.packet;
+                case "regex":
+                    return AdapterKinds.regex;
+                case "cloze":
+                    return AdapterKinds.cloze;
+            }
+        }
+        return null;
+    }
     /*保存XML文档*/
     public boolean saveXml(){
         if(!isLegalPanelXml()){

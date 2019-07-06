@@ -2,6 +2,7 @@ package com.phase.czq.signalpanel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -263,12 +264,19 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
     private void adapterEditDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        MultiAutoCompleteTextView textInputEditText = new MultiAutoCompleteTextView(this);
-        textInputEditText.setText("adapt");
+        final MultiAutoCompleteTextView textInputEditText = new MultiAutoCompleteTextView(this);
+        if(panelXmlDom.hasAdapt()){
+            textInputEditText.setText(panelXmlDom.getApapt());
+        }
         builder.setIcon(R.drawable.ic_receive);
         builder.setTitle("Packet Adapter");
         builder.setView(textInputEditText);
-        builder.setPositiveButton(R.string.accept_buttun,null);
+        builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                panelXmlDom.setAdapt(textInputEditText.getText().toString(),AdapterKinds.cloze);
+            }
+        });
         builder.setNegativeButton(R.string.canel_buttun,null);
         builder.show();
     }

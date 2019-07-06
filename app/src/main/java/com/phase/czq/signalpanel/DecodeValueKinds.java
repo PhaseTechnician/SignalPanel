@@ -6,4 +6,5 @@ public enum DecodeValueKinds {
     kind_int,
     kind_float,
     kind_bool,
+    kind_undefine,
 }
