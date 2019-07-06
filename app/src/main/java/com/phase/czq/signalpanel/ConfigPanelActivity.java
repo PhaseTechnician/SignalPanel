@@ -2,6 +2,7 @@ package com.phase.czq.signalpanel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
@@ -49,21 +51,46 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     private ConstraintLayout mainLayout;
     //ID计数 不应该出现重复的ID
     private int IDcount=0;
+    //编辑模式
+    boolean layoutMode = true;
 
+
+    Context context = this;
     View.OnTouchListener dragListener=new View.OnTouchListener() {
+        private int firsrID=-1;
+        private int secondID=-1;
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
+            if(!layoutMode){
+                return false;
+            }
+            switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    return false;
+                    firsrID = event.getPointerId(event.getActionIndex());
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     newChanges = true;
-                    v.setTranslationX(event.getRawX());
-                    v.setTranslationY(event.getRawY());
-                    flushPlug(v);
-                    return false;
+                    if(event.getPointerCount()==1){
+                        v.setRight(v.getRight()+(int) event.getX(firsrID));
+                        v.setBottom(v.getBottom()+(int) event.getY(firsrID));
+                        v.setLeft(v.getLeft()+(int) event.getX(firsrID));
+                        v.setTop(v.getTop()+(int) event.getY(firsrID));
+                        v.setTranslationX(event.getRawX());
+                        v.setTranslationY(event.getRawY());
+                    }
+                    else if(event.getPointerCount()==2){
+                        v.setRight(v.getLeft()+(int) event.getX(secondID));
+                        v.setBottom(v.getTop()+(int) event.getY(secondID));
+                    }
+                    break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_POINTER_UP:
+                    reload(v);
+                    flushPlug(v);
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    secondID = event.getPointerId(event.getActionIndex());
                     break;
             }
             return false;
@@ -85,6 +112,19 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         //设置侧边栏
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        findViewById(R.id.EditModeButtun).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(layoutMode){
+                    ((FloatingActionButton) v).setImageDrawable(getDrawable(R.drawable.ic_function));
+                }else {
+                    ((FloatingActionButton) v).setImageDrawable(getDrawable(R.drawable.ic_layout));
+                }
+                layoutMode =!layoutMode;
+            }
+        });
         //从Intent中获取基本信息填充到nav_drawer中
         if(navigationView.getHeaderCount() > 0) {//From 雪兰灵莹 https://blog.csdn.net/xuelanlingying/article/details/79884592
             View header = navigationView.getHeaderView(0);
@@ -309,6 +349,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
     }
 
     private void plugSetingDialog(int ID){
+        if(layoutMode){
+            return;
+        }
         Intent intent = new Intent(this,ParamsSetingActivity.class);
         //intent.putExtra("plugID",ID);
         intent.putExtra("params",panelXmlDom.getPlugParamsByID(ID));
@@ -348,6 +391,12 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             IDcount++;
             view.setId(IDcount);
         }
+    }
+    private void reload(View view){
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        params.width = view.getWidth();
+        params.height = view.getHeight();
+        view.setLayoutParams(params);
     }
 
     @NewPlugAttation

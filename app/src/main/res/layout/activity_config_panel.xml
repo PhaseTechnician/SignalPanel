@@ -12,6 +12,18 @@
         android:id="@+id/config_layout_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/EditModeButtun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:clickable="true"
+            app:backgroundTint="#6000105C"
+            app:fabCustomSize="@dimen/floatingButtun_width"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_layout" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView

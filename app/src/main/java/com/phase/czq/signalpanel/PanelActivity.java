@@ -71,7 +71,7 @@ public class PanelActivity extends AppCompatActivity {
         //设置定时器
         timer = new Timer();
         //频率设置
-        timer.schedule(new checkReceiveTask(),0,100);
+        //timer.schedule(new checkReceiveTask(),0,100);
     }
 
     @Override
@@ -214,11 +214,15 @@ public class PanelActivity extends AppCompatActivity {
         mainLayout.addView(sb);
         sb.setClickable(true);
         applyBasicParam(sb,plugParams);
-        sb.setMax(Integer.valueOf(plugParams.negativeKey));
-        sb.setMin(Integer.valueOf(plugParams.positiveKey));
+        final int min=0;
+        int max=100;
+        if(!plugParams.negativeKey.equals("null"))
+            sb.setMax(Integer.valueOf(plugParams.negativeKey));
+        if(!plugParams.positiveKey.equals("null"))
+            sb.setMin(Integer.valueOf(plugParams.positiveKey));
         final ValueExpression expression = ValueExpression.analzeSignalString(plugParams.spareString,"%");
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int lastProgress=Integer.valueOf(plugParams.positiveKey);
+            int lastProgress=min;
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -249,7 +253,15 @@ public class PanelActivity extends AppCompatActivity {
         applyBasicParam(joystick,plugParams);
         joystick.setAutoCentral(true);
         joystick.setStickName(plugParams.mainString);
-        joystick.setRange(Integer.valueOf(plugParams.positiveKey),Integer.valueOf(plugParams.negativeKey));
+        int Xr=100;
+        int Yr=100;
+        if(!plugParams.positiveKey.equals("null")){
+            Xr=Integer.valueOf(plugParams.positiveKey);
+        }
+        if(!plugParams.negativeKey.equals("null")){
+            Yr=Integer.valueOf(plugParams.negativeKey);
+        }
+        joystick.setRange(Xr,Yr);
         ValueExpression expression = ValueExpression.analzeSignalString(plugParams.spareString,",");
         final ValueExpression Xexpression,Yexpression;
         if(expression.head.indexOf("%X")!=-1){
