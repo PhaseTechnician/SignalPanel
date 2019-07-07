@@ -3,6 +3,7 @@ package com.phase.czq.signalpanel;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 

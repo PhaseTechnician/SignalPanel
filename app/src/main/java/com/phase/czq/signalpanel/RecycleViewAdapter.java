@@ -54,33 +54,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 openPanel(viewHolder.XmlFilePath);
             }
         });
-        viewHolder.itemView.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        v.scrollTo(-(int)event.getX(),0);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                       //Log.i("Xpos",Integer.toString((int)v.getScrollX()));
-                       // if(-1*v.getScrollX()>400){
-                       //     v.scrollTo(-500,0);
-                       // }else{
-                            v.scrollTo(0,0);
-                       // }
-                       // if(-1*v.getScrollX()<10){
-                       //     return  true;
-                       // }
-                        break;
-                }
-                return false;
-            }
-        });
-
     }
 
     @Override
@@ -88,10 +61,15 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return datas.size();
     }
 
+    public List<Panel> getDatas() {
+        return datas;
+    }
+
     public static class panelViewHolder extends RecyclerView.ViewHolder{
         public final TextView panel_name,panel_author,panel_descrip;
         public final ImageButton Ibutton_config,Ibuttun_delet;
         public String XmlFilePath;
+
         public panelViewHolder(View v) {
             super(v);
             panel_name = v.findViewById(R.id.panel_main_name);
@@ -119,6 +97,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             });
         }
 
+        public int getButtunsWidth(){
+            return Ibutton_config.getWidth()+Ibuttun_delet.getWidth();
+        }
+
+        public int getScoller(){
+            return itemView.getScrollX();
+        }
+
+        public void scollerView(int distance){
+            itemView.scrollTo(distance,0);
+        }
     }
 
     private void addItem(Panel newPanel){

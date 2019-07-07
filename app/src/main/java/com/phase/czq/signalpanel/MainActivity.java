@@ -6,15 +6,21 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,10 +38,13 @@ import com.phase.czq.signalpanel.ui.login.LoginActivity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
+
+import static com.phase.czq.signalpanel.LanguageSupport.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,12 +55,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ValuePool.init(this);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
+        //设置语言
+        applyLanguageSeting(LanguageSupport.getLanguage(ValuePool.getInt("language_set")));
+        //设置布局
         setContentView(R.layout.activity_main);
         //尝试创建XML文档路径
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
@@ -62,9 +73,11 @@ public class MainActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RV.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
-
         RVA = new RecycleViewAdapter(this);
         RV.setAdapter(RVA);
+        RV.addItemDecoration(new ItemDecoration(30,getColor(R.color.colorPrimaryDark)));
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
+        touchHelper.attachToRecyclerView(RV);
         RVA.reloadItems();
 
         //设置工具栏
@@ -79,18 +92,16 @@ public class MainActivity extends AppCompatActivity
                 newPanelSetingDialog("czq");
             }
         });
-        //
+        //添加抽屉按钮
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.nullString, R.string.nullString);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        ValuePool.init(this);
     }
-//213
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -175,6 +186,7 @@ public class MainActivity extends AppCompatActivity
         builder.show();
     }
 
+//存在无法连接时出错
     //创建一个临时的WIFI连接窗口
     private void newWifiConnectDialog(){
         ValuePool.tcpClient = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
@@ -189,10 +201,17 @@ public class MainActivity extends AppCompatActivity
             builder.show();
             return;
         }
+        MenuItem menuItemWIFI = mMenu.findItem(R.id.pipe_WIFI);
         if(ValuePool.tcpClient.initStream()){
             builder.setMessage("success");
             builder.show();
+            menuItemWIFI.setIcon(R.drawable.ic_wifi_connected);
             ValuePool.wifiPipeConnect = true;
+        }else {
+            builder.setMessage("failed");
+            builder.show();
+            menuItemWIFI.setIcon(R.drawable.ic_wifi_disabled);
+            ValuePool.wifiPipeConnect = false;
         }
     }
 
@@ -299,6 +318,26 @@ public class MainActivity extends AppCompatActivity
         }else{
             menuItemWIFI.setVisible(false);
         }
+    }
+
+    //引用语言设置
+    private void applyLanguageSeting(LanguageSupport language){
+        Resources resources = getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        // 应用用户选择语言
+        switch (language) {
+            case zh:
+                config.setLocale(Locale.CHINESE);
+                break;
+            case en:
+                config.setLocale(Locale.ENGLISH);
+                break;
+            default:
+                config.setLocale(Locale.getDefault());
+                break;
+        }
+        resources.updateConfiguration(config, dm);
     }
 
     @Override
