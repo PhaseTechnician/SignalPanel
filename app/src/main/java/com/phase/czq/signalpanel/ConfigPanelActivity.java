@@ -12,13 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
@@ -134,7 +132,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             descTextView.setText(getIntent().getStringExtra("SignalPanel.description"));
         }
         //准备对应的XML对象
-        if(getIntent().getStringExtra("SignalPanel.Creat_Change").equals("Creat")){
+        if(PanelOpenMode.CreatNewPanelToConfig.equal(getIntent().getIntExtra("SignalPanel.openMode",PanelOpenMode.undefine.getIndex()))){
             //新建流程
             panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.WriteToFile,
                     this.getFilesDir().getAbsolutePath()+ File.separator+"panelXMLs"+File.separator+getIntent().getStringExtra("SignalPanel.panelName"));
@@ -147,20 +145,74 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 //ERRORs
             //修改流程
             panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile,
-                    this.getFilesDir().getAbsolutePath()+ File.separator+"panelXMLs"+File.separator+getIntent().getStringExtra("SignalPanel.panelName"));
+                    this.getFilesDir().getAbsolutePath()+ File.separator+"panelXMLs"+File.separator+getIntent().getStringExtra("SignalPanel.panelName")+".xml");
             //更新最大ID，避免重复
             IDcount=panelXmlDom.getMaxID();
             //创建控件
-            List<PlugParams> buttuns = panelXmlDom.getPlugsParams(PlugKinds.buttun);
-            if(buttuns!=null){
-                for (PlugParams buttun:buttuns) {
-
-                }
-            }
+            addPlugsFromXml();
             /*当创建完成之后*/
         }
     }
 
+    private void addPlugsFromXml() {
+        //addbuttuns
+        List<PlugParams> buttunParams = panelXmlDom.getPlugsParams(PlugKinds.buttun);
+        if (buttunParams == null) {
+            return;
+        }
+        for (int i = 0; i < buttunParams.size(); i++) {
+            addPlug(PlugKinds.buttun,buttunParams.get(i));
+        }
+        //addswitch
+        List<PlugParams> switchParams = panelXmlDom.getPlugsParams(PlugKinds.switche);
+        if (switchParams == null) {
+            return;
+        }
+        for (int i = 0; i < switchParams.size(); i++) {
+            addPlug(PlugKinds.switche,switchParams.get(i));
+        }
+        //addseeksbar
+        List<PlugParams> seekbarParams = panelXmlDom.getPlugsParams(PlugKinds.seekbar);
+        if (seekbarParams == null) {
+            return;
+        }
+        for (int i = 0; i < seekbarParams.size(); i++) {
+            addPlug(PlugKinds.seekbar,seekbarParams.get(i));
+        }
+        //addJoystick
+        List<PlugParams> joystickParams = panelXmlDom.getPlugsParams(PlugKinds.joystick);
+        if (joystickParams == null) {
+            return;
+        }
+        for (int i = 0; i < joystickParams.size(); i++) {
+            addPlug(PlugKinds.joystick,joystickParams.get(i));
+        }
+        //addimageview
+        List<PlugParams> imageviewParams = panelXmlDom.getPlugsParams(PlugKinds.imageview);
+        if(imageviewParams==null){
+            return;
+        }
+        for (int i = 0; i < imageviewParams.size(); i++) {
+            addPlug(PlugKinds.imageview,imageviewParams.get(i));
+        }
+        //addprogressbar
+        List<PlugParams> progressbarParams = panelXmlDom.getPlugsParams(PlugKinds.progressbar);
+        if (progressbarParams == null) {
+            return;
+        }
+        for (int i = 0; i < progressbarParams.size(); i++) {
+            addPlug(PlugKinds.progressbar,progressbarParams.get(i));
+        }
+        //addtextview
+        List<PlugParams> textviewParams = panelXmlDom.getPlugsParams(PlugKinds.textview);
+        if (textviewParams == null) {
+            return;
+        }
+        for (int i = 0; i < textviewParams.size(); i++) {
+            addPlug(PlugKinds.textview,textviewParams.get(i));
+        }
+
+    }
 
     //EXTRACT
     @NewPlugAttation
@@ -236,7 +288,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             }
         });
         panelXmlDom.XmlAddPlug(plugKinds,plugParams.changeID(view.getId()));
-        Toast.makeText(this,"NEW "+plugKinds.toString()+" Add",Toast.LENGTH_SHORT).show();
+        //以默认值进行加载，应该是手动添加的控件
+        if(plugParams==ValuePool.defaultParam)
+            Toast.makeText(this,"NEW "+plugKinds.toString()+" Add",Toast.LENGTH_SHORT).show();
     }
     //EXTRACT
     //当控件被拖动时或修改大小时，更新控件信息
@@ -280,7 +334,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
                 addPlug(PlugKinds.progressbar,ValuePool.defaultParam);
                 break;
             //File
-            case R.id.nav_save:
+            case R.id.nav_config:
                 Log.e("XMLSAVE","START SAVE");
                 if(savePanel()){
                     Toast.makeText(this,"Success save file",Toast.LENGTH_SHORT).show();

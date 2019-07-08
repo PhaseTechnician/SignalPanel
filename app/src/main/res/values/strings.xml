@@ -105,14 +105,9 @@
 
 
     <!-- Login Activity -> Login -->
-    <string name="log_account_kit">input your account</string>
-    <string name="log_password_kit">input your password</string>
-    <string name="log_login_buttun_title">Login</string>
-    <string name="log_welcome">Welcome</string>
-    <string name="log_fail">Fail Log</string>
-    <string name="log_invalid_username">invalid username</string>
-    <string name="log_invalid_password">invalid password</string>
-    <string name="log_un">unn</string>
+    <string name="login_message">Your Account will be used to upload or download files from GitHub.
+    If you try to suggest or feed back to me, your account is also use to creat issuse.
+    And your account will be the author of your panel.</string>
 
     <!-- ParamSeting Activity -->
     <string name="paramset_mainstring_kit">Main String</string>

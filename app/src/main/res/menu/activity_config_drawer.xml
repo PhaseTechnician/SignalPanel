@@ -46,7 +46,7 @@
     <item android:title="File">
         <menu>
             <item
-                android:id="@+id/nav_save"
+                android:id="@+id/nav_config"
                 android:icon="@drawable/ic_savefile"
                 android:title="SAVE"/>
             <item

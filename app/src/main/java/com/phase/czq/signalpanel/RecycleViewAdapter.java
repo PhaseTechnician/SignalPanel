@@ -1,26 +1,23 @@
 package com.phase.czq.signalpanel;
 
-import android.app.Application;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.phase.czq.signalpanel.Panel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.panelViewHolder> {
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.PanelViewHolder> {
 
     private List<Panel> datas;
     private Context mcontext;
@@ -37,13 +34,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @NonNull
     @Override
-    public RecycleViewAdapter.panelViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public PanelViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.panel_main, viewGroup, false);
-        return new panelViewHolder(view);
+        return new PanelViewHolder(view,this);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecycleViewAdapter.panelViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final PanelViewHolder viewHolder, int i) {
         viewHolder.panel_name.setText(datas.get(i).getPanelName());
         viewHolder.panel_author.setText(datas.get(i).getAuthor());
         viewHolder.panel_descrip.setText(datas.get(i).getDesc());
@@ -51,7 +48,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPanel(viewHolder.XmlFilePath);
+                openPanel(viewHolder,PanelOpenMode.LoadFileToUse);
             }
         });
     }
@@ -65,48 +62,38 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return datas;
     }
 
-    public static class panelViewHolder extends RecyclerView.ViewHolder{
+    public static class PanelViewHolder extends RecyclerView.ViewHolder{
         public final TextView panel_name,panel_author,panel_descrip;
-        public final ImageButton Ibutton_config,Ibuttun_delet;
         public String XmlFilePath;
+        public RecycleViewAdapter RVadapter;
 
-        public panelViewHolder(View v) {
+        public PanelViewHolder(View v,RecycleViewAdapter adapter) {
             super(v);
+            RVadapter = adapter;
             panel_name = v.findViewById(R.id.panel_main_name);
             panel_author =  v.findViewById(R.id.panel_main_author);
             panel_descrip = v.findViewById(R.id.panel_main_desc);
-            Ibutton_config = v.findViewById(R.id.panel_main_config);
-            Ibuttun_delet = v.findViewById(R.id.panel_main_delet);
-            Ibutton_config.setOnClickListener(new View.OnClickListener() {
+        }
+
+        public void openConfig(){
+            RVadapter.openPanel(this,PanelOpenMode.LoadFileToConfig);
+        }
+
+        public void delet(){
+            AlertDialog.Builder builder = new AlertDialog.Builder(RVadapter.mcontext);
+            builder.setIcon(R.drawable.ic_notifications);
+            builder.setMessage("File will be delete .accept?");
+            builder.setTitle("warning");
+            builder.setNegativeButton(R.string.canel_buttun,null);
+            final int pos = this.getAdapterPosition();
+            builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
                 @Override
-                //panel 的设置按钮被点击
-                public void onClick(View v) {
-                    //
+                public void onClick(DialogInterface dialog, int which) {
+                    RVadapter.deletePanel(RVadapter.datas.get(pos).getXMLpath());
+                    RVadapter.reloadItems();
+                    RVadapter.notifyDataSetChanged();
                 }
             });
-            Ibuttun_delet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                //panel 的删除按钮被点击
-                public void onClick(View v) {
-                    File deletXml = new File(XmlFilePath);
-                    if(deletXml.exists()){
-                        deletXml.delete();
-//存在问题
-                    }
-                }
-            });
-        }
-
-        public int getButtunsWidth(){
-            return Ibutton_config.getWidth()+Ibuttun_delet.getWidth();
-        }
-
-        public int getScoller(){
-            return itemView.getScrollX();
-        }
-
-        public void scollerView(int distance){
-            itemView.scrollTo(distance,0);
         }
     }
 
@@ -146,17 +133,43 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     //打开一个Panel
-    private void openPanel(String path){
-        if(!criticalPipe()){
-            Toast.makeText(mcontext,"No Pipe Contect",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else{
-            //Toast.makeText(mcontext,"open",Toast.LENGTH_SHORT).show();
+    private void openPanel(PanelViewHolder viewHolder, PanelOpenMode mode){
+        if(mode==PanelOpenMode.LoadFileToUse){
+            if(!criticalPipe()){
+                Toast.makeText(mcontext,"No Pipe Contect",Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(mcontext,PanelActivity.class);
-            intent.putExtra("SignalPanel.XMLPath",path);
+            intent.putExtra("SignalPanel.XMLPath",viewHolder.XmlFilePath);
             mcontext.startActivity(intent);
-            return;
+        }else  if(mode==PanelOpenMode.LoadFileToConfig){
+            openConfigActivity(viewHolder.panel_name.getText().toString(),viewHolder.panel_author.getText().toString(),viewHolder.panel_descrip.getText().toString(),
+                    PanelOpenMode.LoadFileToConfig);
         }
+    }
+
+    private void openConfigActivity(String panelName,String author,String description,PanelOpenMode mode){
+        Intent intent = new Intent(mcontext,ConfigPanelActivity.class);
+        intent.putExtra("SignalPanel.panelName",panelName);
+        intent.putExtra("SignalPanel.author",author);
+        intent.putExtra("SignalPanel.description",description);
+        intent.putExtra("SignalPanel.openMode",mode.getIndex());
+        mcontext.startActivity(intent);
+    }
+
+    private boolean deletePanel(String path){
+        File file = new File(path.substring(0,path.length()-4));
+            if (file.exists() && file.isFile()) {
+                if (file.delete()) {
+                    Log.i("File", "Delete "+path);
+                    return true;
+                } else {
+                    Log.i("File", "Delete "+path+" Fail");
+                    return false;
+                }
+            } else {
+                Log.i("File", "Delete "+path+" not exist");
+                return false;
+            }
     }
 }

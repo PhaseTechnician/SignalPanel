@@ -82,9 +82,9 @@ public class PanelXmlDom {
                 descE = getElement("description");
                 layout = getElement("layout");
                 setings = getElement("setings");
-            } catch (SAXException e) {
-                e.printStackTrace();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
                 e.printStackTrace();
             }
         }
@@ -240,7 +240,7 @@ public class PanelXmlDom {
         if(allPlugs!=null){
             int maxID=0;
             for(int i=0;i<allPlugs.getLength();i++){
-                int idNum =Integer.getInteger(allPlugs.item(i).getAttributes().getNamedItem("id").getNodeValue());
+                int idNum =Integer.valueOf(allPlugs.item(i).getAttributes().getNamedItem("id").getNodeValue());
                 if(idNum>maxID){
                     maxID=idNum;
                 }

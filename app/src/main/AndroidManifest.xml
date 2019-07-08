@@ -31,9 +31,11 @@
                 android:value="com.phase.czq.signalpanel.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.phase.czq.signalpanel.MainActivity" />

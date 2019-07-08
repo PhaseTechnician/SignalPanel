@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,12 +37,24 @@ import javax.xml.transform.Templates;
 
 //考虑何时停止TIMER
 
-public class PanelActivity extends AppCompatActivity {
+public class PanelActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     PanelXmlDom panelXmlDom;
     //主要布局
     private ConstraintLayout mainLayout;
     private Timer timer;
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.nav_config:
+                finish();
+                break;
+
+        }
+        return false;
+    }
+
     class checkReceiveTask extends TimerTask {
         public void run() {
             if(ValuePool.serial.isReceive())

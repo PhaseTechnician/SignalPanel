@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -30,10 +32,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.phase.czq.signalpanel.ui.login.LoginActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,7 +79,19 @@ public class MainActivity extends AppCompatActivity
         RVA = new RecycleViewAdapter(this);
         RV.setAdapter(RVA);
         RV.addItemDecoration(new ItemDecoration(30,getColor(R.color.colorPrimaryDark)));
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
+        ItemTouchHelperCallback itemTouchHelperCallback = new ItemTouchHelperCallback();
+        itemTouchHelperCallback.setOnSwipeLR(new ItemTouchHelperCallback.OnSwipeLR() {
+            @Override
+            public void onLeft(RecycleViewAdapter.PanelViewHolder viewHolder) {
+                viewHolder.openConfig();
+            }
+
+            @Override
+            public void onRight(RecycleViewAdapter.PanelViewHolder viewHolder) {
+                viewHolder.delet();
+            }
+        });
+        ItemTouchHelper touchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         touchHelper.attachToRecyclerView(RV);
         RVA.reloadItems();
 
@@ -109,6 +124,7 @@ public class MainActivity extends AppCompatActivity
         upLoadOptionsMenu();
         //更新items
         RVA.reloadItems();
+        RVA.notifyDataSetChanged();
     }
 
     @Override
@@ -174,16 +190,20 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton("creat", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(MainActivity.this,ConfigPanelActivity.class);
-                intent.putExtra("SignalPanel.panelName",eName.getText().toString());
-                intent.putExtra("SignalPanel.author",eAuthor.getText().toString());
-                intent.putExtra("SignalPanel.description",eDesc.getText().toString());
-                intent.putExtra("SignalPanel.Creat_Change","Creat");
-                startActivity(intent);
+                openConfigActivity(eName.getText().toString(),eAuthor.getText().toString(),eDesc.getText().toString(),PanelOpenMode.CreatNewPanelToConfig);
             }
         });
         builder.setNegativeButton("cancel",null);
         builder.show();
+    }
+
+    private void openConfigActivity(String panelName,String author,String description,PanelOpenMode mode){
+        Intent intent = new Intent(MainActivity.this,ConfigPanelActivity.class);
+        intent.putExtra("SignalPanel.panelName",panelName);
+        intent.putExtra("SignalPanel.author",author);
+        intent.putExtra("SignalPanel.description",description);
+        intent.putExtra("SignalPanel.openMode",mode.getIndex());
+        startActivity(intent);
     }
 
 //存在无法连接时出错
@@ -251,6 +271,23 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
     }
 
+    //尝试进行登录
+    private void LoginDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Login");
+        builder.setIcon(R.drawable.ic_account);
+        builder.setMessage(R.string.login_message);
+        final Context context = this;
+        builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(R.string.canel_buttun,null);
+        builder.show();
+    }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case BluetoothState.REQUEST_CONNECT_DEVICE:
@@ -391,8 +428,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         } else if(id==R.id.nav_login){
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
+            LoginDialog();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

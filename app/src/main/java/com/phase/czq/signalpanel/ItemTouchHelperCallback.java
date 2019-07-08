@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import java.util.Collections;
 
@@ -14,9 +15,14 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     }
 
+    public interface OnSwipeLR{
+        void onLeft(RecycleViewAdapter.PanelViewHolder viewHolder);
+        void onRight(RecycleViewAdapter.PanelViewHolder viewHolder);
+    }
+    OnSwipeLR onSwipeLR;
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(ItemTouchHelper.UP|ItemTouchHelper.DOWN,ItemTouchHelper.RIGHT);
+        return makeMovementFlags(ItemTouchHelper.UP|ItemTouchHelper.DOWN,ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT);
     }
 
     @Override
@@ -39,19 +45,23 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        if(direction == ItemTouchHelper.LEFT){
+            onSwipeLR.onLeft((RecycleViewAdapter.PanelViewHolder) viewHolder);
+        }else if(direction == ItemTouchHelper.RIGHT){
+            onSwipeLR.onRight((RecycleViewAdapter.PanelViewHolder) viewHolder);
+        }
     }
-
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            RecycleViewAdapter.panelViewHolder vh = (RecycleViewAdapter.panelViewHolder)viewHolder;
-            if (Math.abs(dX) <= vh.getButtunsWidth()+10) {
-                vh.scollerView(-(int) dX);
-            }
+            viewHolder.itemView.scrollTo(-(int)dX,0);
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
+    }
+
+    public void setOnSwipeLR(OnSwipeLR lr){
+        this.onSwipeLR = lr;
     }
 }

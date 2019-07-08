@@ -12,15 +12,9 @@
         android:id="@+id/panel_main_delet"
         android:layout_width="@dimen/panel_main_image_width"
         android:layout_height="@dimen/panel_main_image_height"
-        android:layout_marginLeft="-128dp"
+        android:layout_marginLeft="-64dp"
         android:cropToPadding="false"
         android:src="@drawable/ic_delete" />
-
-    <ImageButton
-        android:id="@+id/panel_main_config"
-        android:layout_width="@dimen/panel_main_image_width"
-        android:layout_height="@dimen/panel_main_image_height"
-        android:src="@drawable/ic_config" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -74,5 +68,12 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/panel_main_config"
+        android:layout_width="@dimen/panel_main_image_width"
+        android:layout_height="@dimen/panel_main_image_height"
+        android:layout_marginRight="64dp"
+        android:src="@drawable/ic_config" />
 
 </LinearLayout>
