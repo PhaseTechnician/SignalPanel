@@ -368,7 +368,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                panelXmlDom.setAdapt(textInputEditText.getText().toString(),AdapterKinds.cloze);
+                panelXmlDom.setAdapt(textInputEditText.getText().toString(),AdapterKinds.adapter_header);
             }
         });
         builder.setNegativeButton(R.string.canel_buttun,null);

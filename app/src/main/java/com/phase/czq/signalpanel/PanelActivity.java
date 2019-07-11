@@ -56,11 +56,21 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
     }
 
     class checkReceiveTask extends TimerTask {
+        protected checkReceiveTask() {
+            super();
+            //在之前完成
+            Serial.setPipeLine(ValuePool.pipeLine);
+            Serial.setReportAdapter(new HeaderAdapter());
+            Serial.setApplyChange(new Serial.ApplyChange() {
+                @Override
+                public void apply(ValueChangMessage changeMessage) {
+                    Toast.makeText(getApplicationContext(),changeMessage.getKey()+";"+changeMessage.getDefault(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
         public void run() {
-            if(ValuePool.serial.isReceive())
-            {
-                ValuePool.serial.getValueChangMessages();
-            }
+            Serial.update();
         }
     }
 
@@ -85,7 +95,7 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         //设置定时器
         timer = new Timer();
         //频率设置
-        //timer.schedule(new checkReceiveTask(),0,100);
+        timer.schedule(new checkReceiveTask(),0,100);
     }
 
     @Override
@@ -182,13 +192,13 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
                     //未添加mode解释和spareString
                     case MotionEvent.ACTION_DOWN:
                         if(plugParams.positiveEnable) {
-                            ValuePool.serial.send(plugParams.positiveKey);
+                            Serial.send(plugParams.positiveKey);
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         if(plugParams.negativeEnable){
-                            ValuePool.serial.send(plugParams.negativeKey);
+                            Serial.send(plugParams.negativeKey);
                         }
                         break;
                 }
@@ -208,13 +218,13 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
             public void onClick(View v) {
                 Switch sw = (Switch) v;
                 if(sw.isChecked()){
-                    ValuePool.serial.send(plugParams.positiveKey);
+                    Serial.send(plugParams.positiveKey);
                     if(plugParams.positiveEnable){
                         sw.setText(plugParams.mainString);
                     }
                 }
                 else if(!sw.isChecked()){
-                    ValuePool.serial.send(plugParams.negativeKey);
+                    Serial.send(plugParams.negativeKey);
                     if(plugParams.positiveEnable){
                         sw.setText(plugParams.spareString);
                     }
@@ -241,10 +251,10 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress-lastProgress>0&&plugParams.positiveEnable){
-                    ValuePool.serial.send(expression.head + Integer.toString(progress)+ expression.foot);
+                    Serial.send(expression.head + Integer.toString(progress)+ expression.foot);
                 }
                 else if(progress-lastProgress<0&&plugParams.negativeEnable){
-                    ValuePool.serial.send(expression.head + Integer.toString(progress)+ expression.foot);
+                    Serial.send(expression.head + Integer.toString(progress)+ expression.foot);
                 }
                 lastProgress = progress;
             }
@@ -290,7 +300,7 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onAxeXValueChange(int X) {
                 if(plugParams.positiveEnable){
-                    ValuePool.serial.send(Xexpression.head+X+Xexpression.foot);
+                    Serial.send(Xexpression.head+X+Xexpression.foot);
                     //Log.i("Joystick","X: "+Integer.toString(X));
                 }
             }
@@ -298,15 +308,15 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onAxeYValueChange(int Y) {
                 if(plugParams.negativeEnable){
-                    ValuePool.serial.send(Yexpression.head+Y+Yexpression.foot);
+                    Serial.send(Yexpression.head+Y+Yexpression.foot);
                     //Log.i("Joystick","Y: "+Integer.toString(Y));
                 }
             }
 
             @Override
             public void onAutoCentral() {
-                ValuePool.serial.send(Xexpression.head+0+Xexpression.foot);
-                ValuePool.serial.send(Yexpression.head+0+Yexpression.foot);
+                Serial.send(Xexpression.head+0+Xexpression.foot);
+                Serial.send(Yexpression.head+0+Yexpression.foot);
             }
         });
     }

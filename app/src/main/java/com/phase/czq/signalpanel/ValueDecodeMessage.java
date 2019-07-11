@@ -3,6 +3,7 @@ package com.phase.czq.signalpanel;
 import android.util.Size;
 
 //用于保存用于解析报文的引导结构节点
+@Deprecated
 public class ValueDecodeMessage {
     private String key;
     private DecodeValueKinds kind;

@@ -39,6 +39,9 @@ public class ValueChangMessage {
         else
             return "";
     }
+    public String getDefault(){
+        return value;
+    }
 
     public String getKey() {
         return key;

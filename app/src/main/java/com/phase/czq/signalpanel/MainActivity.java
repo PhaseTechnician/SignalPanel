@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         if(ValuePool.spp!=null)
         ValuePool.spp.stopService();
-        if(ValuePool.tcpClient!=null){
-            ValuePool.tcpClient.close();
+        if(ValuePool.pipeLine!=null){
+            ValuePool.pipeLine.close();
         }
     }
 
@@ -226,20 +226,20 @@ public class MainActivity extends AppCompatActivity
 //存在无法连接时出错
     //创建一个临时的WIFI连接窗口
     private void newWifiConnectDialog(){
-        ValuePool.tcpClient = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
+        ValuePool.pipeLine = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wifi_normal);
         builder.setTitle("connecting...");
         builder.setMessage("IP:"+ValuePool.getString("pipe_wifi_address")+"Port:"+ValuePool.getInt("pipe_wifi_port"));
         builder.setNegativeButton("canel",null);
         builder.show();
-        if(ValuePool.tcpClient == null){
+        if(ValuePool.pipeLine == null){
             builder.setMessage("unable00");
             builder.show();
             return;
         }
         MenuItem menuItemWIFI = mMenu.findItem(R.id.pipe_WIFI);
-        if(ValuePool.tcpClient.initStream()){
+        if(ValuePool.pipeLine.open()){
             builder.setMessage("success");
             builder.show();
             menuItemWIFI.setIcon(R.drawable.ic_wifi_connected);

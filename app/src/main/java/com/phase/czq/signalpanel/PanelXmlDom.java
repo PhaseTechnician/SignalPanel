@@ -266,15 +266,7 @@ public class PanelXmlDom {
     public AdapterKinds getAdapter(){
         NodeList setingEs = setings.getElementsByTagName("adapt");
         if(setingEs.getLength()!=0){
-            switch (setingEs.item(0).getAttributes().getNamedItem("adapter").getNodeValue())
-            {
-                case "packet":
-                    return AdapterKinds.packet;
-                case "regex":
-                    return AdapterKinds.regex;
-                case "cloze":
-                    return AdapterKinds.cloze;
-            }
+            return AdapterKinds.getAdapterKind(setingEs.item(0).getAttributes().getNamedItem("adapter").getNodeValue());
         }
         return null;
     }

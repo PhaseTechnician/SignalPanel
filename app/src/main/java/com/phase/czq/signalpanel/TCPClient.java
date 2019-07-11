@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+
 //考虑当前并没有大量的数据传输，考虑放弃多线程的操作
-public class TCPClient {
+public class TCPClient extends PipeLine{
 
     private String address;
     private int port;
@@ -21,7 +23,8 @@ public class TCPClient {
         port = Port;
     }
 
-    public boolean initStream(){
+    @Override
+    public boolean open(){
         try {
             socket = new Socket(address,port);
             inputStream = socket.getInputStream();
@@ -36,6 +39,7 @@ public class TCPClient {
         return true;
     }
 
+    @Override
     public void sendMessage(String message){
         try {
             outputStream.write(message.getBytes());
@@ -44,37 +48,31 @@ public class TCPClient {
         }
     }
 
-    public StringBuffer getMessage(String charset){
+    @Override
+    public boolean isReceived() {
+        try {
+            if(inputStream.available()!=0)
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public byte[] getReceive() {
         byte[] buf = new byte[1024];
-        StringBuffer sb = new StringBuffer();
-        int len = 0;
         try {
-            while ((len=inputStream.read(buf)) != -1) {
-                sb.append(new String(buf, 0, len, charset));
-            }
+            inputStream.read(buf);
+            return buf;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sb;
+        return null;
     }
 
-    public boolean isReceived(){
-        if(inputStream==null){
-            return false;
-        }
-        try {
-            if(inputStream.available()!=0){
-                return true;
-            }
-            else {
-                return  false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
+    @Override
     public void close(){
         if (socket!=null){
             try {

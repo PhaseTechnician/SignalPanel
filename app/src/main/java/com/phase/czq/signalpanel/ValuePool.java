@@ -14,11 +14,9 @@ public class ValuePool {
     static Boolean usbOTGPipeConnect = false;
     static Boolean wifiPipeConnect = false;
 
-    static TCPClient tcpClient = null;
+    static PipeLine pipeLine = null;
     //static BlueToothPipe blueToothPipe;
     static BluetoothSPP spp = null;
-
-    static Serial serial = new Serial();
 
     static PlugParams defaultParam = new PlugParams("undefine",300,200,0,0,-1);
     //初始化PV

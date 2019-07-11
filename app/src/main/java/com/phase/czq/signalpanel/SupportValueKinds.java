@@ -5,7 +5,8 @@ public enum SupportValueKinds {
     type_int,
     type_float,
     type_string,
-    type_unsupport;
+    type_unsupport,
+    type_undefine;
     public DecodeValueKinds getDecodeKind(){
         switch (this){
             case type_unsupport:
