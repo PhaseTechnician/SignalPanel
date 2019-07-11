@@ -94,6 +94,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     RVadapter.notifyDataSetChanged();
                 }
             });
+            builder.show();
         }
     }
 

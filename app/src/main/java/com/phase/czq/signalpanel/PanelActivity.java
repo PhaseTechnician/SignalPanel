@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
@@ -29,7 +30,9 @@ import android.widget.Toast;
 import com.phase.czq.signalpanel.plugs.Joystick;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,9 +43,29 @@ import javax.xml.transform.Templates;
 public class PanelActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     PanelXmlDom panelXmlDom;
+    //kepmap 在panel加载的同时完成初始化，自动建立mainkey和ID映射。方便之后查找。
+    private Map<String,Integer> keyMap = new HashMap<String,Integer>();
+    Context context=this;
     //主要布局
     private ConstraintLayout mainLayout;
     private Timer timer;
+    private Handler handler =new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 0){
+                Bundle bundle = msg.getData();
+                String key = bundle.getString("key");
+                if(keyMap.containsKey(key)){
+                    View view = findViewById(keyMap.get(key));
+                    applyValueChangeMessage(view,bundle.getString("value"));
+                }else {
+                    Toast.makeText(context,"key("+bundle.getString("key")+")undefine",Toast.LENGTH_SHORT).show();
+                }
+                //Toast.makeText(context,bundle.getString("key")+";"+bundle.getString("value"),Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -57,14 +80,18 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
 
     class checkReceiveTask extends TimerTask {
         protected checkReceiveTask() {
-            super();
-            //在之前完成
             Serial.setPipeLine(ValuePool.pipeLine);
             Serial.setReportAdapter(new HeaderAdapter());
             Serial.setApplyChange(new Serial.ApplyChange() {
                 @Override
                 public void apply(ValueChangMessage changeMessage) {
-                    Toast.makeText(getApplicationContext(),changeMessage.getKey()+";"+changeMessage.getDefault(),Toast.LENGTH_SHORT).show();
+                    Message message = Message.obtain();
+                    message.what = 0;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("key",changeMessage.getKey());
+                    bundle.putString("value",changeMessage.getDefault());
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 }
             });
         }
@@ -331,19 +358,22 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         }
         applyBasicParam(niv,plugParams);
     }
+
     private void addProgressBar(PlugParams plugParams) {
         ProgressBar npb = new ProgressBar(this);
         mainLayout.addView(npb);
         npb.setClickable(true);
         applyBasicParam(npb,plugParams);
-        //npb.setTooltipText(plugParams.mainString);
+        keyMap.put(plugParams.spareString,plugParams.ID);
     }
     private void addTextView(PlugParams plugParams){
         TextView TV= new TextView(this);
         mainLayout.addView(TV);
         TV.setText(plugParams.mainString);
         applyBasicParam(TV,plugParams);
+        keyMap.put(plugParams.spareString,plugParams.ID);
     }
+
     //XYWHI
     static void applyBasicParam(View view, PlugParams plugParams) {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
@@ -359,14 +389,17 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    //更新控件ID
-    private void appluValueChangeMessages(List<ValueChangMessage> messages){
-        for(int i=0;i<messages.size();i++){
-            messages.get(i);
+    @NewPlugAttation
+    private void applyValueChangeMessage(View view ,String Value){
+        if(view instanceof TextView){
+            TextView textView = (TextView) view;
+            textView.setText(Value);
+        }else if(view instanceof ProgressBar){
+            ProgressBar progressBar = (ProgressBar) view;
+            progressBar.setProgress(Integer.valueOf(Value));
+        }else{
+            Toast.makeText(context,"Plug don`t receive input",Toast.LENGTH_SHORT).show();
         }
-    }
-    private void applyValueChangeMessage(ValueChangMessage message){
-
     }
 
     @Deprecated
