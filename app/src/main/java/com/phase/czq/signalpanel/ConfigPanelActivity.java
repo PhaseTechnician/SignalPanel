@@ -124,7 +124,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             }
         });
         //从Intent中获取基本信息填充到nav_drawer中
-        if(navigationView.getHeaderCount() > 0) {//From 雪兰灵莹 https://blog.csdn.net/xuelanlingying/article/details/79884592
+        if(navigationView.getHeaderCount() > 0) {
             View header = navigationView.getHeaderView(0);
             TextView panelNameTextView = header.findViewById(R.id.nav_config_panelname);
             TextView descTextView = header.findViewById(R.id.nav_config_desc);
@@ -409,12 +409,12 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         Intent intent = new Intent(this,ParamsSetingActivity.class);
         //intent.putExtra("plugID",ID);
         intent.putExtra("params",panelXmlDom.getPlugParamsByID(ID));
-        startActivityForResult(intent,1);
+        startActivityForResult(intent,RequestCodes.ParamSetingActivity);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent){
-        if(requestCode==1){
+        if(requestCode==RequestCodes.ParamSetingActivity){
             if(resultCode == Activity.RESULT_OK){ //
                 PlugParams params = new PlugParams();
                 params.mainString = intent.getStringExtra("mainstring");

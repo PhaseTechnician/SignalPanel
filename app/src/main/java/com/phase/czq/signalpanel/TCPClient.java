@@ -12,9 +12,9 @@ public class TCPClient {
 
     private String address;
     private int port;
-    Socket socket;
-    InputStream inputStream;
-    OutputStream outputStream;
+    private Socket socket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     TCPClient(String Address, int Port){
         address = Address;
@@ -44,7 +44,7 @@ public class TCPClient {
         }
     }
 
-    public String getMessage(String charset){
+    public StringBuffer getMessage(String charset){
         byte[] buf = new byte[1024];
         StringBuffer sb = new StringBuffer();
         int len = 0;
@@ -55,7 +55,7 @@ public class TCPClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sb.toString();
+        return sb;
     }
 
     public boolean isReceived(){

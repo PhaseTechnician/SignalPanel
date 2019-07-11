@@ -7,8 +7,12 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,9 +40,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -71,6 +82,10 @@ public class MainActivity extends AppCompatActivity
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelXMLs");
         //尝试创建IMG文档路径
         tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"panelImgs");
+        //尝试创建配置文件路径
+        tryMakeDirAndList(this.getFilesDir().getAbsolutePath()+File.separator+"config");
+        //路径初始化
+        AccountFile.setDir(this.getFilesDir().getAbsolutePath()+File.separator+"config");
         //设置RecycleView
         RecyclerView RV=(RecyclerView)findViewById(R.id.recycleView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -104,7 +119,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //添加新的Panel 并进入编辑Config
-                newPanelSetingDialog("czq");
+                newPanelSetingDialog(AccountFile.getLogin());
             }
         });
         //添加抽屉按钮
@@ -115,6 +130,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //初始化路径并初次应用
+        applyAccount();
     }
 
     @Override
@@ -282,12 +299,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,RequestCodes.LoginActivity);
             }
         });
         builder.setNegativeButton(R.string.canel_buttun,null);
         builder.show();
     }
+
+    //帮助信息
+    private void HelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        WebView webView = new WebView(this);
+        webView.loadUrl("https://github.com/PhaseTechnician/SignalPanel/wiki");
+        builder.setView(webView);
+        builder.show();
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case BluetoothState.REQUEST_CONNECT_DEVICE:
@@ -314,9 +341,19 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(this,"error",Toast.LENGTH_SHORT);
                 }
                 break;
+            case RequestCodes.LoginActivity:
+                if (resultCode == Activity.RESULT_OK) {
+                    //进行保存
+                    AccountFile.add(data.getStringExtra("login"),data.getStringExtra("avatar"));
+                }
+                else {
+                    Toast.makeText(this,"error",Toast.LENGTH_SHORT);
+                }
+                break;
         }
     }
 
+    //new BufferedReader(new FileReader(new File(this.getFilesDir().getAbsolutePath()+File.separator+"config"+File.separator+"PhaseTechnician.log"))).readLine();
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -377,6 +414,18 @@ public class MainActivity extends AppCompatActivity
         resources.updateConfiguration(config, dm);
     }
 
+
+    //账户信息设置
+    private void applyAccount(){
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        NavigationView NV = drawer.findViewById(R.id.nav_view);
+        View headerView = NV.getHeaderView(0);
+        ImageView imageView = headerView.findViewById(R.id.nav_header_portrait);
+        TextView textView = headerView.findViewById(R.id.nav_header_account);
+        SharedPreferences preferences = getSharedPreferences("account",MODE_PRIVATE);
+        textView.setText(AccountFile.getLogin());
+        imageView.setImageBitmap(AccountFile.getIcon());
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -429,10 +478,14 @@ public class MainActivity extends AppCompatActivity
 
         } else if(id==R.id.nav_login){
             LoginDialog();
+        } else if(id==R.id.nav_help){
+            HelpDialog();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

@@ -39,16 +39,8 @@ public class PanelXmlDom {
         ReadFromFile,
         WriteToFile
     }
-    public enum Pipeline{
-        BlueToothSerial,
-        USBOTGSerial,
-        TCP,
-        UDP,
-        Undefine
-    }
     private String filePath;
     private DomMode mode;
-    private Pipeline pipeline;
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
     private Document document;
@@ -57,7 +49,6 @@ public class PanelXmlDom {
     public PanelXmlDom(DomMode domMode, String xmlFilepath){
         mode=domMode;
         filePath=xmlFilepath;
-        pipeline=Pipeline.Undefine;
         InitDom();
     }
 
@@ -251,10 +242,6 @@ public class PanelXmlDom {
         }
     }
     /*获取seting 信息*/
-    @Deprecated
-    public Pipeline getSetingPipeLine(){
-        return Pipeline.BlueToothSerial;
-    }
     /*管理Adapt*/
     public boolean hasAdapt(){
         NodeList setingEs = setings.getElementsByTagName("adapt");

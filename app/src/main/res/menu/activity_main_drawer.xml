@@ -65,4 +65,13 @@
         </menu>
     </item>
 
+    <item android:title="@string/nav_menu_help_title">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:enabled="true"
+                android:icon="@drawable/ic_help"
+                android:title="@string/nav_menu_help" />
+        </menu>
+    </item>
 </menu>

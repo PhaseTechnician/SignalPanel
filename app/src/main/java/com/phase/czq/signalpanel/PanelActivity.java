@@ -59,7 +59,7 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         public void run() {
             if(ValuePool.serial.isReceive())
             {
-                //处理更新
+                ValuePool.serial.getValueChangMessages();
             }
         }
     }
@@ -347,6 +347,16 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         } else {
             Log.e("ID", "ERROR ID");
         }
+    }
+
+    //更新控件ID
+    private void appluValueChangeMessages(List<ValueChangMessage> messages){
+        for(int i=0;i<messages.size();i++){
+            messages.get(i);
+        }
+    }
+    private void applyValueChangeMessage(ValueChangMessage message){
+
     }
 
     @Deprecated

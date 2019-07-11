@@ -10,7 +10,7 @@
 
     <!-- Main Activity Drawer Titles -->
     <string name="nav_header_title">Un Login</string>
-    <string name="nav_header_subtitle">Un Login</string>
+    <string name="nav_header_subtitle">Basic Authorization</string>
 
     <string name="nav_menu_import">Import</string>
     <string name="nav_menu_export">Export</string>
@@ -24,6 +24,8 @@
     <string name="nav_menu_login">Login</string>
     <string name="nav_menu_feedback_title">FeedBack</string>
     <string name="nav_menu_feedback">FeedBack</string>
+    <string name="nav_menu_help_title">Help</string>
+    <string name="nav_menu_help">Wiki</string>
 
     <!-- Seting Activity -> Preferce -->
     <!-- General Preferce -->
