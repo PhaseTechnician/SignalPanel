@@ -1,12 +1,9 @@
 package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
@@ -27,16 +24,21 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.Panel.PanelXmlDom;
+import com.phase.czq.signalpanel.plugs.PlugParams;
+import com.phase.czq.signalpanel.Pipe.Adapter.HeaderAdapter;
+import com.phase.czq.signalpanel.Pipe.Serial;
+import com.phase.czq.signalpanel.Pipe.message.ValueChangMessage;
 import com.phase.czq.signalpanel.plugs.Joystick;
+import com.phase.czq.signalpanel.plugs.PlugKinds;
+import com.phase.czq.signalpanel.tools_value.ValueExpression;
+import com.phase.czq.signalpanel.tools_value.ValuePool;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.transform.Templates;
 
 //考虑何时停止TIMER
 

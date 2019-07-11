@@ -2,22 +2,15 @@ package com.phase.czq.signalpanel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -26,7 +19,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,29 +28,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.Login.AccountFile;
+import com.phase.czq.signalpanel.Panel.PanelOpenMode;
+import com.phase.czq.signalpanel.Pipe.PipeLine.TCPClient;
+import com.phase.czq.signalpanel.tools_value.LanguageSupport;
+import com.phase.czq.signalpanel.tools_value.RequestCodes;
+import com.phase.czq.signalpanel.tools_value.ValuePool;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
-
-import static com.phase.czq.signalpanel.LanguageSupport.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -207,7 +195,7 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton("creat", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                openConfigActivity(eName.getText().toString(),eAuthor.getText().toString(),eDesc.getText().toString(),PanelOpenMode.CreatNewPanelToConfig);
+                openConfigActivity(eName.getText().toString(),eAuthor.getText().toString(),eDesc.getText().toString(), PanelOpenMode.CreatNewPanelToConfig);
             }
         });
         builder.setNegativeButton("cancel",null);
@@ -298,8 +286,8 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivityForResult(intent,RequestCodes.LoginActivity);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, RequestCodes.LoginActivity);
             }
         });
         builder.setNegativeButton(R.string.canel_buttun,null);

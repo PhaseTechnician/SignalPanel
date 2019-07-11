@@ -6,12 +6,11 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.Switch;
-import android.widget.TextView;
+
+import com.phase.czq.signalpanel.plugs.PlugParams;
 
 public class ParamsSetingActivity extends AppCompatActivity {
 

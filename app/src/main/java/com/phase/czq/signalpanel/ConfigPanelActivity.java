@@ -30,7 +30,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.Panel.PanelOpenMode;
+import com.phase.czq.signalpanel.Panel.PanelXmlDom;
+import com.phase.czq.signalpanel.Pipe.Adapter.AdapterKinds;
+import com.phase.czq.signalpanel.plugs.PlugParams;
 import com.phase.czq.signalpanel.plugs.Joystick;
+import com.phase.czq.signalpanel.plugs.PlugKinds;
+import com.phase.czq.signalpanel.tools_value.RequestCodes;
+import com.phase.czq.signalpanel.tools_value.ValuePool;
 
 import java.io.File;
 import java.util.List;
@@ -289,7 +296,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         });
         panelXmlDom.XmlAddPlug(plugKinds,plugParams.changeID(view.getId()));
         //以默认值进行加载，应该是手动添加的控件
-        if(plugParams==ValuePool.defaultParam)
+        if(plugParams== ValuePool.defaultParam)
             Toast.makeText(this,"NEW "+plugKinds.toString()+" Add",Toast.LENGTH_SHORT).show();
     }
     //EXTRACT
@@ -368,7 +375,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                panelXmlDom.setAdapt(textInputEditText.getText().toString(),AdapterKinds.adapter_header);
+                panelXmlDom.setAdapt(textInputEditText.getText().toString(), AdapterKinds.adapter_header);
             }
         });
         builder.setNegativeButton(R.string.canel_buttun,null);
@@ -409,7 +416,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         Intent intent = new Intent(this,ParamsSetingActivity.class);
         //intent.putExtra("plugID",ID);
         intent.putExtra("params",panelXmlDom.getPlugParamsByID(ID));
-        startActivityForResult(intent,RequestCodes.ParamSetingActivity);
+        startActivityForResult(intent, RequestCodes.ParamSetingActivity);
     }
 
     @Override

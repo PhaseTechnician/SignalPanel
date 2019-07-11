@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.Panel.Panel;
+import com.phase.czq.signalpanel.Panel.PanelOpenMode;
+import com.phase.czq.signalpanel.tools_value.ValuePool;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +52,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPanel(viewHolder,PanelOpenMode.LoadFileToUse);
+                openPanel(viewHolder, PanelOpenMode.LoadFileToUse);
             }
         });
     }
