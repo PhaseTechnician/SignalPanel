@@ -4,72 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Add Input Plugs">
+    <item android:title="@string/config_nav_input">
         <menu>
             <item
                 android:id="@+id/nav_buttun"
                 android:icon="@drawable/ic_plug_button"
-                android:title="Buttun" />
+                android:title="@string/config_nav_buttun" />
             <item
                 android:id="@+id/nav_switch"
                 android:icon="@drawable/ic_plug_switch"
-                android:title="Switch" />
+                android:title="@string/config_nav_switch" />
             <item
                 android:id="@+id/nav_sbr"
                 android:icon="@drawable/ic_plug_seekbar"
-                android:title="sbr"/>
+                android:title="@string/config_nav_seekbar" />
             <item
                 android:id="@+id/nav_joystick"
                 android:icon="@drawable/ic_joystick"
-                android:title="Joystick"/>
+                android:title="@string/config_nav_joystick" />
         </menu>
     </item>
-
-    <item android:title="Add Display Plugs">
+    <item android:title="@string/config_nav_display">
         <menu>
             <item
                 android:id="@+id/nav_textview"
                 android:icon="@drawable/ic_plug_text"
-                android:title="TEXT"/>
+                android:title="@string/confgi_nav_lable" />
             <item
                 android:id="@+id/nav_imageview"
                 android:icon="@drawable/ic_plug_image"
-                android:title="ImageView"/>
+                android:title="@string/config_nav_imageview" />
             <item
                 android:id="@+id/nav_pbr"
                 android:icon="@drawable/ic_plug_progressbar"
-                android:title="Bar"/>
+                android:title="@string/config_nav_progressbar" />
         </menu>
     </item>
-
-
-    <item android:title="File">
-        <menu>
-            <item
-                android:id="@+id/nav_config"
-                android:icon="@drawable/ic_savefile"
-                android:title="SAVE"/>
-            <item
-                android:id="@+id/nav_upload"
-                android:icon="@drawable/ic_upload"
-                android:title="Upload"/>
-        </menu>
-    </item>
-    <item android:title="Feature">
+    <item android:title="@string/config_nav_feature">
         <menu>
             <item
                 android:id="@+id/nav_notification"
                 android:icon="@drawable/ic_notifications"
-                android:title="Notification"/>
+                android:title="@string/config_nav_notification" />
             <item
                 android:id="@+id/nav_frequency"
                 android:icon="@drawable/ic_frequency"
-                android:title="Frequence">
-            </item>
+                android:title="@string/config_nav_frequence"/>
             <item
                 android:id="@+id/nav_Adapter"
                 android:icon="@drawable/ic_receive"
-                android:title="Adapter"/>
+                android:title="@string/config_nav_adapter" />
+        </menu>
+    </item>
+    <item android:title="@string/config_nav_file">
+        <menu>
+            <item
+                android:id="@+id/nav_config"
+                android:icon="@drawable/ic_savefile"
+                android:title="@string/config_nav_save" />
+            <item
+                android:id="@+id/nav_upload"
+                android:icon="@drawable/ic_upload"
+                android:title="@string/config_nav_upload" />
         </menu>
     </item>
 </menu>

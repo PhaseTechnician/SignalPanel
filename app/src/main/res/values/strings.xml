@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SignalPanel</string>
-    <string name="nullString" translatable="false"></string>
+    <string name="nullString" translatable="false">null</string>
 
     <!-- Activities Name -->
     <string name="title_activity_settings">Settings</string>
@@ -106,11 +106,6 @@
     <string name="pre_feature_title">Feature</string>
 
 
-    <!-- Login Activity -> Login -->
-    <string name="login_message">Your Account will be used to upload or download files from GitHub.
-    If you try to suggest or feed back to me, your account is also use to creat issuse.
-    And your account will be the author of your panel.</string>
-
     <!-- ParamSeting Activity -->
     <string name="paramset_mainstring_kit">Main String</string>
     <string name="paramset_sparestring_kit">Spare String</string>
@@ -127,7 +122,53 @@
     <string name="paramset_act_des_dialog_title">Description of params</string>
     <string name="paramset_act_des_buttun"> buttun description s are \r\n notods</string>
 
-    <string name="default_buttun_name">Buttun</string>
+    <!--Main Activity code-->
+    <string name="main_connecting">Connecting _ _ _</string>
+    <string name="main_pipe_null">Pipe is null</string>
+    <string name="connect_state_success">Success</string>
+    <string name="connect_message_success">Now you can open panel.</string>
+    <string name="connect_state_fail">Fail</string>
+    <string name="connect_message_fail">Please retry.</string>
+
+    <!-- Login Activity-->
+    <string name="login_success_message">Account has get,you can back imdeitly or read the wiki.</string>
+    <!-- Login Activity -> Login Dialog-->
+    <string name="login">Login</string>
+    <string name="login_message">Your Account will be used to upload or download files from GitHub.
+    If you try to suggest or feed back to me, your account is also use to creat issuse.
+    And your account will be the author of your panel.</string>
+
+    <!-- New Panel Dialog-->
+    <string name="new_panel_dialog_title">Add New Panel</string>
+    <string name="new_panel_panelname">PanelName</string>
+    <string name="new_panel_panelname_kit">input panel name</string>
+    <string name="new_panel_author">Author</string>
+    <string name="new_panel_author_kit">input your author</string>
+    <string name="new_panel_description">Description</string>
+    <string name="new_panel_description_kit">input your description to this panel</string>
+
+    <!--Config Activity -> nav-->
+    <string name="config_nav_input">Add Input Plugs</string>
+    <string name="config_nav_buttun">Buttun</string>
+    <string name="config_nav_switch">Switch</string>
+    <string name="config_nav_seekbar">SeekBar</string>
+    <string name="config_nav_joystick">Joystick</string>
+    <string name="config_nav_display">Add Display Plugs</string>
+    <string name="confgi_nav_lable">Lable</string>
+    <string name="config_nav_imageview">ImageView</string>
+    <string name="config_nav_progressbar">ProgressBar</string>
+    <string name="config_nav_feature">Feature</string>
+    <string name="config_nav_notification">Notification</string>
+    <string name="config_nav_frequence">Frequence</string>
+    <string name="config_nav_adapter">Adapter</string>
+    <string name="config_nav_file">File</string>
+    <string name="config_nav_save">Save</string>
+    <string name="config_nav_upload">Upload</string>
+    <!--Config Activity -->
+    <string name="config_save_success">Success save file</string>
+    <string name="config_save_fail">Some errors happened</string>
+
+    <string name="config_adapter_dialog_title">Adapter seting</string>
 
     <string name="accept_buttun">Accept</string>
     <string name="canel_buttun">Cancel</string>

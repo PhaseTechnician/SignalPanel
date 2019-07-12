@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         //路径初始化
         AccountFile.setDir(this.getFilesDir().getAbsolutePath()+File.separator+"config");
         //设置RecycleView
-        RecyclerView RV=(RecyclerView)findViewById(R.id.recycleView);
+        RecyclerView RV= findViewById(R.id.recycleView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RV.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
             if(files!=null) {
                 Log.e("FilePath",files.length+" files found");
                 for(int i=0;i<files.length;i++){
-                    Log.e("FilePath",files[i].getName().toString());
+                    Log.e("FilePath", files[i].getName());
                 }
             }
             else {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
     //创建一个新面板打开一个对话框
     private void newPanelSetingDialog(String defaultAuthor){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("add new plane");
+        builder.setTitle(R.string.new_panel_dialog_title);
         builder.setIcon(R.drawable.ic_add);
         View view = LayoutInflater.from(this).inflate(R.layout.new_panel_dialog,null);
         builder.setView(view);
@@ -192,13 +192,13 @@ public class MainActivity extends AppCompatActivity
         final EditText eAuthor = view.findViewById(R.id.input_panel_author);
         final EditText eDesc = view.findViewById(R.id.input_panel_desc);
         eAuthor.setText(defaultAuthor);
-        builder.setPositiveButton("creat", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 openConfigActivity(eName.getText().toString(),eAuthor.getText().toString(),eDesc.getText().toString(), PanelOpenMode.CreatNewPanelToConfig);
             }
         });
-        builder.setNegativeButton("cancel",null);
+        builder.setNegativeButton(R.string.canel_buttun,null);
         builder.show();
     }
 
@@ -217,24 +217,24 @@ public class MainActivity extends AppCompatActivity
         ValuePool.pipeLine = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wifi_normal);
-        builder.setTitle("connecting...");
-        builder.setMessage("IP:"+ValuePool.getString("pipe_wifi_address")+"Port:"+ValuePool.getInt("pipe_wifi_port"));
-        builder.setNegativeButton("canel",null);
-        builder.show();
+        builder.setTitle(R.string.main_connecting);
+        builder.setMessage("IP:"+ValuePool.getString("pipe_wifi_address")+"   "+"Port:"+ValuePool.getInt("pipe_wifi_port"));
+        builder.setNegativeButton(R.string.canel_buttun,null);
+        AlertDialog dialog = builder.show();
         if(ValuePool.pipeLine == null){
-            builder.setMessage("unable00");
-            builder.show();
+            dialog.setMessage(getString(R.string.main_pipe_null));
+            //builder.show();
             return;
         }
         MenuItem menuItemWIFI = mMenu.findItem(R.id.pipe_WIFI);
         if(ValuePool.pipeLine.open()){
-            builder.setMessage("success");
-            builder.show();
+            dialog.setMessage(getString(R.string.connect_state_success)+"//"+getString(R.string.connect_message_success));
+            //builder.show();
             menuItemWIFI.setIcon(R.drawable.ic_wifi_connected);
             ValuePool.wifiPipeConnect = true;
         }else {
-            builder.setMessage("failed");
-            builder.show();
+            dialog.setMessage(getString(R.string.connect_state_fail)+"//"+getString(R.string.connect_message_fail));
+            //builder.show();
             menuItemWIFI.setIcon(R.drawable.ic_wifi_disabled);
             ValuePool.wifiPipeConnect = false;
         }
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
     //尝试进行登录
     private void LoginDialog(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Login");
+        builder.setTitle(R.string.login);
         builder.setIcon(R.drawable.ic_account);
         builder.setMessage(R.string.login_message);
         final Context context = this;
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity
     //new BufferedReader(new FileReader(new File(this.getFilesDir().getAbsolutePath()+File.separator+"config"+File.separator+"PhaseTechnician.log"))).readLine();
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -410,7 +410,6 @@ public class MainActivity extends AppCompatActivity
         View headerView = NV.getHeaderView(0);
         ImageView imageView = headerView.findViewById(R.id.nav_header_portrait);
         TextView textView = headerView.findViewById(R.id.nav_header_account);
-        SharedPreferences preferences = getSharedPreferences("account",MODE_PRIVATE);
         textView.setText(AccountFile.getLogin());
         imageView.setImageBitmap(AccountFile.getIcon());
     }
@@ -470,7 +469,7 @@ public class MainActivity extends AppCompatActivity
             HelpDialog();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

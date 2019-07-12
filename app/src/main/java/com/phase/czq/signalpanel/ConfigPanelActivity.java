@@ -107,7 +107,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
         setContentView(R.layout.activity_config_panel);
-        mainLayout=(ConstraintLayout)findViewById(R.id.config_layout_main);
+        mainLayout= findViewById(R.id.config_layout_main);
 
         //隐藏控制栏
         ActionBar actionBar = getSupportActionBar();
@@ -115,7 +115,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             actionBar.hide();
         }
         //设置侧边栏
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_config);
+        NavigationView navigationView = findViewById(R.id.nav_config);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -308,10 +308,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
 
     private boolean savePanel(){
         newChanges=false;
-        if(panelXmlDom.saveXml()){
-            return true;
-        }
-        return false;
+        return panelXmlDom.saveXml();
     }
 
     @Override@NewPlugAttation
@@ -344,9 +341,9 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             case R.id.nav_config:
                 Log.e("XMLSAVE","START SAVE");
                 if(savePanel()){
-                    Toast.makeText(this,"Success save file",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.config_save_success,Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(this,"Some errors happened",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.config_save_fail,Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.nav_upload:
@@ -370,7 +367,7 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             textInputEditText.setText(panelXmlDom.getApapt());
         }
         builder.setIcon(R.drawable.ic_receive);
-        builder.setTitle("Packet Adapter");
+        builder.setTitle(R.string.config_adapter_dialog_title);
         builder.setView(textInputEditText);
         builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
             @Override

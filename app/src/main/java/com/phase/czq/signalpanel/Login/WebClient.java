@@ -5,6 +5,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.phase.czq.signalpanel.R;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -88,7 +90,7 @@ public class WebClient extends WebViewClient {
                                 accountMessage.onGetMessage(login,avatar);
                                 Log.i("urlRES","login:"+login);
                                 Log.i("urlRES","avatar:"+avatar);
-                                Toast.makeText(view.getContext(),"Account has get,you can back imdeitly or read the wiki.",Toast.LENGTH_LONG).show();
+                                Toast.makeText(view.getContext(), R.string.login_success_message,Toast.LENGTH_LONG).show();
                             }
                         }
                         token_reader.close();
