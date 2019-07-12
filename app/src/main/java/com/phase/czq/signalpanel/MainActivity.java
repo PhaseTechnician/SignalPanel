@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -36,7 +35,8 @@ import android.widget.Toast;
 
 import com.phase.czq.signalpanel.Login.AccountFile;
 import com.phase.czq.signalpanel.Panel.PanelOpenMode;
-import com.phase.czq.signalpanel.Pipe.PipeLine.TCPClient;
+import com.phase.czq.signalpanel.Pipe.PipeLine.BlueToothPipeLine;
+import com.phase.czq.signalpanel.Pipe.PipeLine.TCPClientPipeLine;
 import com.phase.czq.signalpanel.tools_value.LanguageSupport;
 import com.phase.czq.signalpanel.tools_value.RequestCodes;
 import com.phase.czq.signalpanel.tools_value.ValuePool;
@@ -214,18 +214,13 @@ public class MainActivity extends AppCompatActivity
 //存在无法连接时出错
     //创建一个临时的WIFI连接窗口
     private void newWifiConnectDialog(){
-        ValuePool.pipeLine = new TCPClient(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
+        ValuePool.pipeLine = new TCPClientPipeLine(ValuePool.getString("pipe_wifi_address"),ValuePool.getInt("pipe_wifi_port"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wifi_normal);
         builder.setTitle(R.string.main_connecting);
         builder.setMessage("IP:"+ValuePool.getString("pipe_wifi_address")+"   "+"Port:"+ValuePool.getInt("pipe_wifi_port"));
         builder.setNegativeButton(R.string.canel_buttun,null);
         AlertDialog dialog = builder.show();
-        if(ValuePool.pipeLine == null){
-            dialog.setMessage(getString(R.string.main_pipe_null));
-            //builder.show();
-            return;
-        }
         MenuItem menuItemWIFI = mMenu.findItem(R.id.pipe_WIFI);
         if(ValuePool.pipeLine.open()){
             dialog.setMessage(getString(R.string.connect_state_success)+"//"+getString(R.string.connect_message_success));
@@ -240,40 +235,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //创建一个新的蓝牙连接设置对话框
-    private void newBlueToothConnectDialog() {
-        ValuePool.spp = new BluetoothSPP(this);
-        if(!ValuePool.spp.isBluetoothAvailable()) {
-            Toast.makeText(getApplicationContext(),"Bluetooth is not available",Toast.LENGTH_SHORT).show();
-            finish();
+    private void BT(){
+        ValuePool.pipeLine = new BlueToothPipeLine(this);
+        MenuItem menuItemBT = mMenu.findItem(R.id.pipe_BT);
+        if(ValuePool.pipeLine.open()){
+            menuItemBT.setIcon(R.drawable.ic_bluetooth_connected);
+            ValuePool.blueToothPipeConnect = true;
         }
-        ValuePool.spp.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-            public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getApplicationContext()
-                        , "Connected to " + name + "\n" + address
-                        , Toast.LENGTH_SHORT).show();
-
-            }
-
-            public void onDeviceDisconnected() {
-                Toast.makeText(getApplicationContext()
-                        , "Connection lost", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceConnectionFailed() {
-                Toast.makeText(getApplicationContext()
-                        , "Unable to connect", Toast.LENGTH_SHORT).show();
-            }
-        });
-        Intent intent = new Intent(this, DeviceList.class);
-        intent.putExtra("bluetooth_devices", "Bluetooth devices");
-        intent.putExtra("no_devices_found", "No device");
-        intent.putExtra("scanning", "Scanning");
-        intent.putExtra("scan_for_devices", "Search");
-        intent.putExtra("select_device", "Select");
-        intent.putExtra("layout_list", R.layout.device_layout_list);
-        intent.putExtra("layout_text", R.layout.device_layout_text);
-        startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+        else {
+            menuItemBT.setIcon(R.drawable.ic_bluetooth_disabled);
+            ValuePool.blueToothPipeConnect = false;
+        }
     }
 
     //尝试进行登录
@@ -421,8 +393,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.pipe_BT) {
-            //ValuePool.blueToothPipe = new BlueToothPipe(this);
-            newBlueToothConnectDialog();
+            BT();
             return true;
         }else if(id==R.id.pipe_OTG){
 

@@ -1,5 +1,7 @@
 package com.phase.czq.signalpanel.Pipe.PipeLine;
 
+import com.phase.czq.signalpanel.tools_value.ValuePool;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 //考虑当前并没有大量的数据传输，考虑放弃多线程的操作
-public class TCPClient extends PipeLine {
+public class TCPClientPipeLine extends PipeLine {
 
     private String address;
     private int port;
@@ -15,7 +17,7 @@ public class TCPClient extends PipeLine {
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    public TCPClient(String Address, int Port){
+    public TCPClientPipeLine(String Address, int Port){
         address = Address;
         port = Port;
     }
@@ -58,7 +60,7 @@ public class TCPClient extends PipeLine {
 
     @Override
     public byte[] getReceive() {
-        byte[] buf = new byte[1024];
+        byte[] buf = new byte[ValuePool.Byte_Buffer_Size];
         try {
             inputStream.read(buf);
             return buf;

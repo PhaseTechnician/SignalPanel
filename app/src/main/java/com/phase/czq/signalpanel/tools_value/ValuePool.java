@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import com.phase.czq.signalpanel.plugs.PlugParams;
 import com.phase.czq.signalpanel.Pipe.PipeLine.PipeLine;
 
+import java.util.UUID;
+
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 public class ValuePool {
@@ -15,10 +17,14 @@ public class ValuePool {
     static public Boolean usbOTGPipeConnect = false;
     static public Boolean wifiPipeConnect = false;
 
+    static public Boolean pipeLineConnect = false;
+
     static public PipeLine pipeLine = null;
-    //static BlueToothPipe blueToothPipe;
+    //static BlueToothPipeLine blueToothPipe;
     static public BluetoothSPP spp = null;
 
+    static public int Byte_Buffer_Size = 512;
+    static public final UUID UUID_SPP = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     static public PlugParams defaultParam = new PlugParams("undefine",300,200,0,0,-1);
     //初始化PV
     static public void init(Context mContext){
