@@ -1,6 +1,9 @@
 package com.phase.czq.signalpanel.tools_value;
 
 import android.content.Context;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.preference.PreferenceManager;
 
 import com.phase.czq.signalpanel.plugs.PlugParams;
@@ -16,8 +19,7 @@ public class ValuePool {
     static public Boolean blueToothPipeConnect = false;
     static public Boolean usbOTGPipeConnect = false;
     static public Boolean wifiPipeConnect = false;
-
-    static public Boolean pipeLineConnect = false;
+    static public Boolean debugPipeConnect = false;
 
     static public PipeLine pipeLine = null;
     //static BlueToothPipeLine blueToothPipe;
@@ -28,8 +30,9 @@ public class ValuePool {
     static public PlugParams defaultParam = new PlugParams("undefine",300,200,0,0,-1);
     //初始化PV
     static public void init(Context mContext){
-         context = mContext;
+        context = mContext;
     }
+
     static public boolean getBoolean(String key){
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key,false);
     }

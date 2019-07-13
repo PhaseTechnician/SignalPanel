@@ -27,6 +27,15 @@
     <string name="nav_menu_help_title">Help</string>
     <string name="nav_menu_help">Wiki</string>
 
+    <!--Main Activity code-->
+    <string name="main_connecting">Connecting _ _ _</string>
+    <string name="main_pipe_null">Pipe is null</string>
+    <string name="connect_state_success">Success</string>
+    <string name="connect_message_success">Now you can open panel.</string>
+    <string name="connect_state_fail">Fail</string>
+    <string name="connect_message_fail">Please retry.</string>
+
+
     <!-- Seting Activity -> Preferce -->
     <!-- General Preferce -->
     <string name="pre_general_title">General</string>
@@ -122,13 +131,7 @@
     <string name="paramset_act_des_dialog_title">Description of params</string>
     <string name="paramset_act_des_buttun"> buttun description s are \r\n notods</string>
 
-    <!--Main Activity code-->
-    <string name="main_connecting">Connecting _ _ _</string>
-    <string name="main_pipe_null">Pipe is null</string>
-    <string name="connect_state_success">Success</string>
-    <string name="connect_message_success">Now you can open panel.</string>
-    <string name="connect_state_fail">Fail</string>
-    <string name="connect_message_fail">Please retry.</string>
+
 
     <!-- Login Activity-->
     <string name="login_success_message">Account has get,you can back imdeitly or read the wiki.</string>
@@ -146,6 +149,8 @@
     <string name="new_panel_author_kit">input your author</string>
     <string name="new_panel_description">Description</string>
     <string name="new_panel_description_kit">input your description to this panel</string>
+
+    <!-- Panel Activity -->
 
     <!--Config Activity -> nav-->
     <string name="config_nav_input">Add Input Plugs</string>

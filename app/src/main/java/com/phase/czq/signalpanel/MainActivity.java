@@ -44,9 +44,7 @@ import com.phase.czq.signalpanel.tools_value.ValuePool;
 import java.io.File;
 import java.util.Locale;
 
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
-import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -235,7 +233,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void BT(){
+    private void newBlueToothConnectDialog(){
         ValuePool.pipeLine = new BlueToothPipeLine(this);
         MenuItem menuItemBT = mMenu.findItem(R.id.pipe_BT);
         if(ValuePool.pipeLine.open()){
@@ -387,13 +385,12 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+        if(ValuePool.pipeLine!=null){
+            ValuePool.pipeLine.close();
+        }
         if (id == R.id.pipe_BT) {
-            BT();
+            newBlueToothConnectDialog();
             return true;
         }else if(id==R.id.pipe_OTG){
 

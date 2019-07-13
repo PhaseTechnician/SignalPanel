@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.phase.czq.signalpanel.Panel.Panel;
 import com.phase.czq.signalpanel.Panel.PanelOpenMode;
+import com.phase.czq.signalpanel.Pipe.PipeLine.DebugPipe;
 import com.phase.czq.signalpanel.tools_value.ValuePool;
 
 import java.io.File;
@@ -129,10 +130,26 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     //管线状态判断
     private boolean criticalPipe(){
-        if(ValuePool.blueToothPipeConnect||ValuePool.usbOTGPipeConnect||ValuePool.wifiPipeConnect){
+        if(ValuePool.blueToothPipeConnect||ValuePool.usbOTGPipeConnect||ValuePool.wifiPipeConnect||ValuePool.debugPipeConnect){
             return true;
         }
         else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+            builder.setTitle("warning");
+            builder.setIcon(R.drawable.ic_pipe);
+            builder.setMessage("no pipe can be use,do you want open Debug PIPLINE");
+            builder.setPositiveButton(R.string.accept_buttun, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(ValuePool.pipeLine!=null){
+                        ValuePool.pipeLine.close();
+                    }
+                    ValuePool.pipeLine = new DebugPipe();
+                    ValuePool.debugPipeConnect = true;
+                }
+            });
+            builder.setNegativeButton(R.string.canel_buttun,null);
+            builder.show();
             return false;
         }
     }

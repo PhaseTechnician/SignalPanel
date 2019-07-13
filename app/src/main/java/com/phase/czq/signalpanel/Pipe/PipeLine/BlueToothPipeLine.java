@@ -126,9 +126,15 @@ public class BlueToothPipeLine extends PipeLine{
     @Override
     public void close() {
         try {
-            inputStream.close();
-            outputStream.close();
-            socket.close();
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            if(outputStream!=null){
+                outputStream.close();
+            }
+            if(socket!=null){
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

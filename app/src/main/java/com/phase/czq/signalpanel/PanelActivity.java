@@ -2,6 +2,7 @@ package com.phase.czq.signalpanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,6 +52,7 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
     Context context=this;
     //主要布局
     private ConstraintLayout mainLayout;
+    private TextView headerMessage;
     private Timer timer;
     private Handler handler =new Handler(){
         @Override
@@ -119,6 +122,24 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         String path = getIntent().getExtras().getString("SignalPanel.XMLPath");
         panelXmlDom = new PanelXmlDom(PanelXmlDom.DomMode.ReadFromFile, path);
         mainLayout = findViewById(R.id.panel_layout_main);
+        //设置侧边栏
+        NavigationView navigationView = findViewById(R.id.nav_config);
+        navigationView.setNavigationItemSelectedListener(this);
+        if(navigationView.getHeaderCount() > 0) {
+            View header = navigationView.getHeaderView(0);
+            TextView panelNameTextView = header.findViewById(R.id.nav_config_panelname);
+            TextView descTextView = header.findViewById(R.id.nav_config_desc);
+            panelNameTextView.setText(panelXmlDom.getHeaderPanelName());
+            descTextView.setText(panelXmlDom.getHeaderAuthor());
+            applyPipleLineMessage((ImageView) header.findViewById(R.id.nav_header_bluetooth_icon),
+                    (ImageView) header.findViewById(R.id.nav_header_wifi_icon),
+                    (ImageView) header.findViewById(R.id.nav_header_USB_icon));
+            headerMessage = header.findViewById(R.id.nav_header_message);
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics metrics = new DisplayMetrics();
+            windowManager.getDefaultDisplay().getMetrics(metrics);
+            headerMessage.setText(metrics.widthPixels +"X"+ metrics.heightPixels);
+        }
         //添加控件
         addPlugsFromXml();
         //设置定时器
@@ -204,6 +225,25 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         }
 
     }
+    public void applyPipleLineMessage(ImageView viewBT,ImageView viewWIFI,ImageView viewUSB){
+        if(ValuePool.blueToothPipeConnect){
+            viewBT.setColorFilter(getColor(R.color.black_dark));
+            viewUSB.setColorFilter(getColor(R.color.black_overlay));
+            viewWIFI.setColorFilter(getColor(R.color.black_overlay));
+        }else if(ValuePool.usbOTGPipeConnect){
+            viewBT.setColorFilter(getColor(R.color.black_overlay));
+            viewUSB.setColorFilter(getColor(R.color.black_dark));
+            viewWIFI.setColorFilter(getColor(R.color.black_overlay));
+        }else if(ValuePool.wifiPipeConnect){
+            viewBT.setColorFilter(getColor(R.color.black_overlay));
+            viewUSB.setColorFilter(getColor(R.color.black_overlay));
+            viewWIFI.setColorFilter(getColor(R.color.black_dark));
+        }else{
+            viewBT.setColorFilter(getColor(R.color.black_overlay));
+            viewUSB.setColorFilter(getColor(R.color.black_overlay));
+            viewWIFI.setColorFilter(getColor(R.color.black_overlay));
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addButtun(final PlugParams plugParams) {
@@ -280,10 +320,10 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress-lastProgress>0&&plugParams.positiveEnable){
-                    Serial.send(expression.head + Integer.toString(progress)+ expression.foot);
+                    Serial.send(expression.head + progress + expression.foot);
                 }
                 else if(progress-lastProgress<0&&plugParams.negativeEnable){
-                    Serial.send(expression.head + Integer.toString(progress)+ expression.foot);
+                    Serial.send(expression.head + progress + expression.foot);
                 }
                 lastProgress = progress;
             }
@@ -404,14 +444,5 @@ public class PanelActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    @Deprecated
-    static void applyReactor(View view,PlugParams plugParams){
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
 
 }

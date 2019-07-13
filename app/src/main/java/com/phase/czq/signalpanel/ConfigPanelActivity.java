@@ -137,6 +137,11 @@ public class ConfigPanelActivity extends AppCompatActivity implements Navigation
             TextView descTextView = header.findViewById(R.id.nav_config_desc);
             panelNameTextView.setText(getIntent().getStringExtra("SignalPanel.panelName"));
             descTextView.setText(getIntent().getStringExtra("SignalPanel.description"));
+            TextView headerMessage = header.findViewById(R.id.nav_header_message);
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics metrics = new DisplayMetrics();
+            windowManager.getDefaultDisplay().getMetrics(metrics);
+            headerMessage.setText(metrics.widthPixels +"X"+ metrics.heightPixels);
         }
         //准备对应的XML对象
         if(PanelOpenMode.CreatNewPanelToConfig.equal(getIntent().getIntExtra("SignalPanel.openMode",PanelOpenMode.undefine.getIndex()))){

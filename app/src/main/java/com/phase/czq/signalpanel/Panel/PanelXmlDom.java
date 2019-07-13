@@ -89,7 +89,7 @@ public class PanelXmlDom {
             root.appendChild(header);
             panelNameE = document.createElement("panelName");
             header.appendChild(panelNameE);
-            authorE = document.createElement("authorE");
+            authorE = document.createElement("author");
             header.appendChild(authorE);
             descE = document.createElement("description");
             header.appendChild(descE);
@@ -243,10 +243,7 @@ public class PanelXmlDom {
     /*管理Adapt*/
     public boolean hasAdapt(){
         NodeList setingEs = setings.getElementsByTagName("adapt");
-        if(setingEs.getLength()!=0){
-            return true;
-        }
-        return false;
+        return setingEs.getLength() != 0;
     }
     public void setAdapt(String adapt, AdapterKinds kinds){
         Element adaptE = document.createElement("adapt");
